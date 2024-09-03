@@ -1,0 +1,6 @@
+origin_x,destination_x,arrival_x,departure_y,arrival_h,arrival_m,departure_h,departure_m,time
+DEL,BLR,16:25 IST,19:15 IST,16,25,19,15,170
+DEL,BLR,17:00 IST,19:15 IST,17,0,19,15,135
+DEL,CCU,20:30 IST,21:45 IST,20,30,21,45,75
+DEL,HYD,14:30 IST,17:05 IST,14,30,17,5,155
+DEL,LKO,20:05 IST,21:55 IST,20,5,21,55,110

@@ -1,0 +1,11 @@
+https://www.data.gov.in/resource/flight-schedule
+
+https://www.eurocontrol.int/dashboard/rnd-data-archive
+
+https://atmdata.github.io/sources/
+
+https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WTZS4K
+
+https://www.iata.org/en/about/members/airline-list/?page=3&search=&ordering=Alphabetical
+
+https://data.world/tylerudite/airports-airlines-and-routes
