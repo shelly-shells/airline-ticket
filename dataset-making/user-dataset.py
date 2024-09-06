@@ -1,6 +1,6 @@
 import pandas as pd
 import random
-
+import password_encryption as pe
 l = [
     "Aarav Sharma", "Vihaan Gupta", "Vivaan Kumar", "Aditya Mishra", "Krishna Yadav",
     "Sai Patel", "Arjun Mehta", "Aryan Singh", "Ishaan Sinha", "Shaurya Verma",
@@ -24,20 +24,25 @@ l = [
     "Trisha Bhatt", "Uma Rao", "Vandana Patel", "Vaishali Sinha", "Yamini Deshmukh"
 ]
 
+cipher = pe.gen_key()
+
 l = [i.split() for i in l]
 m = ["gmail.com", "yahoo.com", "rediffmail.com"]
 s = [i for i in range(9)]
+alpha = [chr(i) for i in range(65, 91)] + [chr(i) for i in range(97, 123)]
+alpha += ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "-", "=", "[", "]", "{", "}", ";", ":", "'", '"', "<", ">", ",", ".", "?", "/", "\\", "|", "`", "~", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 nos = [random.randint(6500000000, 9999999999) for i in range(len(l))]
 for i in range(len(l)):
     name = ''.join(l[i]).lower()
     suffix = ''.join([str(random.choice(s)) for j in range(random.randint(0, 5))])
     l[i].append(name+suffix+"@"+random.choice(m))
     l[i].append(nos[i])
-    p
+    p = ''.join([random.choice(alpha) for j in range(random.randint(8, 15))])
+    l[i].append(pe.encrypter(cipher, p))
 
 
 
 df = pd.DataFrame(l)
-df.columns = ["first_name", "last_name", "email", "phone_no"]
-df.to_csv("csvs/user.csv", index=False)
+df.columns = ["first_name", "last_name", "email", "phone_no", "password_encrpyt"]
+df.to_csv("csvs/users.csv", index=False)
 
