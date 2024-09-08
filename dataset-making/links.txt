@@ -13,3 +13,5 @@ https://data.world/tylerudite/airports-airlines-and-routes
 https://www.goindigo.in/information/seat-map-price-details.html
 
 pricing - https://youtu.be/72hlr-E7KA0?si=6393IQSY0hpgONQw
+
+https://www.kaggle.com/datasets/shubhambathwal/flight-price-prediction
