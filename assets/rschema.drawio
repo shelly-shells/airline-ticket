@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:130.0) Gecko/20100101 Firefox/130.0" version="24.7.12">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" version="24.7.11">
   <diagram name="Page-1" id="sCcfLyy0vtP1j9GHQ2U_">
-    <mxGraphModel dx="1114" dy="628" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2345" dy="1013" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -151,17 +151,17 @@
         <mxCell id="HDAIHqW3xJN0AV3oF5u7-42" value="date" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="400" y="760" width="120" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="HDAIHqW3xJN0AV3oF5u7-43" value="noOfSeats" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="HDAIHqW3xJN0AV3oF5u7-43" value="adults" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="520" y="760" width="120" height="50" as="geometry" />
         </mxCell>
         <mxCell id="HDAIHqW3xJN0AV3oF5u7-44" value="amountPaid" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="640" y="760" width="120" height="50" as="geometry" />
+          <mxGeometry x="761" y="760" width="120" height="50" as="geometry" />
         </mxCell>
         <mxCell id="HDAIHqW3xJN0AV3oF5u7-45" value="food" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="760" y="760" width="120" height="50" as="geometry" />
+          <mxGeometry x="881" y="760" width="120" height="50" as="geometry" />
         </mxCell>
         <mxCell id="HDAIHqW3xJN0AV3oF5u7-46" value="extraLuggage" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="880" y="760" width="120" height="50" as="geometry" />
+          <mxGeometry x="1001" y="760" width="120" height="50" as="geometry" />
         </mxCell>
         <mxCell id="HDAIHqW3xJN0AV3oF5u7-47" value="&lt;b&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;Bookings&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="41" y="720" width="100" height="30" as="geometry" />
@@ -210,6 +210,9 @@
             <mxPoint x="60" y="1030" as="sourcePoint" />
             <mxPoint x="110" y="980" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="wB6hMtW-AQrQEqTnkis1-1" value="children" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="641" y="760" width="120" height="50" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
