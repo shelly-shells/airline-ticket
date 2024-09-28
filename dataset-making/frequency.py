@@ -8,9 +8,9 @@ metros = ["BOM", "DEL", "BLR", "HYD", "MAA", "CCU", "AMD", "PNQ", "COK", "GOI", 
 prio = []
 for i in a:
     if i[0] in metros and i[1] in metros:
-        prio.append(random.randint(6, 7))
+        prio.append(random.randint(5, 7))
     elif i[0] in metros or i[1] in metros:
-        prio.append(random.randint(4, 6))
+        prio.append(random.randint(3, 5))
     else:
         prio.append(random.randint(2, 4))
 
