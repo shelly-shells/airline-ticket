@@ -1,3 +1,7 @@
+"""
+Initial route scraping to get the flight numbers
+"""
+
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -8,7 +12,7 @@ a = df["fltno"]
 d = []
 for i in a:
     x, y = i.split()
-    url = f"https://www.flightstats.com/v2/flight-tracker/{x}/{y}"  # Replace with the actual URL
+    url = f"https://www.flightstats.com/v2/flight-tracker/{x}/{y}"  
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
 

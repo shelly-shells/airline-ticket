@@ -1,3 +1,9 @@
+"""
+generate booking details csv using bookings and users csv.
+first row is the user who made the booking, followed by the adults and children in the booking. 
+information set randomly from an AI generated list of names and random age and gender
+"""
+
 import random
 import pandas as pd
 
@@ -250,4 +256,3 @@ g = pd.DataFrame(
     g, columns=["bid", "username", "first_name", "last_name", "age", "gender"]
 )
 g.to_csv("csvs/booking-details.csv", index=False)
-

@@ -1,3 +1,7 @@
+"""
+Separating aircraft information from routes and adding it to the planes csv
+"""
+
 import pandas as pd
 
 df = pd.read_csv("csvs/planes.csv")

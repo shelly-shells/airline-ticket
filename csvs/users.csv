@@ -1,4 +1,4 @@
-first_name,last_name,email,phone_no,password_encrpyt,username,age,gender,role
+first_name,last_name,email,phone_no,password_encrypt,username,age,gender,role
 Aarav,Sharma,aaravsharma5@gmail.com,8241127737,b'gAAAAABm2q92egVhOQccPwoomYqvan5K0ON2ZUO1xdBLrX5iB_aDmV98L9NCnlGr8p1xXXSqfnuzyLcAPuA7xNCWlpNzaNG6dQ==',aaravshar,34,M,user
 Vihaan,Gupta,vihaangupta26@gmail.com,8507599663,b'gAAAAABm2q92-VG7cfpGwHx6Cvhp0k52obsZ5LO8mx51THKqQoqdsXKwy2De6ZYsg-uiId0mgrUJ-UfgUM4jHNVPoLBw0f201A==',vihaagupta99,57,M,user
 Vivaan,Kumar,vivaankumar@gmail.com,9695073310,b'gAAAAABm2q92V6pktmPuNpCsdDz_2_T8g35P-uEH8ZuRqjqGD380AtiDwn_526iYCDmTyMd-9q1qGO_21GL0rtjGM-jHzWNlHw==',vivakumar5,45,M,user

@@ -1,3 +1,7 @@
+"""
+Logic for choosing connecting flights, to be used in the future
+"""
+
 import pandas as pd
 
 df = pd.read_csv("output.csv")
@@ -28,9 +32,9 @@ for i in b:
 merged_df["departure_h"] = h
 merged_df["departure_m"] = m
 
-merged_df["time"] = (merged_df["departure_h"] - merged_df["arrival_h"]) * 60 + (merged_df["departure_m"] - merged_df["arrival_m"])
+merged_df["time"] = (merged_df["departure_h"] - merged_df["arrival_h"]) * 60 + (
+    merged_df["departure_m"] - merged_df["arrival_m"]
+)
 
 merged_df = merged_df[(merged_df["time"] > 45) & (merged_df["time"] < 180)]
 merged_df.to_csv("output1.csv", index=False)
-
-

@@ -1,4 +1,9 @@
+"""
+password engrytion logic to be used to store passwords in the database
+"""
+
 from cryptography.fernet import Fernet
+
 
 def gen_key():
     key = Fernet.generate_key()
@@ -13,11 +18,13 @@ def encrypter(cipher, password):
     encrypted_password = cipher.encrypt(password.encode())
     return encrypted_password
 
+
 def read_key():
     with open("secret.key", "rb") as key_file:
         key = key_file.read()
     return key
 
-def decrypter(cipher, encrypted_password):    
+
+def decrypter(cipher, encrypted_password):
     decrypted_password = cipher.decrypt(encrypted_password).decode()
     return decrypted_password

@@ -1,3 +1,9 @@
+"""
+Generate bookings csv. Randomly assign users to flights, generate random number of passengers and children, assign random food and luggage, and generate random timestamps.
+Number of passengers chosen from a normal distribution with mean 3.5 and standard deviation 2.291. Number of children chosen randomly from 0 to half the number of passengers.
+Chose a random day of the week that the flight is available and chose a random date between sept 1 and oct 31
+"""
+
 import pandas as pd
 import random
 import numpy as np
@@ -28,12 +34,19 @@ passengers = [i - j for i, j in zip(passengers, children)]
 fid = [[x[0], x[1], random.choice([i for i in range(7) if x[i + 2] == 1])] for x in fid]
 fid = [[x[0], x[1], random.choice(weekdays[x[2]])] for x in fid]
 bookings = [
-    [random.randint(1000000, 9999999), random.choice(users), *random.choice(fid), passengers[i], children[i]]
+    [
+        random.randint(1000000, 9999999),
+        random.choice(users),
+        *random.choice(fid),
+        passengers[i],
+        children[i],
+    ]
     for i in range(500)
 ]
 
 bookings = pd.DataFrame(
-    bookings, columns=["bid", "username", "fid", "base_price", "day", "passengers", "children"]
+    bookings,
+    columns=["bid", "username", "fid", "base_price", "day", "passengers", "children"],
 )
 bookings["price"] = (
     bookings["base_price"] * bookings["passengers"]
@@ -55,6 +68,7 @@ def random_timestamp(start_date, end_date):
     end_timestamp = end_date.timestamp()
     random_timestamp = random.uniform(start_timestamp, end_timestamp)
     return datetime.fromtimestamp(random_timestamp).strftime("%Y-%m-%d %H:%M:%S")
+
 
 bookings["timestamp"] = [random_timestamp(start_date, end_date) for i in range(500)]
 
