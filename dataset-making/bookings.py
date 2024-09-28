@@ -28,11 +28,12 @@ passengers = [i - j for i, j in zip(passengers, children)]
 fid = [[x[0], x[1], random.choice([i for i in range(7) if x[i + 2] == 1])] for x in fid]
 fid = [[x[0], x[1], random.choice(weekdays[x[2]])] for x in fid]
 bookings = [
-    [random.choice(users), *random.choice(fid), passengers[i], children[i]]
+    [random.randint(1000000, 9999999), random.choice(users), *random.choice(fid), passengers[i], children[i]]
     for i in range(500)
 ]
+
 bookings = pd.DataFrame(
-    bookings, columns=["username", "fid", "base_price", "day", "passengers", "children"]
+    bookings, columns=["bid", "username", "fid", "base_price", "day", "passengers", "children"]
 )
 bookings["price"] = (
     bookings["base_price"] * bookings["passengers"]
