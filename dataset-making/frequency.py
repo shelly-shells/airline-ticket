@@ -1,3 +1,10 @@
+"""
+Randomly generating frequency of flights for each route
+if flight between two metros, freq is b/w 5 and 7
+one metro and non metro, 3 and 5
+non metros, 2 and 4
+"""
+
 import pandas as pd
 import random
 

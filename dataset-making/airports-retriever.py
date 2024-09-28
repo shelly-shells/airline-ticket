@@ -1,3 +1,7 @@
+"""
+Retrieves the airports' names and cities from the IATA website.
+"""
+
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests

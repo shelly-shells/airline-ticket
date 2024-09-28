@@ -1,3 +1,8 @@
+"""
+Randomly generating usernames, age and gender for registered users
+username is first_name[:3-6] + last_name[:3-6] + random digits
+"""
+
 import pandas as pd
 import random
 
@@ -13,6 +18,5 @@ usn = [
 
 df["username"] = usn
 df["age"] = [random.randint(18, 70) for i in range(len(df))]
-df["gender"] = ['M' if i < 78 else 'F' for i in range(len(df))]
+df["gender"] = ["M" if i < 78 else "F" for i in range(len(df))]
 df.to_csv("csvs/users.csv", index=False)
-

@@ -1,3 +1,8 @@
+"""
+Scraping flight data from flight tracker website, using list of flight numbers from the scraped flight ids
+retrieved distance, code, and aircraft type
+"""
+
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -9,7 +14,7 @@ d = []
 j = 0
 for i in a:
     x, y = i.split()
-    url = f"https://www.flightstats.com/v2/flight-tracker/{x}/{y}"  # Replace with the actual URL
+    url = f"https://www.flightstats.com/v2/flight-tracker/{x}/{y}"
     response = requests.get(url)
 
     soup = BeautifulSoup(response.text, "html.parser")
@@ -26,4 +31,3 @@ df["Distance"] = df1["Distance"]
 df["AircraftCode"] = df1["AircraftCode"]
 df["Aircraft"] = df1["Aircraft"]
 df.to_csv("output.csv", index=False)
-

@@ -1,3 +1,7 @@
+"""
+assigning roles to users
+"""
+
 import pandas as pd
 
 df = pd.read_csv("csvs/users.csv")
