@@ -1,69 +1,69 @@
-City,Airport Name,ID
-Agra,Agra Airport,AGR
-Aizawl,Lengpui,AJL
-Ahmedabad,S.VallabhBhai Patel,AMD
-Amritsar,Sri Guru Ram Dass Jee,ATQ
-Bhubaneshwar,Biju Patnaik,BBI
-Vadodara,Vadodara Airport,BDQ
-Bhopal,Raja Bhoj,BHO
-Bhavnagar,Bhavnagar Airport,BHU
-Bengaluru,Kempegowda Intl,BLR
-Mumbai,Chhatrapati S Maharaj,BOM
-Kozhikode,Kozhikode Intl.,CCJ
-Kolkata,Subhas Chandra Bose,CCU
-Cuddapah,Cuddapah Airport,CDP
-Coimbatore,Coimbatore Intl.,CJB
-Kannur,Kannur Intl.,CNN
-Kochi,Kochi Intl.,COK
-Darbhanga,Darbhanga Airport,DBR
-Dehra Dun,Jolly Grant,DED
-Delhi,Indira Gandhi Intl,DEL
-Dharamsala,Kangra,DHM
-Dimapur,Dimapur Airport,DMU
-Guwahati,Gopinath Bordoloi Intl,GAU
-Goa,Dabolim,GOI
-Goa,Mopa Airport,GOX
-Itanagar,Hollongi,HGI
-Hirasar,Rajkot International Airport,HSR
-Hyderabad,Rajiv Gandhi Int'l,HYD
-Indore,Devi Ahilya Bai Holkar,IDR
-Imphal,Imphal Airport,IMF
-Nasik,Ozar,ISK
-Agartala,Agartala Airport,IXA
-Bagdogra,Bagdogra Airport,IXB
-Chandigarh,Chandigarh Airport,IXC
-Mangalore,Mangalore Airport,IXE
-Belgaum,Sambre,IXG
-Jammu,Satwari,IXJ
-Leh,Kushok Bakula Rimpoche,IXL
-Madurai,Madurai Airport,IXM
-Ranchi,Birsa Munda,IXR
-Aurangabad,Aurangabad Airport,IXU
-Port Blair,Veer Savarkar Intl,IXZ
-Jaipur,Jaipur Intl.,JAI
-Jodhpur,Jodhpur Airport,JDH
-Jamnagar,Govardhanpur,JGA
-Jagdalpur,Jagdalpur Airport,JGB
-Jabalpur,Jabalpur Airport,JLR
-Jharsuguda,Veer Surendra Sai,JRG
-Jorhat,Rowriah,JRH
-Kanpur,Kanpur Airport,KNU
-Lucknow,Chaudhary Charan Singh,LKO
-Chennai,International,MAA
-Mysore,Mandakalli,MYQ
-Nagpur,Dr.Ambedkar Intl,NAG
-Patna,Jayaprakash Narayan,PAT
-Pantnagar,Pantnagar Airport,PGH
-Pune,Lohegaon,PNQ
-Rajahmundry,Rajahmundry Airport,RJA
-Raipur,Swami Vivekananda,RPR
-Surat,Surat Airport,STV
-Srinagar,Sheikh ul Alam,SXR
-Tuticorin,Tuticorin Airport,TCR
-Tirupati,Tirupati Airport,TIR
-Thiruvananthapuram,Thiruvananthapuram Intl.,TRV
-Tiruchchirappalli,Tiruchirappalli,TRZ
-Udaipur,Maharana Pratap,UDR
-Vijayawada,Vijayawada Airport,VGA
-Varanasi,Lal Bahadur Shastri,VNS
-Vishakhapatnam,Vishakhapatnam Airport,VTZ
+City,Airport Name,ID,timestamp,modified_by
+Agra,Agra Airport,AGR,2024-07-03 22:40:36,yamidesh
+Aizawl,Lengpui,AJL,2024-08-18 20:56:22,snemeno5
+Ahmedabad,S.VallabhBhai Patel,AMD,2024-08-14 11:48:09,swatishuk73
+Amritsar,Sri Guru Ram Dass Jee,ATQ,2024-07-03 12:19:23,vandanpatel
+Bhubaneshwar,Biju Patnaik,BBI,2024-08-26 09:03:15,vandanpatel
+Vadodara,Vadodara Airport,BDQ,2024-07-09 05:21:44,trisbha
+Bhopal,Raja Bhoj,BHO,2024-08-05 00:10:00,tanmehta2
+Bhavnagar,Bhavnagar Airport,BHU,2024-07-18 11:05:02,swatishuk73
+Bengaluru,Kempegowda Intl,BLR,2024-07-16 09:00:44,swatishuk73
+Mumbai,Chhatrapati S Maharaj,BOM,2024-08-01 14:34:40,vaissin14
+Kozhikode,Kozhikode Intl.,CCJ,2024-08-26 03:26:25,trisbha
+Kolkata,Subhas Chandra Bose,CCU,2024-08-26 18:20:50,shretiwar
+Cuddapah,Cuddapah Airport,CDP,2024-08-21 14:28:39,vaissin14
+Coimbatore,Coimbatore Intl.,CJB,2024-07-16 12:39:47,vaissin14
+Kannur,Kannur Intl.,CNN,2024-08-03 18:39:20,snemeno5
+Kochi,Kochi Intl.,COK,2024-07-16 00:00:16,vandanpatel
+Darbhanga,Darbhanga Airport,DBR,2024-07-11 21:55:04,trisbha
+Dehra Dun,Jolly Grant,DED,2024-08-22 17:50:04,vaissin14
+Delhi,Indira Gandhi Intl,DEL,2024-07-22 14:46:29,snemeno5
+Dharamsala,Kangra,DHM,2024-07-01 10:47:59,yamidesh
+Dimapur,Dimapur Airport,DMU,2024-08-20 16:26:47,umarao5
+Guwahati,Gopinath Bordoloi Intl,GAU,2024-08-30 21:00:20,vaissin14
+Goa,Dabolim,GOI,2024-08-05 22:04:43,snemeno5
+Goa,Mopa Airport,GOX,2024-07-15 14:38:26,umarao5
+Itanagar,Hollongi,HGI,2024-07-28 03:55:13,shretiwar
+Hirasar,Rajkot International Airport,HSR,2024-08-26 07:18:49,trisbha
+Hyderabad,Rajiv Gandhi Int'l,HYD,2024-08-06 16:48:26,vaissin14
+Indore,Devi Ahilya Bai Holkar,IDR,2024-07-19 10:47:50,vandanpatel
+Imphal,Imphal Airport,IMF,2024-08-26 09:09:02,snemeno5
+Nasik,Ozar,ISK,2024-07-25 09:08:38,trisbha
+Agartala,Agartala Airport,IXA,2024-08-23 04:24:12,umarao5
+Bagdogra,Bagdogra Airport,IXB,2024-07-24 13:43:07,swatishuk73
+Chandigarh,Chandigarh Airport,IXC,2024-07-24 21:52:45,tanmehta2
+Mangalore,Mangalore Airport,IXE,2024-07-17 09:42:46,shretiwar
+Belgaum,Sambre,IXG,2024-08-22 19:40:25,tanmehta2
+Jammu,Satwari,IXJ,2024-08-04 02:15:20,tanmehta2
+Leh,Kushok Bakula Rimpoche,IXL,2024-08-16 04:05:17,swatishuk73
+Madurai,Madurai Airport,IXM,2024-08-30 08:39:02,vaissin14
+Ranchi,Birsa Munda,IXR,2024-07-03 17:13:11,swatishuk73
+Aurangabad,Aurangabad Airport,IXU,2024-07-06 01:12:54,snemeno5
+Port Blair,Veer Savarkar Intl,IXZ,2024-08-31 14:03:13,vaissin14
+Jaipur,Jaipur Intl.,JAI,2024-08-01 00:38:51,snemeno5
+Jodhpur,Jodhpur Airport,JDH,2024-07-12 14:44:44,vaissin14
+Jamnagar,Govardhanpur,JGA,2024-07-03 15:40:21,vaissin14
+Jagdalpur,Jagdalpur Airport,JGB,2024-08-09 02:22:26,snemeno5
+Jabalpur,Jabalpur Airport,JLR,2024-07-12 07:16:48,tanmehta2
+Jharsuguda,Veer Surendra Sai,JRG,2024-07-20 14:12:33,tanmehta2
+Jorhat,Rowriah,JRH,2024-07-26 13:41:38,vandanpatel
+Kanpur,Kanpur Airport,KNU,2024-08-19 00:35:18,vandanpatel
+Lucknow,Chaudhary Charan Singh,LKO,2024-08-17 22:30:09,vaissin14
+Chennai,International,MAA,2024-07-21 15:33:02,tanmehta2
+Mysore,Mandakalli,MYQ,2024-07-13 11:40:55,vaissin14
+Nagpur,Dr.Ambedkar Intl,NAG,2024-08-24 19:54:42,tanmehta2
+Patna,Jayaprakash Narayan,PAT,2024-08-09 11:10:05,shretiwar
+Pantnagar,Pantnagar Airport,PGH,2024-07-20 02:06:23,snemeno5
+Pune,Lohegaon,PNQ,2024-07-26 15:07:48,umarao5
+Rajahmundry,Rajahmundry Airport,RJA,2024-08-13 08:37:09,shretiwar
+Raipur,Swami Vivekananda,RPR,2024-08-04 19:11:42,vaissin14
+Surat,Surat Airport,STV,2024-07-24 21:13:47,swatishuk73
+Srinagar,Sheikh ul Alam,SXR,2024-08-07 02:57:48,tanmehta2
+Tuticorin,Tuticorin Airport,TCR,2024-07-30 08:35:34,swatishuk73
+Tirupati,Tirupati Airport,TIR,2024-07-30 17:03:03,shretiwar
+Thiruvananthapuram,Thiruvananthapuram Intl.,TRV,2024-07-25 10:50:29,yamidesh
+Tiruchchirappalli,Tiruchirappalli,TRZ,2024-07-21 12:45:29,umarao5
+Udaipur,Maharana Pratap,UDR,2024-08-25 17:14:24,vaissin14
+Vijayawada,Vijayawada Airport,VGA,2024-08-08 16:47:33,tanmehta2
+Varanasi,Lal Bahadur Shastri,VNS,2024-07-03 23:48:28,tanmehta2
+Vishakhapatnam,Vishakhapatnam Airport,VTZ,2024-08-14 04:46:20,vaissin14
