@@ -25,14 +25,17 @@ function Login() {
 			});
 	}
 	return (
-		<div className="login-container">
-			<h1>Login</h1>
-			<div className="error-message"></div>
-			<input type="text" placeholder="Username" />
-			<br />
-			<input type="password" placeholder="Password" />
-			<br />
-			<button onClick={login}>Login</button>
+		<div>
+			<TopBar />
+			<div className="login-container">
+				<h1>Login</h1>
+				<div className="error-message"></div>
+				<input type="text" placeholder="Username" />
+				<br />
+				<input type="password" placeholder="Password" />
+				<br />
+				<button onClick={login}>Login</button>
+			</div>
 		</div>
 	);
 }
