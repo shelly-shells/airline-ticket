@@ -1,7 +1,7 @@
-CREATE DATABASE flight_booking;
-USE flight_booking;
+CREATE DATABASE flightBooking;
+USE flightBooking;
 
-CREATE TABLE Users (
+CREATE TABLE users (
     username VARCHAR(50) PRIMARY KEY,
     pwd VARCHAR(100) NOT NULL,
     firstName VARCHAR(50),
@@ -11,31 +11,31 @@ CREATE TABLE Users (
     age INT,
     gender VARCHAR(10),
     updatedBy VARCHAR(50),
-    FOREIGN KEY (updatedBy) REFERENCES Users(username)
+    FOREIGN KEY (updatedBy) REFERENCES users(username)
 );
 
 
-CREATE TABLE Cities (
+CREATE TABLE cities (
     cityID int PRIMARY KEY,
     cityName VARCHAR(100),
     airportName VARCHAR(100),
-    u_time TIMESTAMP,
+    uTime TIMESTAMP,
     updatedBy VARCHAR(50),
-    FOREIGN KEY (updatedBy) REFERENCES Users(username)
+    FOREIGN KEY (updatedBy) REFERENCES users(username)
 );
 
-CREATE TABLE Flights (
+CREATE TABLE flights (
     aircraftID int PRIMARY KEY,
     model VARCHAR(50),
     business INT,
     economy INT,
     updatedBy VARCHAR(50),
-    FOREIGN KEY (updatedBy) REFERENCES Users(username)
+    FOREIGN KEY (updatedBy) REFERENCES users(username)
 );
 
-CREATE TABLE Routes (
+CREATE TABLE routes (
     id int PRIMARY KEY,
-    aircraftID INT REFERENCES Flights(aircraftID),
+    aircraftID INT REFERENCES flights(aircraftID),
     departureAirportCode INT,
     arrivalAirportCode INT,
     departureTime TIMESTAMP,
@@ -49,13 +49,13 @@ CREATE TABLE Routes (
     saturday BOOLEAN DEFAULT FALSE,
     sunday BOOLEAN DEFAULT FALSE,
     updatedBy VARCHAR(50),
-    FOREIGN KEY (updatedBy) REFERENCES Users(username)
+    FOREIGN KEY (updatedBy) REFERENCES users(username)
 );
 
-CREATE TABLE Bookings (
+CREATE TABLE bookings (
     bookingID int PRIMARY KEY,
-    username VARCHAR(50) REFERENCES Users(username),
-    flightID INT REFERENCES Routes(id),
+    username VARCHAR(50) REFERENCES users(username),
+    flightID INT REFERENCES routes(id),
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     adults INT,
     children INT,
@@ -63,32 +63,33 @@ CREATE TABLE Bookings (
     food BOOLEAN DEFAULT FALSE,
     extraLuggage BOOLEAN DEFAULT FALSE,
     updatedBy VARCHAR(50),
-    FOREIGN KEY (updatedBy) REFERENCES Users(username)
+    FOREIGN KEY (updatedBy) REFERENCES users(username)
 );
 
-CREATE TABLE BookingDetails (
-    bookingID INT REFERENCES Bookings(bookingID),
-    passengerNo int PRIMARY KEY,
+CREATE TABLE bookingDetails (
+    bookingID INT REFERENCES bookings(bookingID),
+    passengerNo int,
+    PRIMARY KEY (bookingID, passengerNo),
     firstName VARCHAR(50),
     lastName VARCHAR(50),
     gender VARCHAR(10),
     age INT,
     updatedBy VARCHAR(50),
-    FOREIGN KEY (updatedBy) REFERENCES Users(username)
+    FOREIGN KEY (updatedBy) REFERENCES users(username)
 );
 
-ALTER TABLE Routes ADD CONSTRAINT fk_departure_city FOREIGN KEY (departureAirportCode) REFERENCES Cities(cityID);
-ALTER TABLE Routes ADD CONSTRAINT fk_arrival_city FOREIGN KEY (arrivalAirportCode) REFERENCES Cities(cityID);
+ALTER TABLE routes ADD CONSTRAINT fk_departure_city FOREIGN KEY (departureAirportCode) REFERENCES cities(cityID);
+ALTER TABLE routes ADD CONSTRAINT fk_arrival_city FOREIGN KEY (arrivalAirportCode) REFERENCES cities(cityID);
 
 CREATE ROLE users;
 CREATE ROLE adm;
 CREATE ROLE sys;
 
-GRANT SELECT ON Cities TO users;
-GRANT SELECT ON FLights TO users;
-GRANT SELECT ON Routes TO users;
-GRANT SELECT ON Bookings TO users;
+GRANT SELECT ON cities TO users;
+GRANT SELECT ON flights TO users;
+GRANT SELECT ON routes TO users;
+GRANT SELECT ON bookings TO users;
 
-GRANT ALL PRIVILEGES ON flight_booking.* TO adm;
+GRANT ALL PRIVILEGES ON flightBooking.* TO adm;
 
-GRANT SELECT, INSERT, UPDATE ON Users TO sys;
+GRANT SELECT, INSERT, UPDATE ON users TO sys;
