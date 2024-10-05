@@ -14,12 +14,11 @@ def login(username, password):
     if user:
         p = password_decryption.decryption(user[0][1])
         if p == password:
-            print("Login successful")
+            return 1
         else:
-            print(p)
-            print("Incorrect password")
+            return 0
     else:
-        print("User not found")
+        return 0
 
 
 def register(username, password, fname, lname, phone, email, age, gender):
@@ -27,7 +26,6 @@ def register(username, password, fname, lname, phone, email, age, gender):
     cursor = cnx.cursor()
     cursor.execute("use flightBooking")
     encrypted_password = password_enryption.encrypter(password)
-    print(encrypted_password)
     insert_query = """
         INSERT INTO users (username, pwd, firstName, lastName, mobileNo, emailID, age, gender, updatedBy)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -39,7 +37,6 @@ def register(username, password, fname, lname, phone, email, age, gender):
     )
     cnx.commit()
     cursor.execute("set foreign_key_checks=1")
-    cursor.execute("select * from users")
     for i in cursor.fetchall():
         print(i)
     cursor.close()
