@@ -9,7 +9,10 @@ CREATE TABLE users (
     lastName VARCHAR(50) NOT NULL,
     mobileNo VARCHAR(10) UNIQUE CHECK (mobileNo REGEXP '^[0-9]{10}$'),
     emailID VARCHAR(100) UNIQUE,
-    age INT CHECK (age > 18 AND age < 100) NOT NULL,
+    age INT CHECK (
+        age > 18
+        AND age < 100
+    ) NOT NULL,
     gender enum('M', 'F', 'O') NOT NULL,
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -48,6 +51,7 @@ CREATE TABLE routes (
     saturday BOOLEAN DEFAULT FALSE,
     sunday BOOLEAN DEFAULT FALSE,
     updatedBy VARCHAR(50),
+    uTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (updatedBy) REFERENCES users(username)
 );
 
@@ -72,7 +76,10 @@ CREATE TABLE bookingDetails (
     firstName VARCHAR(50),
     lastName VARCHAR(50),
     gender enum('M', 'F', 'O') NOT NULL,
-    age INT CHECK (age > 18 AND age < 100) NOT NULL,
+    age INT CHECK (
+        age > 18
+        AND age < 100
+    ) NOT NULL,
     updatedBy VARCHAR(50),
     FOREIGN KEY (updatedBy) REFERENCES users(username)
 );
@@ -87,40 +94,30 @@ ALTER TABLE
 ADD
     CONSTRAINT fk_arrival_city FOREIGN KEY (arrivalAirportCode) REFERENCES cities(cityID);
 
-CREATE ROLE users;
+CREATE ROLE user;
 
-CREATE ROLE adm;
+CREATE ROLE admin;
 
 CREATE ROLE sys;
 
-CREATE USER 'user' @'localhost' IDENTIFIED BY 'password';
-
-CREATE USER 'admin' @'localhost' IDENTIFIED BY 'admin';
-
-CREATE USER 'sys' @'localhost' IDENTIFIED BY 'sys';
+GRANT
+SELECT
+    ON flightBooking.cities TO user;
 
 GRANT
 SELECT
-    ON flightBooking.cities TO users;
+    ON flightBooking.flights TO user;
 
 GRANT
 SELECT
-    ON flightBooking.flights TO users;
+    ON flightBooking.routes TO user;
 
 GRANT
 SELECT
-    ON flightBooking.routes TO users;
+    ON flightBooking.bookings TO user;
 
-GRANT
-SELECT
-    ON flightBooking.bookings TO users;
-
-GRANT
-SELECT
-    ON flightBooking.* TO 'user' @'localhost';
-
-GRANT ALL PRIVILEGES ON flightBooking.* TO adm;
-
+GRANT ALL PRIVILEGES ON flightBooking.* TO admin;
+GRANT USAGE ON flightBooking.* TO admin;
 GRANT
 SELECT
 ,
@@ -129,7 +126,16 @@ INSERT
 UPDATE
     ON flightBooking.users TO sys;
 
-GRANT 'users' TO 'user' @'localhost';
-GRANT 'sys' TO 'sys' @'localhost';
-GRANT 'adm' TO 'admin' @'localhost';
+CREATE USER 'user' @'localhost' IDENTIFIED BY 'user';
+
+CREATE USER 'admin' @'localhost' IDENTIFIED BY 'admin';
+
+CREATE USER 'sys' @'localhost' IDENTIFIED BY 'sys';
+
+GRANT user TO 'user' @'localhost';
+
+GRANT sys TO 'sys' @'localhost';
+
+GRANT admin TO 'admin' @'localhost';
+
 FLUSH PRIVILEGES;
