@@ -12,9 +12,7 @@ CREATE TABLE users (
     age INT,
     gender VARCHAR(10),
     updatedBy VARCHAR(50),
-    FOREIGN KEY (updatedBy) REFERENCES users(username) 
-    ON UPDATE CASCADE 
-    ON DELETE CASCADE
+    FOREIGN KEY (updatedBy) REFERENCES users(username)
 );
 
 CREATE TABLE cities (
@@ -52,8 +50,12 @@ CREATE TABLE routes (
     saturday BOOLEAN DEFAULT FALSE,
     sunday BOOLEAN DEFAULT FALSE,
     updatedBy VARCHAR(50),
-    uTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (updatedBy) REFERENCES users(username) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (aircraftID) REFERENCES flights(aircraftID)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+    FOREIGN KEY (updatedBy) REFERENCES users(username)
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE
 );
 
 CREATE TABLE bookings (
@@ -77,8 +79,8 @@ CREATE TABLE bookingDetails (
     PRIMARY KEY (bookingID, passengerNo),
     firstName VARCHAR(50),
     lastName VARCHAR(50),
-    gender VARCHAR(10),
-    age INT,
+    gender enum('M', 'F', 'O') NOT NULL,
+    age INT CHECK (age > 18 AND age < 100) NOT NULL,
     updatedBy VARCHAR(50),
     FOREIGN KEY (bookingID) REFERENCES bookings(bookingID)
     ON UPDATE CASCADE
@@ -102,35 +104,39 @@ ADD
     ON UPDATE CASCADE 
     ON DELETE CASCADE;
 
-CREATE ROLE users;
+CREATE ROLE user;
 
 CREATE ROLE admin;
 
 CREATE ROLE sys;
 
-CREATE USER 'user'@'localhost' IDENTIFIED BY 'password';
+CREATE USER 'user' @'localhost' IDENTIFIED BY 'password';
 
-CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
+CREATE USER 'admin' @'localhost' IDENTIFIED BY 'admin';
 
-CREATE USER 'sys'@'localhost' IDENTIFIED BY 'sys';
-
-GRANT
-SELECT
-    ON cities TO users;
+CREATE USER 'sys' @'localhost' IDENTIFIED BY 'sys';
 
 GRANT
 SELECT
-    ON flights TO users;
+    ON flightBooking.cities TO users;
 
 GRANT
 SELECT
-    ON routes TO users;
+    ON flightBooking.flights TO users;
 
 GRANT
 SELECT
-    ON bookings TO users;
+    ON flightBooking.routes TO users;
 
-GRANT USAGE ON flightBooking.* TO admin;
+GRANT
+SELECT
+    ON flightBooking.bookings TO users;
+
+GRANT
+SELECT
+    ON flightBooking.* TO 'user' @'localhost';
+
+GRANT ALL PRIVILEGES ON flightBooking.* TO adm;
 
 GRANT
 SELECT
@@ -140,8 +146,7 @@ INSERT
 UPDATE
     ON flightBooking.users TO sys;
 
-GRANT 'sys' TO 'sys'@'localhost';
-
-GRANT 'adm' TO 'admin'@'localhost';
-
-GRANT 'users' TO 'user'@'localhost';
+GRANT 'users' TO 'user' @'localhost';
+GRANT 'sys' TO 'sys' @'localhost';
+GRANT 'adm' TO 'admin' @'localhost';
+FLUSH PRIVILEGES;
