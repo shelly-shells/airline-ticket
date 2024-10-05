@@ -5,16 +5,14 @@ USE flightBooking;
 CREATE TABLE users (
     username VARCHAR(50) PRIMARY KEY,
     pwd VARCHAR(200) NOT NULL,
-    firstName VARCHAR(50),
-    lastName VARCHAR(50),
-    mobileNo VARCHAR(10),
+    firstName VARCHAR(50) NOT NULL,
+    lastName VARCHAR(50) NOT NULL,
+    mobileNo VARCHAR(10) UNIQUE CHECK (mobileNo REGEXP '^[0-9]{10}$'),
     emailID VARCHAR(100) UNIQUE,
     age INT,
     gender VARCHAR(10),
     updatedBy VARCHAR(50),
-    FOREIGN KEY (updatedBy) REFERENCES users(username) 
-    ON UPDATE CASCADE 
-    ON DELETE CASCADE
+    FOREIGN KEY (updatedBy) REFERENCES users(username)
 );
 
 CREATE TABLE cities (
@@ -29,7 +27,7 @@ CREATE TABLE cities (
 );
 
 CREATE TABLE flights (
-    aircraftID int PRIMARY KEY,
+    aircraftID int PRIMARY KEY CHECK (aircraftID REGEXP '^[A-Z]{2}\s[0-9]{3,4}$'),
     model VARCHAR(50),
     business INT,
     economy INT,
@@ -91,8 +89,8 @@ CREATE TABLE bookingDetails (
     PRIMARY KEY (bookingID, passengerNo),
     firstName VARCHAR(50),
     lastName VARCHAR(50),
-    age INT,
     gender VARCHAR(10),
+    age INT,
     updatedBy VARCHAR(50),
     FOREIGN KEY (bookingID) REFERENCES bookings(bookingID)
     ON UPDATE CASCADE
@@ -122,27 +120,31 @@ CREATE ROLE adm;
 
 CREATE ROLE sys;
 
-CREATE USER 'user'@'localhost' IDENTIFIED BY 'password';
+CREATE USER 'user' @'localhost' IDENTIFIED BY 'password';
 
-CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
+CREATE USER 'admin' @'localhost' IDENTIFIED BY 'admin';
 
-CREATE USER 'sys'@'localhost' IDENTIFIED BY 'sys';
-
-GRANT
-SELECT
-    ON cities TO users;
+CREATE USER 'sys' @'localhost' IDENTIFIED BY 'sys';
 
 GRANT
 SELECT
-    ON flights TO users;
+    ON flightBooking.cities TO users;
 
 GRANT
 SELECT
-    ON routes TO users;
+    ON flightBooking.flights TO users;
 
 GRANT
 SELECT
-    ON bookings TO users;
+    ON flightBooking.routes TO users;
+
+GRANT
+SELECT
+    ON flightBooking.bookings TO users;
+
+GRANT
+SELECT
+    ON flightBooking.* TO 'user' @'localhost';
 
 GRANT ALL PRIVILEGES ON flightBooking.* TO adm;
 
@@ -152,10 +154,9 @@ SELECT
 INSERT
 ,
 UPDATE
-    ON users TO sys;
+    ON flightBooking.users TO sys;
 
-GRANT 'sys' TO 'sys'@'localhost';
-
-GRANT 'adm' TO 'admin'@'localhost';
-
-GRANT 'users' TO 'user'@'localhost';
+GRANT 'users' TO 'user' @'localhost';
+GRANT 'sys' TO 'sys' @'localhost';
+GRANT 'adm' TO 'admin' @'localhost';
+FLUSH PRIVILEGES;

@@ -22,25 +22,31 @@ def login(username, password):
 
 
 def register(username, password, fname, lname, phone, email, age, gender):
-    cnx = mysql.connector.connect(user="sys", password="sys", host="127.0.0.1")
-    cursor = cnx.cursor()
-    cursor.execute("use flightBooking")
-    encrypted_password = password_enryption.encrypter(password)
-    insert_query = """
-        INSERT INTO users (username, pwd, firstName, lastName, mobileNo, emailID, age, gender, updatedBy)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """
-    cursor.execute("set foreign_key_checks=0")
-    cursor.execute(
-        insert_query,
-        (username, encrypted_password, fname, lname, phone, email, age, gender, "a"),
-    )
-    cnx.commit()
-    cursor.execute("set foreign_key_checks=1")
-    for i in cursor.fetchall():
-        print(i)
-    cursor.close()
-    cnx.close()
+    
+    try:
+        cnx = mysql.connector.connect(user="sys", password="sys", host="127.0.0.1")
+        cursor = cnx.cursor()
+        cursor.execute("use flightBooking")
+        encrypted_password = password_enryption.encrypter(password)
+        insert_query = """
+            INSERT INTO users (username, pwd, firstName, lastName, mobileNo, emailID, age, gender, updatedBy)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+        cursor.execute("set foreign_key_checks=0")
+        cursor.execute(
+            insert_query,
+            (username, encrypted_password, fname, lname, phone, email, age, gender, "sys"),
+        )
+        cnx.commit()
+        cursor.execute("set foreign_key_checks=1")
+        for i in cursor.fetchall():
+            print(i)
+        cursor.close()
+        cnx.close()
+        return 1
+    except Exception as e:
+        print(e)
+        return 0
 
 
 # register("test", "test", "test", "test", "test", "test", 20, "M")
