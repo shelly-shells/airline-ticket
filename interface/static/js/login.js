@@ -19,7 +19,7 @@ function Login() {
 				if (data.status === "success") {
 					window.location.href = "/home";
 				} else {
-					err = document.querySelector(".error-message");
+					let err = document.querySelector(".error-message");
 					err.innerHTML = "Invalid username or password";
 				}
 			});
@@ -28,13 +28,19 @@ function Login() {
 		<div>
 			<TopBar />
 			<div className="login-container">
-				<h1>Login</h1>
+				<h1 className="center-text">Login</h1>
 				<div className="error-message"></div>
-				<input type="text" placeholder="Username" />
+				<label htmlFor="username">Username:</label>
+				<input type="text" placeholder="Username" id="username" />
 				<br />
-				<input type="password" placeholder="Password" />
+				<label htmlFor="password">Password:</label>
+				<input type="password" placeholder="Password" id="password" />
 				<br />
 				<button onClick={login}>Login</button>
+				<br />
+				<p className="center-text">
+					Don't have an account? <a href="/register">Sign up</a>
+				</p>
 			</div>
 		</div>
 	);
