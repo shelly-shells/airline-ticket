@@ -1,18 +1,17 @@
 .top-bar {
-    background-color: #4CAF50; /* Green background */
-    color: white; /* White text */
-    padding: 10px 20px; /* Some padding */
-    text-align: center; /* Centered text */
-    font-family: Arial, sans-serif; /* Font family */
+    color: rgb(14, 104, 178); 
+    padding: 10px 20px; 
+    text-align: center; 
+    font-family: Arial, sans-serif; 
 }
 
 .top-bar h1 {
-    margin: 0; /* Remove default margin */
-    font-size: 24px; /* Font size */
+    margin: 0; 
+    font-size: 24px; 
 }
 
 .bar {
-    height: 4px; /* Height of the bar */
-    background-color: #333; /* Dark background color */
-    margin-top: 10px; /* Space between the title and the bar */
+    height: 4px; 
+    background-color: #333;
+    margin-top: 10px; 
 }
