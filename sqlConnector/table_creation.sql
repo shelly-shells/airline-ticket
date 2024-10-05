@@ -4,18 +4,17 @@ USE flightBooking;
 
 CREATE TABLE users (
     username VARCHAR(50) PRIMARY KEY,
-    password_encrypt VARCHAR(200) NOT NULL,
-    firstName VARCHAR(50) NOT NULL,
-    lastName VARCHAR(50) NOT NULL,
-    mobileNo VARCHAR(10) UNIQUE CHECK (mobileNo REGEXP '^[0-9]{10}$'),
-    email VARCHAR(100) UNIQUE,
-    age INT CHECK (
-        age >= 18
-        AND age < 100
-    ) NOT NULL,
-    gender enum('M', 'F', 'O') NOT NULL,
-    role enum('user', 'admin') DEFAULT 'user',
-    uTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    pwd VARCHAR(200) NOT NULL,
+    firstName VARCHAR(50),
+    lastName VARCHAR(50),
+    mobileNo VARCHAR(10),
+    emailID VARCHAR(100) UNIQUE,
+    age INT,
+    gender VARCHAR(10),
+    updatedBy VARCHAR(50),
+    FOREIGN KEY (updatedBy) REFERENCES users(username) 
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE
 );
 
 CREATE TABLE cities (
@@ -28,7 +27,7 @@ CREATE TABLE cities (
 );
 
 CREATE TABLE flights (
-    aircraftID VARCHAR(8) PRIMARY KEY CHECK (aircraftID REGEXP '[A-Z0-9]{3}'),
+    aircraftID int PRIMARY KEY,
     model VARCHAR(50),
     business INT,
     economy INT,
@@ -109,23 +108,27 @@ CREATE ROLE admin;
 
 CREATE ROLE sys;
 
-GRANT
-SELECT
-    ON flightBooking.cities TO user;
+CREATE USER 'user'@'localhost' IDENTIFIED BY 'password';
+
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
+
+CREATE USER 'sys'@'localhost' IDENTIFIED BY 'sys';
 
 GRANT
 SELECT
-    ON flightBooking.flights TO user;
+    ON cities TO users;
 
 GRANT
 SELECT
-    ON flightBooking.routes TO user;
+    ON flights TO users;
 
 GRANT
 SELECT
-    ON flightBooking.bookings TO user;
+    ON routes TO users;
 
-GRANT ALL PRIVILEGES ON flightBooking.* TO admin;
+GRANT
+SELECT
+    ON bookings TO users;
 
 GRANT USAGE ON flightBooking.* TO admin;
 
@@ -137,16 +140,8 @@ INSERT
 UPDATE
     ON flightBooking.users TO sys;
 
-CREATE USER 'user' @'localhost' IDENTIFIED BY 'user';
+GRANT 'sys' TO 'sys'@'localhost';
 
-CREATE USER 'admin' @'localhost' IDENTIFIED BY 'admin';
+GRANT 'adm' TO 'admin'@'localhost';
 
-CREATE USER 'sys' @'localhost' IDENTIFIED BY 'sys';
-
-GRANT user TO 'user' @'localhost';
-
-GRANT sys TO 'sys' @'localhost';
-
-GRANT admin TO 'admin' @'localhost';
-
-FLUSH PRIVILEGES;
+GRANT 'users' TO 'user'@'localhost';
