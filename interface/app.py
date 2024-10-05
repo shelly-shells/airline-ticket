@@ -1,12 +1,18 @@
 from flask import Flask, request, render_template, redirect, url_for
 from flask_cors import CORS
+import sys
+import os
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "sqlConnector"))
+)
+from loginRegister import login, register
 
 app = Flask(__name__)
 CORS(app)
 
 
 @app.route("/")
-def login():
+def loginPage():
     return render_template("login.html")
 
 
@@ -20,8 +26,11 @@ def logMeIn():
     data = request.get_json()
     username = data.get("username")
     password = data.get("password")
-    print(username, password)
-    return {"status": "success"}
+    status = login(username, password)
+    if status == 1:
+        return {"status": "success"}
+    else:
+        return {"status": "failure"}
 
 
 @app.route("/search", methods=["POST"])
