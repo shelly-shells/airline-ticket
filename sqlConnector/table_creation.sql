@@ -25,7 +25,7 @@ CREATE TABLE cities (
 );
 
 CREATE TABLE flights (
-    aircraftID int PRIMARY KEY,
+    aircraftID int PRIMARY KEY CHECK (aircraftID REGEXP '^[A-Z]{2}\s[0-9]{3,4}$'),
     model VARCHAR(50),
     business INT,
     economy INT,
@@ -36,7 +36,6 @@ CREATE TABLE flights (
 
 CREATE TABLE routes (
     id int PRIMARY KEY,
-    aircraftID INT,
     departureAirportCode INT,
     arrivalAirportCode INT,
     departureTime TIMESTAMP,
@@ -138,6 +137,8 @@ SELECT
 
 GRANT ALL PRIVILEGES ON flightBooking.* TO adm;
 
+GRANT ALL PRIVILEGES ON flightBooking.* TO admin;
+GRANT USAGE ON flightBooking.* TO admin;
 GRANT
 SELECT
 ,
