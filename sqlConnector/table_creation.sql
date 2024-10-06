@@ -15,7 +15,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE cities (
-    cityID int PRIMARY KEY,
+    cityID VARCHAR(3) PRIMARY KEY,
     cityName VARCHAR(100),
     airportName VARCHAR(100),
     uTime TIMESTAMP,
@@ -26,7 +26,7 @@ CREATE TABLE cities (
 );
 
 CREATE TABLE flights (
-    aircraftID int PRIMARY KEY CHECK (aircraftID REGEXP '^[A-Z]{2}\s[0-9]{3,4}$'),
+    aircraftID VARCHAR(8) PRIMARY KEY CHECK (aircraftID REGEXP '^[A-Z]{2}\s[0-9]{3,4}$'),
     model VARCHAR(50),
     business INT,
     economy INT,
@@ -38,11 +38,12 @@ CREATE TABLE flights (
 
 CREATE TABLE routes (
     id int PRIMARY KEY,
+    aircraftID INT REFERENCES flights(aircraftID),
     departureAirportCode INT,
     arrivalAirportCode INT,
     departureTime TIMESTAMP,
     arrivalTime TIMESTAMP,
-    aircraftID INT,
+    basePrice NUMERIC(10, 2),
     monday BOOLEAN DEFAULT FALSE,
     tuesday BOOLEAN DEFAULT FALSE,
     wednesday BOOLEAN DEFAULT FALSE,
@@ -133,7 +134,9 @@ SELECT
     ON flightBooking.bookings TO user;
 
 GRANT ALL PRIVILEGES ON flightBooking.* TO admin;
+
 GRANT USAGE ON flightBooking.* TO admin;
+
 GRANT
 SELECT
 ,
