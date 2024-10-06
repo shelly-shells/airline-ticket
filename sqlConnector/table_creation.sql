@@ -60,8 +60,8 @@ CREATE TABLE routes (
 
 CREATE TABLE bookings (
     bookingID int PRIMARY KEY,
-    username VARCHAR(50),
-    flightID INT,
+    username VARCHAR(50) REFERENCES users(username),
+    flightID INT REFERENCES routes(id),
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     adults INT,
     children INT,
