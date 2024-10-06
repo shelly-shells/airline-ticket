@@ -58,10 +58,10 @@ CREATE TABLE routes (
 );
 
 CREATE TABLE bookings (
-    bookingID INT PRIMARY KEY,
-    username VARCHAR(50) REFERENCES users(username),
-    flightID VARCHAR(8) REFERENCES routes(id),
-    date DATE,
+    bookingID int PRIMARY KEY,
+    username VARCHAR(50),
+    flightID INT,
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     adults INT,
     children INT,
     amountPaid NUMERIC(10, 2),
