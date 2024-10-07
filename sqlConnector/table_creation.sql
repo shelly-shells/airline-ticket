@@ -12,7 +12,9 @@ CREATE TABLE users (
     age INT,
     gender VARCHAR(10),
     updatedBy VARCHAR(50),
-    FOREIGN KEY (updatedBy) REFERENCES users(username)
+    FOREIGN KEY (updatedBy) REFERENCES users(username) 
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE
 );
 
 CREATE TABLE cities (
@@ -22,6 +24,8 @@ CREATE TABLE cities (
     uTime TIMESTAMP,
     updatedBy VARCHAR(50),
     FOREIGN KEY (updatedBy) REFERENCES users(username)
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE
 );
 
 CREATE TABLE flights (
@@ -31,11 +35,13 @@ CREATE TABLE flights (
     economy INT,
     updatedBy VARCHAR(50),
     FOREIGN KEY (updatedBy) REFERENCES users(username)
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE
 );
 
 CREATE TABLE routes (
     id int PRIMARY KEY,
-    aircraftID INT REFERENCES flights(aircraftID),
+    aircraftID INT,
     departureAirportCode INT,
     arrivalAirportCode INT,
     departureTime TIMESTAMP,
@@ -49,13 +55,18 @@ CREATE TABLE routes (
     saturday BOOLEAN DEFAULT FALSE,
     sunday BOOLEAN DEFAULT FALSE,
     updatedBy VARCHAR(50),
+    FOREIGN KEY (aircraftID) REFERENCES flights(aircraftID)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
     FOREIGN KEY (updatedBy) REFERENCES users(username)
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE
 );
 
 CREATE TABLE bookings (
     bookingID int PRIMARY KEY,
-    username VARCHAR(50) REFERENCES users(username),
-    flightID INT REFERENCES routes(id),
+    username VARCHAR(50),
+    flightID INT,
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     adults INT,
     children INT,
@@ -63,11 +74,19 @@ CREATE TABLE bookings (
     food BOOLEAN DEFAULT FALSE,
     extraLuggage BOOLEAN DEFAULT FALSE,
     updatedBy VARCHAR(50),
+    FOREIGN KEY (username) REFERENCES users(username)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+    FOREIGN KEY (flightID) REFERENCES routes(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
     FOREIGN KEY (updatedBy) REFERENCES users(username)
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE
 );
 
 CREATE TABLE bookingDetails (
-    bookingID INT REFERENCES bookings(bookingID),
+    bookingID INT,
     passengerNo int,
     PRIMARY KEY (bookingID, passengerNo),
     firstName VARCHAR(50),
@@ -75,18 +94,27 @@ CREATE TABLE bookingDetails (
     gender VARCHAR(10),
     age INT,
     updatedBy VARCHAR(50),
+    FOREIGN KEY (bookingID) REFERENCES bookings(bookingID)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
     FOREIGN KEY (updatedBy) REFERENCES users(username)
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE
 );
 
 ALTER TABLE
     routes
 ADD
-    CONSTRAINT fk_departure_city FOREIGN KEY (departureAirportCode) REFERENCES cities(cityID);
+    CONSTRAINT fk_departure_city FOREIGN KEY (departureAirportCode) REFERENCES cities(cityID)
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE;
 
 ALTER TABLE
     routes
 ADD
-    CONSTRAINT fk_arrival_city FOREIGN KEY (arrivalAirportCode) REFERENCES cities(cityID);
+    CONSTRAINT fk_arrival_city FOREIGN KEY (arrivalAirportCode) REFERENCES cities(cityID)
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE;
 
 CREATE ROLE users;
 
