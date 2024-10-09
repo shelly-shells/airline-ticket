@@ -29,7 +29,7 @@ CREATE TABLE cities (
 );
 
 CREATE TABLE flights (
-    aircraftID VARCHAR(8) PRIMARY KEY CHECK (aircraftID REGEXP '^[A-Z]{2}\s[0-9]{3,4}$'),
+    aircraftID VARCHAR(8) PRIMARY KEY CHECK (aircraftID REGEXP '[A-Z0-9]{3}'),
     model VARCHAR(50),
     business INT,
     economy INT,
@@ -41,8 +41,8 @@ CREATE TABLE flights (
 CREATE TABLE routes (
     id VARCHAR(8) PRIMARY KEY CHECK (id REGEXP '^[A-Z]{2}|6E [0-9]{3,4}$'),
     aircraftID VARCHAR(4) REFERENCES flights(aircraftID),
-    departureAirportCode VARCHAR(3) NOT NULL,
-    arrivalAirportCode VARCHAR(3) NOT NULL,
+    departureAirportCode VARCHAR(3) NOT NULL REFERENCES cities(cityID),
+    arrivalAirportCode VARCHAR(3) NOT NULL REFERENCES cities(cityID),
     departureTime TIME,
     arrivalTime TIME,
     basePrice NUMERIC(10, 2),
@@ -86,16 +86,6 @@ CREATE TABLE bookingDetails (
     ) NOT NULL,
     FOREIGN KEY (bookingID) REFERENCES bookings(bookingID) ON UPDATE CASCADE ON DELETE CASCADE
 );
-
-ALTER TABLE
-    routes
-ADD
-    CONSTRAINT fk_departure_city FOREIGN KEY (departureAirportCode) REFERENCES cities(cityID) ON UPDATE CASCADE ON DELETE CASCADE;
-
-ALTER TABLE
-    routes
-ADD
-    CONSTRAINT fk_arrival_city FOREIGN KEY (arrivalAirportCode) REFERENCES cities(cityID) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE ROLE user;
 
