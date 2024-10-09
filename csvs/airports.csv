@@ -1,4 +1,4 @@
-City,Airport Name,ID,timestamp,modified_by
+cityName,airportName,cityID,uTime,updatedBy
 Agra,Agra Airport,AGR,2024-07-03 22:40:36,yamidesh
 Aizawl,Lengpui,AJL,2024-08-18 20:56:22,snemeno5
 Ahmedabad,S.VallabhBhai Patel,AMD,2024-08-14 11:48:09,swatishuk73
