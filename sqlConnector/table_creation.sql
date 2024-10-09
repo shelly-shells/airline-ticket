@@ -38,20 +38,20 @@ CREATE TABLE flights (
 );
 
 CREATE TABLE routes (
-    id VARCHAR(8) PRIMARY KEY CHECK (id REGEXP '^[A-Z]{2}|6E [0-9]{3,4}$'),
-    aircraftID VARCHAR(4) REFERENCES flights(aircraftID),
-    departureAirportCode VARCHAR(3) NOT NULL REFERENCES cities(cityID),
-    arrivalAirportCode VARCHAR(3) NOT NULL REFERENCES cities(cityID),
-    departureTime TIME,
-    arrivalTime TIME,
+    id int PRIMARY KEY,
+    aircraftID INT,
+    departureAirportCode INT,
+    arrivalAirportCode INT,
+    departureTime TIMESTAMP,
+    arrivalTime TIMESTAMP,
     basePrice NUMERIC(10, 2),
-    Mon BOOLEAN DEFAULT FALSE,
-    Tue BOOLEAN DEFAULT FALSE,
-    Wed BOOLEAN DEFAULT FALSE,
-    Thu BOOLEAN DEFAULT FALSE,
-    Fri BOOLEAN DEFAULT FALSE,
-    Sat BOOLEAN DEFAULT FALSE,
-    Sun BOOLEAN DEFAULT FALSE,
+    monday BOOLEAN DEFAULT FALSE,
+    tuesday BOOLEAN DEFAULT FALSE,
+    wednesday BOOLEAN DEFAULT FALSE,
+    thursday BOOLEAN DEFAULT FALSE,
+    friday BOOLEAN DEFAULT FALSE,
+    saturday BOOLEAN DEFAULT FALSE,
+    sunday BOOLEAN DEFAULT FALSE,
     updatedBy VARCHAR(50),
     uTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (updatedBy) REFERENCES users(username) ON UPDATE CASCADE ON DELETE CASCADE
@@ -78,12 +78,32 @@ CREATE TABLE bookingDetails (
     PRIMARY KEY (bookingID, passengerNo),
     firstName VARCHAR(50),
     lastName VARCHAR(50),
-    gender enum('M', 'F', 'O') NOT NULL,
-    age INT NOT NULL,
-    FOREIGN KEY (bookingID) REFERENCES bookings(bookingID) ON UPDATE CASCADE ON DELETE CASCADE
+    gender VARCHAR(10),
+    age INT,
+    updatedBy VARCHAR(50),
+    FOREIGN KEY (bookingID) REFERENCES bookings(bookingID)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+    FOREIGN KEY (updatedBy) REFERENCES users(username)
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE
 );
 
-CREATE ROLE user;
+ALTER TABLE
+    routes
+ADD
+    CONSTRAINT fk_departure_city FOREIGN KEY (departureAirportCode) REFERENCES cities(cityID)
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE;
+
+ALTER TABLE
+    routes
+ADD
+    CONSTRAINT fk_arrival_city FOREIGN KEY (arrivalAirportCode) REFERENCES cities(cityID)
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE;
+
+CREATE ROLE users;
 
 CREATE ROLE admin;
 
