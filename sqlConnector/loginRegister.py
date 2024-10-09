@@ -7,7 +7,7 @@ def login(username, password):
     cnx = mysql.connector.connect(user="sys", password="sys", host="127.0.0.1")
     cursor = cnx.cursor()
     cursor.execute("use flightBooking")
-    cursor.execute(f"select username, pwd from users where username = '{username}'")
+    cursor.execute(f"select username, password_encrypt from users where username = '{username}'")
     user = cursor.fetchall()
     cursor.close()
     cnx.close()
@@ -29,7 +29,7 @@ def register(username, password, fname, lname, phone, email, age, gender):
         cursor.execute("use flightBooking")
         encrypted_password = password_enryption.encrypter(password)
         insert_query = """
-            INSERT INTO users (username, pwd, firstName, lastName, mobileNo, emailID, age, gender)
+            INSERT INTO users (username, password_encrypt, firstName, lastName, mobileNo, email, age, gender)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """
         cursor.execute("set foreign_key_checks=0")
