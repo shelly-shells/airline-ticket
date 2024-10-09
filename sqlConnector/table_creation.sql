@@ -10,13 +10,12 @@ CREATE TABLE users (
     mobileNo VARCHAR(10) UNIQUE CHECK (mobileNo REGEXP '^[0-9]{10}$'),
     email VARCHAR(100) UNIQUE,
     age INT CHECK (
-        age > 18
+        age >= 18
         AND age < 100
     ) NOT NULL,
     gender enum('M', 'F', 'O') NOT NULL,
     role enum('user', 'admin') DEFAULT 'user',
-    uTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedBy VARCHAR(50) REFERENCES users(username)
+    uTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE cities (
@@ -80,10 +79,7 @@ CREATE TABLE bookingDetails (
     firstName VARCHAR(50),
     lastName VARCHAR(50),
     gender enum('M', 'F', 'O') NOT NULL,
-    age INT CHECK (
-        age > 18
-        AND age < 100
-    ) NOT NULL,
+    age INT NOT NULL,
     FOREIGN KEY (bookingID) REFERENCES bookings(bookingID) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
