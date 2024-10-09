@@ -37,7 +37,7 @@ CREATE TABLE flights (
 
 CREATE TABLE routes (
     id int PRIMARY KEY,
-    aircraftID INT REFERENCES flights(aircraftID),
+    aircraftID INT,
     departureAirportCode INT,
     arrivalAirportCode INT,
     departureTime TIMESTAMP,
@@ -50,7 +50,9 @@ CREATE TABLE routes (
     friday BOOLEAN DEFAULT FALSE,
     saturday BOOLEAN DEFAULT FALSE,
     sunday BOOLEAN DEFAULT FALSE,
+    basePrice NUMERIC(10, 2),
     updatedBy VARCHAR(50),
+    uTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (updatedBy) REFERENCES users(username)
     ON UPDATE CASCADE 
     ON DELETE CASCADE,
@@ -66,15 +68,16 @@ CREATE TABLE routes (
 );
 
 CREATE TABLE bookings (
-    bookingID int PRIMARY KEY,
+    bookingID INT PRIMARY KEY,
     username VARCHAR(50) REFERENCES users(username),
-    flightID INT REFERENCES routes(id),
-    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    flightID VARCHAR(8) REFERENCES routes(id),
+    date DATE DEFAULT CURRENT_TIMESTAMP,
     adults INT,
     children INT,
     amountPaid NUMERIC(10, 2),
     food BOOLEAN DEFAULT FALSE,
     extraLuggage BOOLEAN DEFAULT FALSE,
+    timestamp_ TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedBy VARCHAR(50),
     FOREIGN KEY (username) REFERENCES users(username)
     ON UPDATE CASCADE
@@ -92,8 +95,10 @@ CREATE TABLE bookingDetails (
     username VARCHAR(50),
     firstName VARCHAR(50),
     lastName VARCHAR(50),
-    gender VARCHAR(10),
     age INT,
+    gender VARCHAR(10),
+    passengerNo INT,
+    PRIMARY KEY (bookingID, passengerNo),
     updatedBy VARCHAR(50),
     FOREIGN KEY (bookingID) REFERENCES bookings(bookingID)
     ON UPDATE CASCADE
