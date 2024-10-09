@@ -5,20 +5,20 @@ USE flightBooking;
 CREATE TABLE users (
     username VARCHAR(50) PRIMARY KEY,
     pwd VARCHAR(200) NOT NULL,
-    firstName VARCHAR(50),
-    lastName VARCHAR(50),
-    mobileNo VARCHAR(10),
+    firstName VARCHAR(50) NOT NULL,
+    lastName VARCHAR(50) NOT NULL,
+    mobileNo VARCHAR(10) UNIQUE CHECK (mobileNo REGEXP '^[0-9]{10}$'),
     emailID VARCHAR(100) UNIQUE,
-    age INT,
-    gender VARCHAR(10),
-    updatedBy VARCHAR(50),
-    FOREIGN KEY (updatedBy) REFERENCES users(username) 
-    ON UPDATE CASCADE 
-    ON DELETE CASCADE
+    age INT CHECK (
+        age > 18
+        AND age < 100
+    ) NOT NULL,
+    gender enum('M', 'F', 'O') NOT NULL,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE cities (
-    cityID int PRIMARY KEY,
+    cityID VARCHAR(3) PRIMARY KEY,
     cityName VARCHAR(100),
     airportName VARCHAR(100),
     uTime TIMESTAMP,
@@ -29,7 +29,7 @@ CREATE TABLE cities (
 );
 
 CREATE TABLE flights (
-    aircraftID int PRIMARY KEY,
+    aircraftID VARCHAR(8) PRIMARY KEY CHECK (aircraftID REGEXP '^[A-Z]{2}\s[0-9]{3,4}$'),
     model VARCHAR(50),
     business INT,
     economy INT,
@@ -41,11 +41,12 @@ CREATE TABLE flights (
 
 CREATE TABLE routes (
     id int PRIMARY KEY,
+    aircraftID INT,
     departureAirportCode INT,
     arrivalAirportCode INT,
     departureTime TIMESTAMP,
     arrivalTime TIMESTAMP,
-    aircraftID INT,
+    basePrice NUMERIC(10, 2),
     monday BOOLEAN DEFAULT FALSE,
     tuesday BOOLEAN DEFAULT FALSE,
     wednesday BOOLEAN DEFAULT FALSE,
@@ -55,19 +56,17 @@ CREATE TABLE routes (
     sunday BOOLEAN DEFAULT FALSE,
     basePrice NUMERIC(10, 2),
     updatedBy VARCHAR(50),
-    FOREIGN KEY (aircraftID) REFERENCES flights(aircraftID)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
+    uTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (updatedBy) REFERENCES users(username)
     ON UPDATE CASCADE 
     ON DELETE CASCADE
 );
 
 CREATE TABLE bookings (
-    bookingID int PRIMARY KEY,
-    username VARCHAR(50),
-    flightID INT,
-    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    bookingID INT PRIMARY KEY,
+    username VARCHAR(50) REFERENCES users(username),
+    flightID VARCHAR(8) REFERENCES routes(id),
+    date DATE DEFAULT CURRENT_TIMESTAMP,
     adults INT,
     children INT,
     amountPaid NUMERIC(10, 2),
@@ -91,8 +90,8 @@ CREATE TABLE bookingDetails (
     PRIMARY KEY (bookingID, passengerNo),
     firstName VARCHAR(50),
     lastName VARCHAR(50),
-    age INT,
     gender VARCHAR(10),
+    age INT,
     updatedBy VARCHAR(50),
     FOREIGN KEY (bookingID) REFERENCES bookings(bookingID)
     ON UPDATE CASCADE
@@ -116,35 +115,31 @@ ADD
     ON UPDATE CASCADE 
     ON DELETE CASCADE;
 
-CREATE ROLE users;
+CREATE ROLE user;
 
-CREATE ROLE adm;
+CREATE ROLE admin;
 
 CREATE ROLE sys;
 
-CREATE USER 'user'@'localhost' IDENTIFIED BY 'password';
-
-CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
-
-CREATE USER 'sys'@'localhost' IDENTIFIED BY 'sys';
+GRANT
+SELECT
+    ON flightBooking.cities TO user;
 
 GRANT
 SELECT
-    ON cities TO users;
+    ON flightBooking.flights TO user;
 
 GRANT
 SELECT
-    ON flights TO users;
+    ON flightBooking.routes TO user;
 
 GRANT
 SELECT
-    ON routes TO users;
+    ON flightBooking.bookings TO user;
 
-GRANT
-SELECT
-    ON bookings TO users;
+GRANT ALL PRIVILEGES ON flightBooking.* TO admin;
 
-GRANT ALL PRIVILEGES ON flightBooking.* TO adm;
+GRANT USAGE ON flightBooking.* TO admin;
 
 GRANT
 SELECT
@@ -152,10 +147,18 @@ SELECT
 INSERT
 ,
 UPDATE
-    ON users TO sys;
+    ON flightBooking.users TO sys;
 
-GRANT 'sys' TO 'sys'@'localhost';
+CREATE USER 'user' @'localhost' IDENTIFIED BY 'user';
 
-GRANT 'adm' TO 'admin'@'localhost';
+CREATE USER 'admin' @'localhost' IDENTIFIED BY 'admin';
 
-GRANT 'users' TO 'user'@'localhost';
+CREATE USER 'sys' @'localhost' IDENTIFIED BY 'sys';
+
+GRANT user TO 'user' @'localhost';
+
+GRANT sys TO 'sys' @'localhost';
+
+GRANT admin TO 'admin' @'localhost';
+
+FLUSH PRIVILEGES;

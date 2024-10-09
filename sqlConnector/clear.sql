@@ -1,7 +1,7 @@
 DROP DATABASE flightBooking;
 
-DROP ROLE 'users',
-'adm',
+DROP ROLE 'user',
+'admin',
 'sys';
 
 DROP USER 'sys' @'localhost';
