@@ -41,12 +41,11 @@ CREATE TABLE flights (
 
 CREATE TABLE routes (
     id int PRIMARY KEY,
-    aircraftID INT,
     departureAirportCode INT,
     arrivalAirportCode INT,
     departureTime TIMESTAMP,
     arrivalTime TIMESTAMP,
-    basePrice NUMERIC(10, 2),
+    aircraftID INT,
     monday BOOLEAN DEFAULT FALSE,
     tuesday BOOLEAN DEFAULT FALSE,
     wednesday BOOLEAN DEFAULT FALSE,
@@ -54,6 +53,7 @@ CREATE TABLE routes (
     friday BOOLEAN DEFAULT FALSE,
     saturday BOOLEAN DEFAULT FALSE,
     sunday BOOLEAN DEFAULT FALSE,
+    basePrice NUMERIC(10, 2),
     updatedBy VARCHAR(50),
     FOREIGN KEY (aircraftID) REFERENCES flights(aircraftID)
     ON UPDATE CASCADE
@@ -91,8 +91,8 @@ CREATE TABLE bookingDetails (
     PRIMARY KEY (bookingID, passengerNo),
     firstName VARCHAR(50),
     lastName VARCHAR(50),
-    gender VARCHAR(10),
     age INT,
+    gender VARCHAR(10),
     updatedBy VARCHAR(50),
     FOREIGN KEY (bookingID) REFERENCES bookings(bookingID)
     ON UPDATE CASCADE
