@@ -1,4 +1,4 @@
-id,origin,destination,departure,arrival,aircraft_id,Mon,Tue,Wed,Thu,Fri,Sat,Sun,base_price,timestamp,modified_by
+id,departureAirportCode,arrivalAirportCode,departureTime,arrivalTime,aircraftID,Mon,Tue,Wed,Thu,Fri,Sat,Sun,basePrice,uTime,updatedBy
 6E 102,BOM,DEL,21:15:00,23:25:00,32Q,1,1,1,1,1,1,1,2414,2024-08-27 13:39:44,trisbha
 6E 106,AMD,ATQ,19:40:00,21:35:00,32N,0,0,0,1,1,1,1,3737,2024-07-13 11:01:01,trisbha
 6E 107,PNQ,BLR,20:55:00,22:30:00,32Q,1,1,1,1,1,1,1,1764,2024-08-14 20:16:04,yamidesh

@@ -1,4 +1,4 @@
-bid,username,first_name,last_name,age,gender,passengerNo
+bookingID,username,firstName,lastName,age,gender,passengerNo
 7459160,tejaspati,Tejas,Patil,28,M,1
 7459160,tejaspati,Leo,Brooks,42,M,2
 7459160,tejaspati,Jonathan,Flores,61,F,3
