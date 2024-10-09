@@ -3,12 +3,12 @@ CREATE DATABASE flightBooking;
 USE flightBooking;
 
 CREATE TABLE users (
-    username VARCHAR(50) PRIMARY KEY,
-    pwd VARCHAR(200) NOT NULL,
     firstName VARCHAR(50) NOT NULL,
     lastName VARCHAR(50) NOT NULL,
-    mobileNo VARCHAR(10) UNIQUE CHECK (mobileNo REGEXP '^[0-9]{10}$'),
     emailID VARCHAR(100) UNIQUE,
+    mobileNo VARCHAR(10) UNIQUE CHECK (mobileNo REGEXP '^[0-9]{10}$'),
+    pwd VARCHAR(200) NOT NULL,
+    username VARCHAR(50) PRIMARY KEY,
     age INT,
     gender VARCHAR(10),
     updatedBy VARCHAR(50),
@@ -42,8 +42,8 @@ CREATE TABLE flights (
 
 CREATE TABLE routes (
     id int PRIMARY KEY,
-    departureAirportCode INT,
-    arrivalAirportCode INT,
+    departureAirportCode varchar(3),
+    arrivalAirportCode varchar(3),
     departureTime TIMESTAMP,
     arrivalTime TIMESTAMP,
     aircraftID VARCHAR(8),
