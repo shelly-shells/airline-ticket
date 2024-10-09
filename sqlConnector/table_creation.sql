@@ -5,9 +5,9 @@ USE flightBooking;
 CREATE TABLE users (
     username VARCHAR(50) PRIMARY KEY,
     pwd VARCHAR(200) NOT NULL,
-    firstName VARCHAR(50),
-    lastName VARCHAR(50),
-    mobileNo VARCHAR(10),
+    firstName VARCHAR(50) NOT NULL,
+    lastName VARCHAR(50) NOT NULL,
+    mobileNo VARCHAR(10) UNIQUE CHECK (mobileNo REGEXP '^[0-9]{10}$'),
     emailID VARCHAR(100) UNIQUE,
     age INT,
     gender VARCHAR(10),
@@ -37,7 +37,6 @@ CREATE TABLE flights (
 
 CREATE TABLE routes (
     id int PRIMARY KEY,
-    aircraftID INT,
     departureAirportCode INT,
     arrivalAirportCode INT,
     departureTime TIMESTAMP,
