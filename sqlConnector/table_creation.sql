@@ -3,16 +3,17 @@ CREATE DATABASE flightBooking;
 USE flightBooking;
 
 CREATE TABLE users (
-    username VARCHAR(50) PRIMARY KEY,
-    pwd VARCHAR(200) NOT NULL,
     firstName VARCHAR(50) NOT NULL,
     lastName VARCHAR(50) NOT NULL,
+    emailID VARCHAR(100) UNIQUE,
     mobileNo VARCHAR(10) UNIQUE CHECK (mobileNo REGEXP '^[0-9]{10}$'),
     emailID VARCHAR(100) UNIQUE,
-    age INT,
-    gender VARCHAR(10),
-    updatedBy VARCHAR(50),
-    FOREIGN KEY (updatedBy) REFERENCES users(username)
+    age INT CHECK (
+        age > 18
+        AND age < 100
+    ) NOT NULL,
+    gender enum('M', 'F', 'O') NOT NULL,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE cities (
@@ -36,12 +37,13 @@ CREATE TABLE flights (
 );
 
 CREATE TABLE routes (
-    id int PRIMARY KEY,
-    departureAirportCode INT,
-    arrivalAirportCode INT,
-    departureTime TIMESTAMP,
-    arrivalTime TIMESTAMP,
-    aircraftID VARCHAR(8),
+    id VARCHAR(8) PRIMARY KEY CHECK (id REGEXP '^[A-Z]{2}|6E [0-9]{3,4}$'),
+    aircraftID VARCHAR(4) REFERENCES flights(aircraftID),
+    departureAirportCode VARCHAR(3) NOT NULL,
+    arrivalAirportCode VARCHAR(3) NOT NULL,
+    departureTime TIME,
+    arrivalTime TIME,
+    basePrice NUMERIC(10, 2),
     monday BOOLEAN DEFAULT FALSE,
     tuesday BOOLEAN DEFAULT FALSE,
     wednesday BOOLEAN DEFAULT FALSE,
@@ -49,28 +51,18 @@ CREATE TABLE routes (
     friday BOOLEAN DEFAULT FALSE,
     saturday BOOLEAN DEFAULT FALSE,
     sunday BOOLEAN DEFAULT FALSE,
-    basePrice NUMERIC(10, 2),
     updatedBy VARCHAR(50),
     uTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (updatedBy) REFERENCES users(username)
     ON UPDATE CASCADE 
-    ON DELETE CASCADE,
-    FOREIGN KEY (aircraftID) REFERENCES flights(aircraftID)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-    FOREIGN KEY (departureAirportCode) REFERENCES cities(cityID)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-    FOREIGN KEY (arrivalAirportCode) REFERENCES cities(cityID)
-    ON UPDATE CASCADE
     ON DELETE CASCADE
 );
 
 CREATE TABLE bookings (
-    bookingID INT PRIMARY KEY,
-    username VARCHAR(50) REFERENCES users(username),
-    flightID VARCHAR(8) REFERENCES routes(id),
-    date DATE DEFAULT CURRENT_TIMESTAMP,
+    bookingID int PRIMARY KEY,
+    username VARCHAR(50),
+    flightID INT,
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     adults INT,
     children INT,
     amountPaid NUMERIC(10, 2),
@@ -94,10 +86,11 @@ CREATE TABLE bookingDetails (
     username VARCHAR(50),
     firstName VARCHAR(50),
     lastName VARCHAR(50),
-    age INT,
-    gender VARCHAR(10),
-    passengerNo INT,
-    PRIMARY KEY (bookingID, passengerNo),
+    gender enum('M', 'F', 'O') NOT NULL,
+    age INT CHECK (
+        age > 18
+        AND age < 100
+    ) NOT NULL,
     updatedBy VARCHAR(50),
     FOREIGN KEY (bookingID) REFERENCES bookings(bookingID)
     ON UPDATE CASCADE
