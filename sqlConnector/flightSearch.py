@@ -40,7 +40,8 @@ def searchFlights(source, destination, date, roundTrip, returnDate=None):
     d["toFlights"] = res
     if roundTrip == "True":
         d["returnFlights"] = res1
-
+    else:
+        d["returnFlights"] = False
     return d
 
 
