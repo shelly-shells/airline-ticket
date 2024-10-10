@@ -29,7 +29,7 @@ def registerMe():
     password = data.get("password")
     fname = data.get("fname")
     lname = data.get("lname")
-    phone = data.get("mobile")
+    phone = data.get("phone")
     email = data.get("email")
     age = data.get("age")
     gender = data.get("gender")
