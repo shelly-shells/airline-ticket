@@ -1,13 +1,27 @@
 function FlightResult({ result }) {
     return (
         <div className="flight-result">
-            <p>Flight: {result[0]}</p>
-            <p>Departure: {result[1]}</p>
-            <p>Arrival: {result[2]}</p>
-            <p>Price: {result[3]}</p>
-            <p>Aircraft Model : {result[4]}</p>
-            <p>City : {result[7]}</p>
-            <p>Airport : {result[8]}</p>
+            <div className="time-row">
+                <p>
+                    <span>Departure:</span> {result[1]}
+                </p>
+                <p>
+                    <span>Arrival:</span> {result[2]}
+                </p>
+            </div>
+            <div className="airport-row">
+                <p>{result[7]}</p>
+                <p>{result[8]}</p>
+            </div>
+            <p>
+                <span>Flight:</span> {result[0]}
+            </p>
+            <p>
+                <span>Price:</span> {result[3]}
+            </p>
+            <p>
+                <span>Aircraft Model:</span> {result[4]}
+            </p>
         </div>
     );
 }

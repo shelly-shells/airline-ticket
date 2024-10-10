@@ -1,0 +1,66 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.results-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.result {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+    padding: 20px;
+    width: 90%; /* Increased width */
+    max-width: 800px; /* Increased max-width */
+}
+
+.result h2 {
+    margin-top: 0;
+}
+
+.flight-result {
+    display: flex;
+    flex-direction: column;
+}
+
+.flight-result .time-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.flight-result .time-row p {
+    margin: 0;
+}
+
+.flight-result .airport-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.flight-result .airport-row p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.flight-result p span {
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .result {
+        width: 95%;
+    }
+}
