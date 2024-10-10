@@ -130,3 +130,21 @@ GRANT sys TO 'sys' @'localhost';
 GRANT admin TO 'admin' @'localhost';
 
 FLUSH PRIVILEGES;
+
+DELIMITER // 
+CREATE PROCEDURE airportDetails(
+    IN id VARCHAR(3),
+    OUT airport VARCHAR(100),
+    OUT city VARCHAR(100)
+) BEGIN
+SELECT
+    airportName,
+    cityName INTO airport,
+    city
+FROM
+    cities
+WHERE
+    cityID = id;
+
+END // 
+DELIMITER ;

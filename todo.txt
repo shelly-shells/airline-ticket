@@ -1,0 +1,2 @@
+stored procedure to check remaining seats 
+
