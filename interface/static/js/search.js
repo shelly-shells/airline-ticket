@@ -10,8 +10,16 @@ function FlightResult({ result }) {
                 </p>
             </div>
             <div className="airport-row">
-                <p>{result[7]}</p>
-                <p>{result[8]}</p>
+                <p>
+                    {result[7]}
+                    <br />
+                    {result[8]}
+                </p>
+                <p>
+                    {result[9]}
+                    <br />
+                    {result[10]}
+                </p>
             </div>
             <p>
                 <span>Flight:</span> {result[0]}
