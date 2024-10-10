@@ -16,7 +16,32 @@ def searchFlights(source, destination, date, roundTrip, returnDate=None):
     day = day_dict[datetime.datetime.strptime(date, "%Y-%m-%d").weekday()]
     cursor.execute("USE flightBooking")
     cursor.execute(
-        f"SELECT routes.id, routes.departureTime, routes.arrivalTime, routes.basePrice, flights.model, flights.business, flights.economy, cities.cityName, cities.airportName FROM routes JOIN flights ON routes.aircraftID = flights.aircraftID JOIN cities ON routes.departureAirportCode = cities.cityID WHERE departureAirportCode='{source}' AND arrivalAirportCode='{destination}' AND {day}=1"
+        f"""
+        SELECT 
+            routes.id, 
+            routes.departureTime, 
+            routes.arrivalTime, 
+            routes.basePrice, 
+            flights.model, 
+            flights.business, 
+            flights.economy, 
+            departure_city.cityName AS departureCityName, 
+            departure_city.airportName AS departureAirportName, 
+            arrival_city.cityName AS arrivalCityName, 
+            arrival_city.airportName AS arrivalAirportName 
+        FROM 
+            routes 
+        JOIN 
+            flights ON routes.aircraftID = flights.aircraftID 
+        JOIN 
+            cities AS departure_city ON routes.departureAirportCode = departure_city.cityID 
+        JOIN 
+            cities AS arrival_city ON routes.arrivalAirportCode = arrival_city.cityID 
+        WHERE 
+            departureAirportCode='{source}' 
+            AND arrivalAirportCode='{destination}' 
+            AND {day}=1
+        """
     )
     res = cursor.fetchall()
     res = [
@@ -26,7 +51,32 @@ def searchFlights(source, destination, date, roundTrip, returnDate=None):
     if roundTrip == "True":
         day = day_dict[datetime.datetime.strptime(returnDate, "%Y-%m-%d").weekday()]
         cursor.execute(
-            f"SELECT routes.id, routes.departureTime, routes.arrivalTime, routes.basePrice, flights.model, flights.business, flights.economy, cities.cityName, cities.airportName FROM routes JOIN flights ON routes.aircraftID = flights.aircraftID JOIN cities ON routes.departureAirportCode = cities.cityID WHERE departureAirportCode='{source}' AND arrivalAirportCode='{destination}' AND {day}=1"
+            f"""
+        SELECT 
+            routes.id, 
+            routes.departureTime, 
+            routes.arrivalTime, 
+            routes.basePrice, 
+            flights.model, 
+            flights.business, 
+            flights.economy, 
+            departure_city.cityName AS departureCityName, 
+            departure_city.airportName AS departureAirportName, 
+            arrival_city.cityName AS arrivalCityName, 
+            arrival_city.airportName AS arrivalAirportName 
+        FROM 
+            routes 
+        JOIN 
+            flights ON routes.aircraftID = flights.aircraftID 
+        JOIN 
+            cities AS departure_city ON routes.departureAirportCode = departure_city.cityID 
+        JOIN 
+            cities AS arrival_city ON routes.arrivalAirportCode = arrival_city.cityID 
+        WHERE 
+            departureAirportCode='{source}' 
+            AND arrivalAirportCode='{destination}' 
+            AND {day}=1
+        """
         )
         res1 = cursor.fetchall()
         res1 = [
@@ -40,7 +90,8 @@ def searchFlights(source, destination, date, roundTrip, returnDate=None):
     d["toFlights"] = res
     if roundTrip == "True":
         d["returnFlights"] = res1
-
+    else:
+        d["returnFlights"] = False
     return d
 
 

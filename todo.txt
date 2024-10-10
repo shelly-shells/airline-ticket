@@ -1,0 +1,2 @@
+stored procedure to check remaining seats 
+apply stored procedure to find airport names
