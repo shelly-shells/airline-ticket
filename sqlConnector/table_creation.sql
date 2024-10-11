@@ -13,8 +13,8 @@ CREATE TABLE users (
         age >= 18
         AND age < 100
     ) NOT NULL,
-    gender enum('M', 'F', 'O') NOT NULL,
-    role enum('user', 'admin') DEFAULT 'user',
+    gender ENUM('M', 'F', 'O') NOT NULL,
+    role ENUM('user', 'admin') DEFAULT 'user',
     uTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -64,6 +64,7 @@ CREATE TABLE bookings (
     date DATE,
     adults INT,
     children INT,
+    seatClass ENUM('Business', 'Economy') NOT NULL,
     amountPaid NUMERIC(10, 2),
     food BOOLEAN DEFAULT FALSE,
     extraLuggage BOOLEAN DEFAULT FALSE,
@@ -78,7 +79,7 @@ CREATE TABLE bookingDetails (
     PRIMARY KEY (bookingID, passengerNo),
     firstName VARCHAR(50),
     lastName VARCHAR(50),
-    gender enum('M', 'F', 'O') NOT NULL,
+    gender ENUM('M', 'F', 'O') NOT NULL,
     age INT NOT NULL,
     FOREIGN KEY (bookingID) REFERENCES bookings(bookingID) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -128,6 +129,7 @@ GRANT user TO 'user' @'localhost';
 GRANT sys TO 'sys' @'localhost';
 
 GRANT admin TO 'admin' @'localhost';
+GRANT SUPER ON *.* TO 'admin' @'localhost';
 
 FLUSH PRIVILEGES;
 
@@ -148,3 +150,53 @@ WHERE
 
 END // 
 DELIMITER ;
+
+DELIMITER // 
+CREATE FUNCTION seatAvailability(
+    flightID VARCHAR(8),
+    date DATE,
+    class ENUM('Business', 'Economy')
+) 
+RETURNS INT 
+DETERMINISTIC 
+BEGIN 
+    DECLARE available INT;
+
+    IF class = 'Economy' THEN
+        SELECT
+            flights.economy - COALESCE(SUM(bookings.adults + bookings.children), 0) INTO available
+        FROM
+            flights
+            JOIN routes ON flights.aircraftID = routes.aircraftID
+            JOIN bookings ON bookings.flightID = routes.id
+        WHERE
+            bookings.seatClass = 'Economy'
+            AND bookings.flightID = flightID
+            AND bookings.date = date
+        GROUP BY
+            bookings.flightID,
+            bookings.date;
+
+    ELSEIF class = 'Business' THEN
+        SELECT
+            flights.business - COALESCE(SUM(bookings.adults + bookings.children), 0) INTO available
+        FROM
+            flights
+            JOIN routes ON flights.aircraftID = routes.aircraftID
+            JOIN bookings ON bookings.flightID = routes.id
+        WHERE
+            bookings.seatClass = 'Business'
+            AND bookings.flightID = flightID
+            AND bookings.date = date
+        GROUP BY
+            bookings.flightID,
+            bookings.date;
+
+    END IF;
+
+    RETURN available;
+
+END // 
+DELIMITER ;
+GRANT EXECUTE ON PROCEDURE flightBooking.airportDetails TO user;
+GRANT EXECUTE ON FUNCTION flightBooking.seatAvailability TO user;

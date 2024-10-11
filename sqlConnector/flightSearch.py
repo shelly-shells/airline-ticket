@@ -60,18 +60,10 @@ def searchFlights(source, destination, date, roundTrip, returnDate=None):
             flights.model, 
             flights.business, 
             flights.economy, 
-            departure_city.cityName AS departureCityName, 
-            departure_city.airportName AS departureAirportName, 
-            arrival_city.cityName AS arrivalCityName, 
-            arrival_city.airportName AS arrivalAirportName 
         FROM 
             routes 
         JOIN 
             flights ON routes.aircraftID = flights.aircraftID 
-        JOIN 
-            cities AS departure_city ON routes.departureAirportCode = departure_city.cityID 
-        JOIN 
-            cities AS arrival_city ON routes.arrivalAirportCode = arrival_city.cityID 
         WHERE 
             departureAirportCode='{source}' 
             AND arrivalAirportCode='{destination}' 
@@ -92,6 +84,15 @@ def searchFlights(source, destination, date, roundTrip, returnDate=None):
         d["returnFlights"] = res1
     else:
         d["returnFlights"] = False
+    
+    cursor.execute(f"CALL airportDetails('{source}', @cityName, @airportName)")
+    cursor.execute("SELECT @cityName, @airportName")
+    source = cursor.fetchone()
+    cursor.execute(f"CALL airportDetails('{destination}', @cityName, @airportName)")
+    cursor.execute("SELECT @cityName, @airportName")
+    destination = cursor.fetchone()
+    d["source"] = source
+    d["destination"] = destination
     return d
 
 
