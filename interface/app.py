@@ -8,10 +8,12 @@ sys.path.append(
 )
 from loginRegister import login, register
 from flightSearch import searchFlights
+from admin import flights, routes, cities
 
 app = Flask(__name__)
 CORS(app)
 app.secret_key = "super secret"
+
 
 @app.route("/")
 def loginPage():
@@ -23,11 +25,11 @@ def logMeIn():
     data = request.get_json()
     username = data.get("username")
     password = data.get("password")
-    status = login(username, password)
+    status, role = login(username, password)
     if status == 1:
-        return {"status": "success"}
+        return {"status": "success", "role": role}
     else:
-        return {"status": "failure"}
+        return {"status": "failure", "role": None}
 
 
 @app.route("/register")
@@ -53,6 +55,15 @@ def registerMe():
         return {"status": "failure"}
 
 
+@app.route("/admin")
+def adminPage():
+    return render_template("admin.html")
+
+@app.route("/admin/flights")
+def flightsPage():
+    res = flights()
+    return render_template("flights.html", res=res)
+
 @app.route("/home")
 def home():
     return render_template("home.html")
@@ -68,8 +79,9 @@ def search():
         data["tripType"],
         data["returnDate"],
     )
-    session["results"] = res    
+    session["results"] = res
     return redirect(url_for("searchPage"))
+
 
 @app.route("/search")
 def searchPage():
