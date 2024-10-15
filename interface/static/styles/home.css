@@ -1,11 +1,8 @@
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f0f0f0;
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f0f0f0;
+    padding: 0;
 }
 
 .booking-container {
@@ -18,6 +15,7 @@ body {
     max-width: 600px;
     min-width: 300px;
     box-sizing: border-box;
+    margin: 40px auto;
 }
 
 .booking-container h1 {
@@ -49,4 +47,88 @@ body {
 
 .booking-container button:hover {
     background: linear-gradient(45deg, #2575fc, #6a11cb);
+}
+
+.results-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    background-color: #eaeff2;
+    min-height: 100vh;
+}
+
+.result {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    padding: 25px;
+    width: 90%;
+    max-width: 850px;
+    transition: box-shadow 0.3s ease;
+}
+
+.result:hover {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 1.6em;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.flight-result {
+    display: flex;
+    flex-direction: column;
+}
+
+.flight-result .time-row,
+.flight-result .airport-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.flight-result .time-row p,
+.flight-result .airport-row p {
+    margin: 0;
+    font-size: 1em;
+    color: #333;
+}
+
+.flight-result .airport-row p {
+    font-size: 0.95em;
+    color: #777;
+}
+
+.flight-result p {
+    margin: 10px 0;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.flight-result p span {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+@media (max-width: 600px) {
+    .result {
+        width: 95%;
+    }
+
+    .flight-result .time-row p,
+    .flight-result .airport-row p,
+    .flight-result p {
+        font-size: 0.95em;
+    }
 }

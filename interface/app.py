@@ -36,6 +36,7 @@ def logMeIn():
     password = data.get("password")
     status, role = login(username, password)
     if status == 1:
+        session["username"] = username
         return {"status": "success", "role": role}
     else:
         return {"status": "failure", "role": None}
@@ -101,19 +102,18 @@ def get_flights():
     return jsonify(res)
 
 
-@app.route("/api/flights/<int:flight_id>", methods=["PUT"])
+@app.route("/api/flights/<string:flight_id>", methods=["PUT"])
 def update_flight(flight_id):
     data = request.get_json()
     cnx = get_db_connection()
     cursor = cnx.cursor()
-    cursor.execute(
-        """
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    query = f"""
         UPDATE flights
-        SET model = %s, business = %s, economy = %s
-        WHERE id = %s
-        """,
-        (data["model"], data["business"], data["economy"], flight_id),
-    )
+        SET model = '{data["model"]}', business = {data["business"]}, economy = {data["economy"]}, updatedBy = '{session["username"]}', uTime = '{time}'
+        WHERE aircraftID = '{flight_id}'
+    """
+    cursor.execute(query)
     cnx.commit()
     cursor.close()
     cnx.close()
@@ -142,19 +142,20 @@ def get_routes():
     return jsonify(res)
 
 
-@app.route("/api/routes/<int:route_id>", methods=["PUT"])
+@app.route("/api/routes/<string:route_id>", methods=["PUT"])
 def update_route(route_id):
     data = request.get_json()
     cnx = get_db_connection()
     cursor = cnx.cursor()
-    cursor.execute(
-        """
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    query = f"""
         UPDATE routes
-        SET departure = %s, arrival = %s, basePrice = %s
-        WHERE id = %s
-        """,
-        (data["departure"], data["arrival"], data["basePrice"], route_id),
-    )
+        SET departureAirportCode = '{data["departureAirportCode"]}', arrivalAirportCode = '{data["arrivalAirportCode"]}', basePrice = {data["basePrice"]},
+            aircraftID = '{data["aircraftID"]}', departureTime = '{data["departureTime"]}', arrivalTime = '{data["arrivalTime"]}',
+            Mon = {data["Mon"]}, Tue = {data["Tue"]}, Wed = {data["Wed"]}, Thu = {data["Thu"]}, Fri = {data["Fri"]}, Sat = {data["Sat"]}, Sun = {data["Sun"]}, updatedBy = '{session["username"]}', uTime = '{time}'
+        WHERE id = '{route_id}'
+    """
+    cursor.execute(query)
     cnx.commit()
     cursor.close()
     cnx.close()
@@ -172,18 +173,19 @@ def get_cities():
     return jsonify(res)
 
 
-@app.route("/api/cities/<int:city_id>", methods=["PUT"])
+@app.route("/api/cities/<string:city_id>", methods=["PUT"])
 def update_city(city_id):
     data = request.get_json()
     cnx = get_db_connection()
     cursor = cnx.cursor()
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cursor.execute(
         """
         UPDATE cities
-        SET cityName = %s, airportName = %s
-        WHERE id = %s
+        SET cityName = %s, airportName = %s, updatedBy = %s, uTime = %s
+        WHERE cityID = %s
         """,
-        (data["cityName"], data["airportName"], city_id),
+        (data["cityName"], data["airportName"], session["username"], time, city_id),
     )
     cnx.commit()
     cursor.close()
@@ -196,24 +198,19 @@ def home():
     return render_template("home.html")
 
 
-@app.route("/search", methods=["POST"])
+@app.route("/search", methods=["GET"])
 def search():
-    data = request.get_json()
-    res = searchFlights(
-        data["origin"],
-        data["destination"],
-        data["departure"],
-        data["tripType"],
-        data["returnDate"],
-    )
-    session["results"] = res
-    return redirect(url_for("searchPage"))
+    origin = request.args.get("origin")
+    destination = request.args.get("destination")
+    departure = request.args.get("departure")
+    tripType = request.args.get("tripType")
+    returnDate = request.args.get("returnDate")
 
-
-@app.route("/search")
-def searchPage():
-    results = session.get("results")
-    return render_template("search.html", results=results)
+    try:
+        res = searchFlights(origin, destination, departure, tripType, returnDate)
+        return jsonify({"status": "success", "results": res})
+    except Exception as e:
+        return jsonify({"status": "failure", "message": str(e)}), 500
 
 
 if __name__ == "__main__":

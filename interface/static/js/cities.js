@@ -27,7 +27,7 @@ class CitiesTable extends React.Component {
 
     handleSaveClick = () => {
         const { editedCity } = this.state;
-        fetch(`/api/cities/${editedCity.id}`, {
+        fetch(`/api/cities/${editedCity.cityID}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -36,7 +36,7 @@ class CitiesTable extends React.Component {
         }).then(() => {
             this.setState((prevState) => ({
                 cities: prevState.cities.map((city) =>
-                    city.id === editedCity.id ? editedCity : city
+                    city.cityID === editedCity.cityID ? editedCity : city
                 ),
                 isEditing: false,
                 editedCity: null,
@@ -53,7 +53,7 @@ class CitiesTable extends React.Component {
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>cityID</th>
                             <th>City Name</th>
                             <th>Airport Name</th>
                             <th>Actions</th>
