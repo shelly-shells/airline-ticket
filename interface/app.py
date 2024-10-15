@@ -1,7 +1,8 @@
-from flask import Flask, request, render_template, redirect, url_for, session
+from flask import Flask, request, render_template, redirect, url_for, session, jsonify
 from flask_cors import CORS
 import sys
 import os
+import mysql.connector
 
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "sqlConnector"))
@@ -55,14 +56,121 @@ def registerMe():
         return {"status": "failure"}
 
 
+def get_db_connection():
+    return mysql.connector.connect(
+        user="admin", password="admin", host="127.0.0.1", database="flightBooking"
+    )
+
+
 @app.route("/admin")
 def adminPage():
     return render_template("admin.html")
 
+
 @app.route("/admin/flights")
 def flightsPage():
-    res = flights()
-    return render_template("flights.html", res=res)
+    return render_template("flights.html")
+
+
+@app.route("/admin/routes")
+def routesPage():
+    return render_template("routes.html")
+
+
+@app.route("/admin/cities")
+def citiesPage():
+    return render_template("cities.html")
+
+
+@app.route("/api/flights", methods=["GET"])
+def get_flights():
+    cnx = get_db_connection()
+    cursor = cnx.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM flights")
+    res = cursor.fetchall()
+    cursor.close()
+    cnx.close()
+    return jsonify(res)
+
+
+@app.route("/api/flights/<int:flight_id>", methods=["PUT"])
+def update_flight(flight_id):
+    data = request.get_json()
+    cnx = get_db_connection()
+    cursor = cnx.cursor()
+    cursor.execute(
+        """
+        UPDATE flights
+        SET model = %s, business = %s, economy = %s
+        WHERE id = %s
+        """,
+        (data["model"], data["business"], data["economy"], flight_id),
+    )
+    cnx.commit()
+    cursor.close()
+    cnx.close()
+    return {"status": "success"}
+
+
+@app.route("/api/routes", methods=["GET"])
+def get_routes():
+    cnx = get_db_connection()
+    cursor = cnx.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM routes")
+    res = cursor.fetchall()
+    cursor.close()
+    cnx.close()
+    return jsonify(res)
+
+
+@app.route("/api/routes/<int:route_id>", methods=["PUT"])
+def update_route(route_id):
+    data = request.get_json()
+    cnx = get_db_connection()
+    cursor = cnx.cursor()
+    cursor.execute(
+        """
+        UPDATE routes
+        SET departure = %s, arrival = %s, basePrice = %s
+        WHERE id = %s
+        """,
+        (data["departure"], data["arrival"], data["basePrice"], route_id),
+    )
+    cnx.commit()
+    cursor.close()
+    cnx.close()
+    return {"status": "success"}
+
+
+@app.route("/api/cities", methods=["GET"])
+def get_cities():
+    cnx = get_db_connection()
+    cursor = cnx.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM cities")
+    res = cursor.fetchall()
+    cursor.close()
+    cnx.close()
+    return jsonify(res)
+
+
+@app.route("/api/cities/<int:city_id>", methods=["PUT"])
+def update_city(city_id):
+    data = request.get_json()
+    cnx = get_db_connection()
+    cursor = cnx.cursor()
+    cursor.execute(
+        """
+        UPDATE cities
+        SET cityName = %s, airportName = %s
+        WHERE id = %s
+        """,
+        (data["cityName"], data["airportName"], city_id),
+    )
+    cnx.commit()
+    cursor.close()
+    cnx.close()
+    return {"status": "success"}
+
 
 @app.route("/home")
 def home():

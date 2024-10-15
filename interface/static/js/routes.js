@@ -1,118 +1,118 @@
-class FlightsTable extends React.Component {
+class RoutesTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            flights: [],
+            routes: [],
             isEditing: false,
-            editedFlight: null,
+            editedRoute: null,
         };
     }
 
     componentDidMount() {
-        fetch("/api/flights")
+        fetch("/api/routes")
             .then((response) => response.json())
-            .then((data) => this.setState({ flights: data }));
+            .then((data) => this.setState({ routes: data }));
     }
 
-    handleEditClick = (flight) => {
-        this.setState({ isEditing: true, editedFlight: { ...flight } });
+    handleEditClick = (route) => {
+        this.setState({ isEditing: true, editedRoute: { ...route } });
     };
 
     handleInputChange = (event) => {
         const { name, value } = event.target;
         this.setState((prevState) => ({
-            editedFlight: { ...prevState.editedFlight, [name]: value },
+            editedRoute: { ...prevState.editedRoute, [name]: value },
         }));
     };
 
     handleSaveClick = () => {
-        const { editedFlight } = this.state;
-        fetch(`/api/flights/${editedFlight.id}`, {
+        const { editedRoute } = this.state;
+        fetch(`/api/routes/${editedRoute.id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(editedFlight),
+            body: JSON.stringify(editedRoute),
         }).then(() => {
             this.setState((prevState) => ({
-                flights: prevState.flights.map((flight) =>
-                    flight.id === editedFlight.id ? editedFlight : flight
+                routes: prevState.routes.map((route) =>
+                    route.id === editedRoute.id ? editedRoute : route
                 ),
                 isEditing: false,
-                editedFlight: null,
+                editedRoute: null,
             }));
         });
     };
 
     render() {
-        const { flights, isEditing, editedFlight } = this.state;
+        const { routes, isEditing, editedRoute } = this.state;
 
         return (
             <div>
-                <h1>Flights</h1>
+                <h1>Routes</h1>
                 <table>
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Model</th>
-                            <th>Business</th>
-                            <th>Economy</th>
+                            <th>Departure</th>
+                            <th>Arrival</th>
+                            <th>Base Price</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {flights.map((flight) => (
-                            <tr key={flight.id}>
-                                <td>{flight.id}</td>
+                        {routes.map((route) => (
+                            <tr key={route.id}>
+                                <td>{route.id}</td>
                                 <td>
                                     {isEditing &&
-                                    editedFlight.id === flight.id ? (
+                                    editedRoute.id === route.id ? (
                                         <input
                                             type="text"
-                                            name="model"
-                                            value={editedFlight.model}
+                                            name="departure"
+                                            value={editedRoute.departure}
                                             onChange={this.handleInputChange}
                                         />
                                     ) : (
-                                        flight.model
+                                        route.departure
                                     )}
                                 </td>
                                 <td>
                                     {isEditing &&
-                                    editedFlight.id === flight.id ? (
+                                    editedRoute.id === route.id ? (
                                         <input
                                             type="text"
-                                            name="business"
-                                            value={editedFlight.business}
+                                            name="arrival"
+                                            value={editedRoute.arrival}
                                             onChange={this.handleInputChange}
                                         />
                                     ) : (
-                                        flight.business
+                                        route.arrival
                                     )}
                                 </td>
                                 <td>
                                     {isEditing &&
-                                    editedFlight.id === flight.id ? (
+                                    editedRoute.id === route.id ? (
                                         <input
                                             type="text"
-                                            name="economy"
-                                            value={editedFlight.economy}
+                                            name="basePrice"
+                                            value={editedRoute.basePrice}
                                             onChange={this.handleInputChange}
                                         />
                                     ) : (
-                                        flight.economy
+                                        route.basePrice
                                     )}
                                 </td>
                                 <td>
                                     {isEditing &&
-                                    editedFlight.id === flight.id ? (
+                                    editedRoute.id === route.id ? (
                                         <button onClick={this.handleSaveClick}>
                                             Save
                                         </button>
                                     ) : (
                                         <button
                                             onClick={() =>
-                                                this.handleEditClick(flight)
+                                                this.handleEditClick(route)
                                             }
                                         >
                                             Edit
@@ -128,4 +128,4 @@ class FlightsTable extends React.Component {
     }
 }
 
-ReactDOM.render(<FlightsTable />, document.getElementById("root"));
+ReactDOM.render(<RoutesTable />, document.getElementById("root"));
