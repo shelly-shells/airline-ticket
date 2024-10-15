@@ -48,7 +48,7 @@ def searchFlights(source, destination, date, roundTrip, returnDate=None):
         [timedelta_to_hhmmss(i) if isinstance(i, datetime.timedelta) else i for i in j]
         for j in res
     ]
-    if roundTrip == "True":
+    if roundTrip:
         day = day_dict[datetime.datetime.strptime(returnDate, "%Y-%m-%d").weekday()]
         cursor.execute(
             f"""
@@ -60,13 +60,21 @@ def searchFlights(source, destination, date, roundTrip, returnDate=None):
             flights.model, 
             flights.business, 
             flights.economy, 
+            departure_city.cityName AS departureCityName, 
+            departure_city.airportName AS departureAirportName, 
+            arrival_city.cityName AS arrivalCityName, 
+            arrival_city.airportName AS arrivalAirportName 
         FROM 
             routes 
         JOIN 
             flights ON routes.aircraftID = flights.aircraftID 
+        JOIN 
+            cities AS departure_city ON routes.departureAirportCode = departure_city.cityID 
+        JOIN 
+            cities AS arrival_city ON routes.arrivalAirportCode = arrival_city.cityID 
         WHERE 
-            departureAirportCode='{source}' 
-            AND arrivalAirportCode='{destination}' 
+            departureAirportCode='{destination}' 
+            AND arrivalAirportCode='{source}' 
             AND {day}=1
         """
         )
@@ -80,11 +88,11 @@ def searchFlights(source, destination, date, roundTrip, returnDate=None):
         ]
     d = {}
     d["toFlights"] = res
-    if roundTrip == "True":
+    if roundTrip:
         d["returnFlights"] = res1
     else:
         d["returnFlights"] = False
-    
+
     cursor.execute(f"CALL airportDetails('{source}', @cityName, @airportName)")
     cursor.execute("SELECT @cityName, @airportName")
     source = cursor.fetchone()

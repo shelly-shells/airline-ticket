@@ -198,19 +198,48 @@ def home():
     return render_template("home.html")
 
 
-@app.route("/search", methods=["GET"])
-def search():
+@app.route("/api/search-flights", methods=["GET"])
+def searchFlightsAPI():
+    origin = request.args.get("origin")
+    destination = request.args.get("destination")
+    departure = request.args.get("departure")
+    tripType = request.args.get("tripType") == "true"
+    returnDate = request.args.get("returnDate") if tripType else None
+    print(origin, destination, departure, tripType, returnDate)
+    try:
+        res = searchFlights(origin, destination, departure, tripType, returnDate)
+        if res is None:
+            res = {
+                "toFlights": [],
+                "returnFlights": [],
+                "source": [],
+                "destination": [],
+            }
+        return jsonify({"status": "success", "results": res})
+    except Exception as e:
+        return jsonify({"status": "failure", "message": str(e)}), 500
+
+
+@app.route("/search")
+def searchPage():
     origin = request.args.get("origin")
     destination = request.args.get("destination")
     departure = request.args.get("departure")
     tripType = request.args.get("tripType")
-    returnDate = request.args.get("returnDate")
-
-    try:
-        res = searchFlights(origin, destination, departure, tripType, returnDate)
-        return jsonify({"status": "success", "results": res})
-    except Exception as e:
-        return jsonify({"status": "failure", "message": str(e)}), 500
+    returnDate = request.args.get("returnDate") if tripType else None
+    adults = request.args.get("adults")
+    children = request.args.get("children")
+    
+    return render_template(
+        "search.html",
+        origin=origin,
+        destination=destination,
+        departure=departure,
+        tripType=tripType,
+        returnDate=returnDate,
+        adults=adults,
+        children=children,
+    )
 
 
 if __name__ == "__main__":
