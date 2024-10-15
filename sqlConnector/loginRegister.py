@@ -8,7 +8,7 @@ def login(username, password):
     cursor = cnx.cursor()
     cursor.execute("use flightBooking")
     cursor.execute(
-        f"select username, password_encrypt from users where username = '{username}'"
+        f"select username, password_encrypt, role from users where username = '{username}'"
     )
     user = cursor.fetchall()
     cursor.close()
@@ -16,7 +16,7 @@ def login(username, password):
     if user:
         p = password_decryption.decryption(user[0][1])
         if p == password:
-            return 1
+            return 1, user[0][2]
         else:
             return 0
     else:
@@ -50,4 +50,4 @@ def register(username, password, fname, lname, phone, email, age, gender):
 
 
 # register("test", "test", "test", "test", "test", "test", 20, "M")
-# login("test", "test")
+# print(login("test", "test"))

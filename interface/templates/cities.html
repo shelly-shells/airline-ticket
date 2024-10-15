@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Login</title>
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="{{ url_for('static', filename='styles/flights.css') }}"
+		/>
+		<script
+			src="https://unpkg.com/react@17/umd/react.production.min.js"
+			crossorigin
+		></script>
+		<script
+			src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"
+			crossorigin
+		></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	</head>
+	<body>
+		<div id="root"></div>
+		<script
+			type="text/babel"
+			src="{{ url_for('static', filename='js/top-bar.js') }}"
+		></script>
+		<script
+			type="text/babel"
+			src="{{ url_for('static', filename='js/cities.js') }}"
+		></script>
+	</body>
+</html>
