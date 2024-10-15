@@ -128,8 +128,6 @@ def get_routes():
     res = cursor.fetchall()
     cursor.close()
     cnx.close()
-    print(res)
-
     res = [
         {
             key: (
