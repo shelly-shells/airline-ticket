@@ -11,7 +11,9 @@ class RoutesTable extends React.Component {
     componentDidMount() {
         fetch("/api/routes")
             .then((response) => response.json())
-            .then((data) => this.setState({ routes: data }));
+            .then((data) => {
+                this.setState({ routes: data });
+            });
     }
 
     handleEditClick = (route) => {
@@ -70,11 +72,13 @@ class RoutesTable extends React.Component {
                                         <input
                                             type="text"
                                             name="departure"
-                                            value={editedRoute.departure}
+                                            value={
+                                                editedRoute.departureAirportCode
+                                            }
                                             onChange={this.handleInputChange}
                                         />
                                     ) : (
-                                        route.departure
+                                        route.departureAirportCode
                                     )}
                                 </td>
                                 <td>
@@ -83,11 +87,13 @@ class RoutesTable extends React.Component {
                                         <input
                                             type="text"
                                             name="arrival"
-                                            value={editedRoute.arrival}
+                                            value={
+                                                editedRoute.arrivalAirportCode
+                                            }
                                             onChange={this.handleInputChange}
                                         />
                                     ) : (
-                                        route.arrival
+                                        route.arrivalAirportCode
                                     )}
                                 </td>
                                 <td>

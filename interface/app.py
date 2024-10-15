@@ -3,6 +3,7 @@ from flask_cors import CORS
 import sys
 import os
 import mysql.connector
+import datetime
 
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "sqlConnector"))
@@ -14,6 +15,13 @@ from admin import flights, routes, cities
 app = Flask(__name__)
 CORS(app)
 app.secret_key = "super secret"
+
+
+def timedelta_to_hhmmss(td):
+    total_seconds = int(td.total_seconds())
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, _ = divmod(remainder, 60)
+    return f"{hours:02}:{minutes:02}"
 
 
 @app.route("/")
@@ -120,6 +128,19 @@ def get_routes():
     res = cursor.fetchall()
     cursor.close()
     cnx.close()
+    print(res)
+
+    res = [
+        {
+            key: (
+                timedelta_to_hhmmss(value)
+                if isinstance(value, datetime.timedelta)
+                else value
+            )
+            for key, value in route.items()
+        }
+        for route in res
+    ]
     return jsonify(res)
 
 
