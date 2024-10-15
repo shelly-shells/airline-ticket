@@ -61,10 +61,10 @@ class CitiesTable extends React.Component {
                     </thead>
                     <tbody>
                         {cities.map((city) => (
-                            <tr key={city.id}>
-                                <td>{city.id}</td>
+                            <tr key={city.cityID}>
+                                <td>{city.cityID}</td>
                                 <td>
-                                    {isEditing && editedCity.id === city.id ? (
+                                    {isEditing && editedCity.cityID === city.cityID ? (
                                         <input
                                             type="text"
                                             name="cityName"
@@ -76,7 +76,7 @@ class CitiesTable extends React.Component {
                                     )}
                                 </td>
                                 <td>
-                                    {isEditing && editedCity.id === city.id ? (
+                                    {isEditing && editedCity.cityID === city.cityID ? (
                                         <input
                                             type="text"
                                             name="airportName"
@@ -88,7 +88,7 @@ class CitiesTable extends React.Component {
                                     )}
                                 </td>
                                 <td>
-                                    {isEditing && editedCity.id === city.id ? (
+                                    {isEditing && editedCity.cityID === city.cityID ? (
                                         <button onClick={this.handleSaveClick}>
                                             Save
                                         </button>

@@ -46,7 +46,7 @@ class FlightsTable extends React.Component {
 
     render() {
         const { flights, isEditing, editedFlight } = this.state;
-
+        console.log(flights)
         return (
             <div>
                 <h1>Flights</h1>
@@ -62,11 +62,12 @@ class FlightsTable extends React.Component {
                     </thead>
                     <tbody>
                         {flights.map((flight) => (
-                            <tr key={flight.id}>
-                                <td>{flight.id}</td>
+                            <tr key={flight.aircraftID}>
+                                <td>{flight.aircraftID}</td>
                                 <td>
                                     {isEditing &&
-                                    editedFlight.id === flight.id ? (
+                                    editedFlight.aircraftID ===
+                                        flight.aircraftID ? (
                                         <input
                                             type="text"
                                             name="model"
@@ -79,7 +80,8 @@ class FlightsTable extends React.Component {
                                 </td>
                                 <td>
                                     {isEditing &&
-                                    editedFlight.id === flight.id ? (
+                                    editedFlight.aircraftID ===
+                                        flight.aircraftID ? (
                                         <input
                                             type="text"
                                             name="business"
@@ -92,7 +94,8 @@ class FlightsTable extends React.Component {
                                 </td>
                                 <td>
                                     {isEditing &&
-                                    editedFlight.id === flight.id ? (
+                                    editedFlight.aircraftID ===
+                                        flight.aircraftID ? (
                                         <input
                                             type="text"
                                             name="economy"
@@ -105,7 +108,8 @@ class FlightsTable extends React.Component {
                                 </td>
                                 <td>
                                     {isEditing &&
-                                    editedFlight.id === flight.id ? (
+                                    editedFlight.aircraftID ===
+                                        flight.aircraftID ? (
                                         <button onClick={this.handleSaveClick}>
                                             Save
                                         </button>
