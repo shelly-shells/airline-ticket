@@ -305,6 +305,159 @@ BEGIN
 END // 
 DELIMITER ;
 
+DELIMITER //
+
+CREATE PROCEDURE update_flight(
+    IN p_aircraftID VARCHAR(8),
+    IN p_model VARCHAR(50),
+    IN p_business INT,
+    IN p_economy INT,
+    IN p_updatedBy VARCHAR(50),
+    IN p_uTime TIMESTAMP
+) 
+BEGIN
+    UPDATE
+        flights
+    SET
+        model = p_model,
+        business = p_business,
+        economy = p_economy,
+        updatedBy = p_updatedBy,
+        uTime = p_uTime
+    WHERE
+        aircraftID = p_aircraftID;
+END // 
+
+
+CREATE PROCEDURE insert_flight(
+    IN p_aircraftID VARCHAR(8),
+    IN p_model VARCHAR(50),
+    IN p_business INT,
+    IN p_economy INT,
+    IN p_updatedBy VARCHAR(50),
+    IN p_uTime TIMESTAMP
+)
+BEGIN
+    INSERT INTO flights (aircraftID, model, business, economy, updatedBy, uTime)
+    VALUES (p_aircraftID, p_model, p_business, p_economy, p_updatedBy, p_uTime);
+END //
+
+
+CREATE PROCEDURE delete_flight(
+    IN p_aircraftID VARCHAR(8),
+    IN p_updatedBy VARCHAR(50)
+)
+BEGIN
+    DELETE FROM flights WHERE aircraftID = p_aircraftID;
+    UPDATE flights_deleted
+    SET updatedBy = p_updatedBy, uTime = CURRENT_TIMESTAMP
+    WHERE aircraftID = p_aircraftID;
+END //
+
+
+CREATE PROCEDURE update_route(
+    IN p_id VARCHAR(8),
+    IN p_departureAirportCode VARCHAR(3),
+    IN p_arrivalAirportCode VARCHAR(3),
+    IN p_basePrice DECIMAL(10, 2),
+    IN p_aircraftID VARCHAR(4),
+    IN p_departureTime TIME,
+    IN p_arrivalTime TIME,
+    IN p_Mon BOOLEAN,
+    IN p_Tue BOOLEAN,
+    IN p_Wed BOOLEAN,
+    IN p_Thu BOOLEAN,
+    IN p_Fri BOOLEAN,
+    IN p_Sat BOOLEAN,
+    IN p_Sun BOOLEAN,
+    IN p_updatedBy VARCHAR(50),
+    IN p_uTime TIMESTAMP
+)
+BEGIN
+    UPDATE routes
+    SET departureAirportCode = p_departureAirportCode, arrivalAirportCode = p_arrivalAirportCode, basePrice = p_basePrice,
+        aircraftID = p_aircraftID, departureTime = p_departureTime, arrivalTime = p_arrivalTime,
+        Mon = p_Mon, Tue = p_Tue, Wed = p_Wed, Thu = p_Thu, Fri = p_Fri, Sat = p_Sat, Sun = p_Sun, updatedBy = p_updatedBy, uTime = p_uTime
+    WHERE id = p_id;
+END //
+
+
+CREATE PROCEDURE insert_route(
+    IN p_id VARCHAR(8),
+    IN p_departureAirportCode VARCHAR(3),
+    IN p_arrivalAirportCode VARCHAR(3),
+    IN p_basePrice DECIMAL(10, 2),
+    IN p_aircraftID VARCHAR(4),
+    IN p_departureTime TIME,
+    IN p_arrivalTime TIME,
+    IN p_Mon BOOLEAN,
+    IN p_Tue BOOLEAN,
+    IN p_Wed BOOLEAN,
+    IN p_Thu BOOLEAN,
+    IN p_Fri BOOLEAN,
+    IN p_Sat BOOLEAN,
+    IN p_Sun BOOLEAN,
+    IN p_updatedBy VARCHAR(50),
+    IN p_uTime TIMESTAMP
+)
+BEGIN
+    INSERT INTO routes (id, departureAirportCode, arrivalAirportCode, basePrice, aircraftID, departureTime, arrivalTime, Mon, Tue, Wed, Thu, Fri, Sat, Sun, updatedBy, uTime)
+    VALUES (p_id, p_departureAirportCode, p_arrivalAirportCode, p_basePrice, p_aircraftID, p_departureTime, p_arrivalTime, p_Mon, p_Tue, p_Wed, p_Thu, p_Fri, p_Sat, p_Sun, p_updatedBy, p_uTime);
+END //
+
+
+CREATE PROCEDURE delete_route(
+    IN p_id VARCHAR(8),
+    IN p_updatedBy VARCHAR(50)
+)
+BEGIN
+    DELETE FROM routes WHERE id = p_id;
+    UPDATE routes_deleted
+    SET updatedBy = p_updatedBy, uTime = CURRENT_TIMESTAMP
+    WHERE id = p_id;
+END //
+
+DELIMITER //
+
+CREATE PROCEDURE insert_city(
+    IN p_cityID VARCHAR(3),
+    IN p_cityName VARCHAR(100),
+    IN p_airportName VARCHAR(100),
+    IN p_updatedBy VARCHAR(50),
+    IN p_uTime TIMESTAMP
+)
+BEGIN
+    INSERT INTO cities (cityID, cityName, airportName, updatedBy, uTime)
+    VALUES (p_cityID, p_cityName, p_airportName, p_updatedBy, p_uTime);
+END //
+
+CREATE PROCEDURE update_city(
+    IN p_cityID VARCHAR(3),
+    IN p_cityName VARCHAR(100),
+    IN p_airportName VARCHAR(100),
+    IN p_updatedBy VARCHAR(50),
+    IN p_uTime TIMESTAMP
+)
+BEGIN
+    UPDATE cities
+    SET cityName = p_cityName, airportName = p_airportName, updatedBy = p_updatedBy, uTime = p_uTime
+    WHERE cityID = p_cityID;
+END //
+
+
+CREATE PROCEDURE delete_city(
+    IN p_cityID VARCHAR(3),
+    IN p_updatedBy VARCHAR(50)
+)
+BEGIN
+    DELETE FROM cities WHERE cityID = p_cityID;
+    UPDATE cities_deleted
+    SET updatedBy = p_updatedBy, uTime = CURRENT_TIMESTAMP
+    WHERE cityID = p_cityID;
+END //
+
+DELIMITER ;
+
 GRANT EXECUTE ON PROCEDURE flightBooking.airportDetails TO user;
 
 GRANT EXECUTE ON FUNCTION flightBooking.seatAvailability TO user;

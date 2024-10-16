@@ -10,7 +10,6 @@ sys.path.append(
 )
 from loginRegister import login, register
 from flightSearch import searchFlights
-from admin import flights, routes, cities
 
 app = Flask(__name__)
 CORS(app)
@@ -108,12 +107,17 @@ def update_flight(flight_id):
     cnx = get_db_connection()
     cursor = cnx.cursor()
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    query = f"""
-        UPDATE flights
-        SET model = '{data["model"]}', business = {data["business"]}, economy = {data["economy"]}, updatedBy = '{session["username"]}', uTime = '{time}'
-        WHERE aircraftID = '{flight_id}'
-    """
-    cursor.execute(query)
+    cursor.callproc(
+        "update_flight",
+        (
+            flight_id,
+            data["model"],
+            data["business"],
+            data["economy"],
+            session["username"],
+            time,
+        ),
+    )
     cnx.commit()
     cursor.close()
     cnx.close()
@@ -126,11 +130,8 @@ def add_flight():
     cnx = get_db_connection()
     cursor = cnx.cursor()
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    cursor.execute(
-        """
-        INSERT INTO flights (aircraftID, model, business, economy, updatedBY, uTime)
-        VALUES (%s, %s, %s, %s, %s, %s)
-        """,
+    cursor.callproc(
+        "insert_flight",
         (
             data["aircraftID"],
             data["model"],
@@ -155,20 +156,12 @@ def add_flight():
 def delete_flight(aircraft_id):
     cnx = get_db_connection()
     cursor = cnx.cursor()
-    cursor.execute(
-        """
-        DELETE FROM flights
-        WHERE aircraftID = %s
-        """,
-        (aircraft_id,),
-    )
-    cursor.execute(
-        """
-        UPDATE flights_deleted
-        SET updatedBy = %s, uTime = CURRENT_TIMESTAMP
-        WHERE aircraftID = %s
-        """,
-        (session["username"], aircraft_id),
+    cursor.callproc(
+        "delete_flight",
+        (
+            aircraft_id,
+            session["username"],
+        ),
     )
     cnx.commit()
     cursor.close()
@@ -204,14 +197,27 @@ def update_route(route_id):
     cnx = get_db_connection()
     cursor = cnx.cursor()
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    query = f"""
-        UPDATE routes
-        SET departureAirportCode = '{data["departureAirportCode"]}', arrivalAirportCode = '{data["arrivalAirportCode"]}', basePrice = {data["basePrice"]},
-            aircraftID = '{data["aircraftID"]}', departureTime = '{data["departureTime"]}', arrivalTime = '{data["arrivalTime"]}',
-            Mon = {data["Mon"]}, Tue = {data["Tue"]}, Wed = {data["Wed"]}, Thu = {data["Thu"]}, Fri = {data["Fri"]}, Sat = {data["Sat"]}, Sun = {data["Sun"]}, updatedBy = '{session["username"]}', uTime = '{time}'
-        WHERE id = '{route_id}'
-    """
-    cursor.execute(query)
+    cursor.callproc(
+        "update_route",
+        (
+            route_id,
+            data["departureAirportCode"],
+            data["arrivalAirportCode"],
+            data["basePrice"],
+            data["aircraftID"],
+            data["departureTime"],
+            data["arrivalTime"],
+            data["Mon"],
+            data["Tue"],
+            data["Wed"],
+            data["Thu"],
+            data["Fri"],
+            data["Sat"],
+            data["Sun"],
+            session["username"],
+            time,
+        ),
+    )
     cnx.commit()
     cursor.close()
     cnx.close()
@@ -224,11 +230,8 @@ def add_route():
     cnx = get_db_connection()
     cursor = cnx.cursor()
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    cursor.execute(
-        """
-        INSERT INTO routes (id, departureAirportCode, arrivalAirportCode, basePrice, aircraftID, departureTime, arrivalTime, Mon, Tue, Wed, Thu, Fri, Sat, Sun, updatedBy, uTime)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """,
+    cursor.callproc(
+        "insert_route",
         (
             data["id"],
             data["departureAirportCode"],
@@ -273,20 +276,12 @@ def add_route():
 def delete_route(route_id):
     cnx = get_db_connection()
     cursor = cnx.cursor()
-    cursor.execute(
-        """
-        DELETE FROM routes
-        WHERE id = %s
-        """,
-        (route_id,),
-    )
-    cursor.execute(
-        """
-        UPDATE routes_deleted
-        SET updatedBy = %s, uTime = CURRENT_TIMESTAMP
-        WHERE id = %s
-        """,
-        (session["username"], route_id),
+    cursor.callproc(
+        "delete_route",
+        (
+            route_id,
+            session["username"],
+        ),
     )
     cnx.commit()
     cursor.close()
@@ -311,13 +306,15 @@ def update_city(city_id):
     cnx = get_db_connection()
     cursor = cnx.cursor()
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    cursor.execute(
-        """
-        UPDATE cities
-        SET cityName = %s, airportName = %s, updatedBy = %s, uTime = %s
-        WHERE cityID = %s
-        """,
-        (data["cityName"], data["airportName"], session["username"], time, city_id),
+    cursor.callproc(
+        "update_city",
+        (
+            city_id,
+            data["cityName"],
+            data["airportName"],
+            session["username"],
+            time,
+        ),
     )
     cnx.commit()
     cursor.close()
@@ -331,11 +328,8 @@ def add_city():
     cnx = get_db_connection()
     cursor = cnx.cursor()
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    cursor.execute(
-        """
-        INSERT INTO cities (cityID, cityName, airportName, updatedBy, uTime)
-        VALUES (%s, %s, %s, %s, %s)
-        """,
+    cursor.callproc(
+        "insert_city",
         (
             data["cityID"],
             data["cityName"],
@@ -358,20 +352,12 @@ def add_city():
 def delete_city(city_id):
     cnx = get_db_connection()
     cursor = cnx.cursor()
-    cursor.execute(
-        """
-        DELETE FROM cities
-        WHERE cityID = %s
-        """,
-        (city_id,),
-    )
-    cursor.execute(
-        """
-        UPDATE cities_deleted
-        SET updatedBy = %s, uTime = CURRENT_TIMESTAMP
-        WHERE cityID = %s
-        """,
-        (session["username"], city_id),
+    cursor.callproc(
+        "delete_city",
+        (
+            city_id,
+            session["username"],
+        ),
     )
     cnx.commit()
     cursor.close()
