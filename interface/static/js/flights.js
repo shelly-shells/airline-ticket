@@ -3,8 +3,15 @@ class FlightsTable extends React.Component {
 		super(props);
 		this.state = {
 			flights: [],
-			isEditing: false,
+			isAdding: false, // Separate flag for adding a new flight
+			isEditing: false, // Separate flag for editing an existing flight
 			editedFlight: null,
+			newFlight: {
+				aircraftID: "",
+				model: "",
+				business: "",
+				economy: "",
+			},
 		};
 	}
 
@@ -15,13 +22,19 @@ class FlightsTable extends React.Component {
 	}
 
 	handleEditClick = (flight) => {
-		this.setState({ isEditing: true, editedFlight: { ...flight } });
+		this.setState({
+			isEditing: true,
+			editedFlight: { ...flight },
+			isAdding: false,
+		});
 	};
 
 	handleInputChange = (event) => {
 		const { name, value } = event.target;
 		this.setState((prevState) => ({
-			editedFlight: { ...prevState.editedFlight, [name]: value },
+			editedFlight: prevState.editedFlight
+				? { ...prevState.editedFlight, [name]: value }
+				: { ...prevState.newFlight, [name]: value },
 		}));
 	};
 
@@ -46,8 +59,62 @@ class FlightsTable extends React.Component {
 		});
 	};
 
+	handleAddNewFlight = () => {
+		const { newFlight } = this.state;
+		fetch(`/api/flights`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(newFlight),
+		})
+			.then((response) => response.json())
+			.then((data) => {
+			console.log("New flight added:", data);
+				if (data && data.aircraftID) {
+					this.setState((prevState) => ({
+						flights: [...prevState.flights, data],
+						isAdding: false, 
+						newFlight: {
+							aircraftID: "",
+							model: "",
+							business: "",
+							economy: "",
+						},
+					}));
+				}
+
+			})
+			.catch((error) => {
+				console.error("Error adding new flight:", error);
+			});
+	};
+
+	handleAddRowClick = () => {
+		this.setState({
+			isAdding: true,
+			isEditing: false,
+			editedFlight: null,
+		});
+	};
+
+	handleCancelAddEdit = () => {
+		this.setState({
+			isAdding: false,
+			isEditing: false,
+			editedFlight: null,
+			newFlight: {
+				aircraftID: "",
+				model: "",
+				business: "",
+				economy: "",
+			},
+		});
+	};
+
 	render() {
-		const { flights, isEditing, editedFlight } = this.state;
+		const { flights, isAdding, isEditing, editedFlight, newFlight } =
+			this.state;
 		return (
 			<div>
 				<h1>Flights</h1>
@@ -67,6 +134,7 @@ class FlightsTable extends React.Component {
 								<td>{flight.aircraftID}</td>
 								<td>
 									{isEditing &&
+									editedFlight &&
 									editedFlight.aircraftID ===
 										flight.aircraftID ? (
 										<input
@@ -81,6 +149,7 @@ class FlightsTable extends React.Component {
 								</td>
 								<td>
 									{isEditing &&
+									editedFlight &&
 									editedFlight.aircraftID ===
 										flight.aircraftID ? (
 										<input
@@ -95,6 +164,7 @@ class FlightsTable extends React.Component {
 								</td>
 								<td>
 									{isEditing &&
+									editedFlight &&
 									editedFlight.aircraftID ===
 										flight.aircraftID ? (
 										<input
@@ -109,11 +179,23 @@ class FlightsTable extends React.Component {
 								</td>
 								<td>
 									{isEditing &&
+									editedFlight &&
 									editedFlight.aircraftID ===
 										flight.aircraftID ? (
-										<button onClick={this.handleSaveClick}>
-											Save
-										</button>
+										<>
+											<button
+												onClick={this.handleSaveClick}
+											>
+												Save
+											</button>
+											<button
+												onClick={
+													this.handleCancelAddEdit
+												}
+											>
+												Cancel
+											</button>
+										</>
 									) : (
 										<button
 											onClick={() =>
@@ -126,8 +208,82 @@ class FlightsTable extends React.Component {
 								</td>
 							</tr>
 						))}
+						{/* Render New Flight Input Row Only When Adding */}
+						{isAdding && (
+							<tr>
+								<td>
+									<input
+										type="text"
+										name="aircraftID"
+										value={newFlight.aircraftID}
+										onChange={(e) =>
+											this.setState((prevState) => ({
+												newFlight: {
+													...prevState.newFlight,
+													aircraftID: e.target.value,
+												},
+											}))
+										}
+									/>
+								</td>
+								<td>
+									<input
+										type="text"
+										name="model"
+										value={newFlight.model}
+										onChange={(e) =>
+											this.setState((prevState) => ({
+												newFlight: {
+													...prevState.newFlight,
+													model: e.target.value,
+												},
+											}))
+										}
+									/>
+								</td>
+								<td>
+									<input
+										type="text"
+										name="business"
+										value={newFlight.business}
+										onChange={(e) =>
+											this.setState((prevState) => ({
+												newFlight: {
+													...prevState.newFlight,
+													business: e.target.value,
+												},
+											}))
+										}
+									/>
+								</td>
+								<td>
+									<input
+										type="text"
+										name="economy"
+										value={newFlight.economy}
+										onChange={(e) =>
+											this.setState((prevState) => ({
+												newFlight: {
+													...prevState.newFlight,
+													economy: e.target.value,
+												},
+											}))
+										}
+									/>
+								</td>
+								<td>
+									<button onClick={this.handleAddNewFlight}>
+										Save
+									</button>
+									<button onClick={this.handleCancelAddEdit}>
+										Cancel
+									</button>
+								</td>
+							</tr>
+						)}
 					</tbody>
 				</table>
+				<button onClick={this.handleAddRowClick}>Add Row</button>
 			</div>
 		);
 	}

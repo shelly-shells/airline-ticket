@@ -120,6 +120,37 @@ def update_flight(flight_id):
     return {"status": "success"}
 
 
+@app.route("/api/flights", methods=["POST"])
+def add_flight():
+    data = request.get_json()
+    cnx = get_db_connection()
+    cursor = cnx.cursor()
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    cursor.execute(
+        """
+        INSERT INTO flights (aircraftID, model, business, economy, updatedBY, uTime)
+        VALUES (%s, %s, %s, %s, %s, %s)
+        """,
+        (
+            data["aircraftID"],
+            data["model"],
+            data["business"],
+            data["economy"],
+            session["username"],
+            time,
+        ),
+    )
+    cnx.commit()
+    cursor.close()
+    cnx.close()
+    return {
+        "aircraftID": data["aircraftID"],
+        "model": data["model"],
+        "business": data["business"],
+        "economy": data["economy"],
+    }
+
+
 @app.route("/api/routes", methods=["GET"])
 def get_routes():
     cnx = get_db_connection()
@@ -229,7 +260,7 @@ def searchPage():
     returnDate = request.args.get("returnDate") if tripType else None
     adults = request.args.get("adults")
     children = request.args.get("children")
-    
+
     return render_template(
         "search.html",
         origin=origin,
