@@ -9,49 +9,49 @@ def timedelta_to_hhmmss(td):
     return f"{hours:02}:{minutes:02}"
 
 
-def searchFlights(source, destination, date, roundTrip, returnDate=None):
-    cnx = mysql.connector.connect(user="user", password="user", host="127.0.0.1")
-    cursor = cnx.cursor()
-    day_dict = {0: "Mon", 1: "Tue", 2: "Wed", 3: "Thu", 4: "Fri", 5: "Sat", 6: "Sun"}
-    day = day_dict[datetime.datetime.strptime(date, "%Y-%m-%d").weekday()]
-    cursor.execute("USE flightBooking")
-    cursor.execute(
-        f"""
-        SELECT 
-            routes.id, 
-            routes.departureTime, 
-            routes.arrivalTime, 
-            routes.basePrice, 
-            flights.model, 
-            flights.business, 
-            flights.economy, 
-            departure_city.cityName AS departureCityName, 
-            departure_city.airportName AS departureAirportName, 
-            arrival_city.cityName AS arrivalCityName, 
-            arrival_city.airportName AS arrivalAirportName 
-        FROM 
-            routes 
-        JOIN 
-            flights ON routes.aircraftID = flights.aircraftID 
-        JOIN 
-            cities AS departure_city ON routes.departureAirportCode = departure_city.cityID 
-        JOIN 
-            cities AS arrival_city ON routes.arrivalAirportCode = arrival_city.cityID 
-        WHERE 
-            departureAirportCode='{source}' 
-            AND arrivalAirportCode='{destination}' 
-            AND {day}=1
-        """
-    )
-    res = cursor.fetchall()
+def filterFlights(cursor, res, date, seatClass, noPassengers):
     res = [
         [timedelta_to_hhmmss(i) if isinstance(i, datetime.timedelta) else i for i in j]
         for j in res
     ]
-    if roundTrip:
-        day = day_dict[datetime.datetime.strptime(returnDate, "%Y-%m-%d").weekday()]
-        cursor.execute(
-            f"""
+    l = []
+    for i in res:
+        cursor.execute("SELECT seatAvailability(%s, %s, %s)", (i[0], date, seatClass))
+        seatAvailability = cursor.fetchone()[0]
+        l.append(seatAvailability if seatAvailability is not None else -1)
+
+    res = [res[i] for i in range(len(res)) if l[i] >= noPassengers or l[i] == -1]
+    return res
+
+
+def searchFlights(
+    source,
+    destination,
+    date,
+    roundTrip,
+    noAdults,
+    noChildren,
+    seatClass,
+    returnDate=None,
+):
+    try:
+        cnx = mysql.connector.connect(
+            user="user", password="user", host="127.0.0.1", database="flightBooking"
+        )
+        cursor = cnx.cursor()
+
+        day_dict = {
+            0: "Mon",
+            1: "Tue",
+            2: "Wed",
+            3: "Thu",
+            4: "Fri",
+            5: "Sat",
+            6: "Sun",
+        }
+        day = day_dict[datetime.datetime.strptime(date, "%Y-%m-%d").weekday()]
+
+        query = """
         SELECT 
             routes.id, 
             routes.departureTime, 
@@ -59,49 +59,79 @@ def searchFlights(source, destination, date, roundTrip, returnDate=None):
             routes.basePrice, 
             flights.model, 
             flights.business, 
-            flights.economy, 
-            departure_city.cityName AS departureCityName, 
-            departure_city.airportName AS departureAirportName, 
-            arrival_city.cityName AS arrivalCityName, 
-            arrival_city.airportName AS arrivalAirportName 
+            flights.economy 
         FROM 
             routes 
         JOIN 
             flights ON routes.aircraftID = flights.aircraftID 
-        JOIN 
-            cities AS departure_city ON routes.departureAirportCode = departure_city.cityID 
-        JOIN 
-            cities AS arrival_city ON routes.arrivalAirportCode = arrival_city.cityID 
         WHERE 
-            departureAirportCode='{destination}' 
-            AND arrivalAirportCode='{source}' 
-            AND {day}=1
-        """
+            departureAirportCode=%s 
+            AND arrivalAirportCode=%s 
+            AND {}=1
+        """.format(
+            day
         )
-        res1 = cursor.fetchall()
-        res1 = [
-            [
-                timedelta_to_hhmmss(i) if isinstance(i, datetime.timedelta) else i
-                for i in j
-            ]
-            for j in res1
-        ]
-    d = {}
-    d["toFlights"] = res
-    if roundTrip:
-        d["returnFlights"] = res1
-    else:
-        d["returnFlights"] = False
 
-    cursor.execute(f"CALL airportDetails('{source}', @cityName, @airportName)")
-    cursor.execute("SELECT @cityName, @airportName")
-    source = cursor.fetchone()
-    cursor.execute(f"CALL airportDetails('{destination}', @cityName, @airportName)")
-    cursor.execute("SELECT @cityName, @airportName")
-    destination = cursor.fetchone()
-    d["source"] = source
-    d["destination"] = destination
-    return d
+        cursor.execute(query, (source, destination))
+        res = cursor.fetchall()
+        res = filterFlights(
+            cursor, res, date, seatClass, int(noAdults) + int(noChildren)
+        )
+
+        if roundTrip:
+            day = day_dict[datetime.datetime.strptime(returnDate, "%Y-%m-%d").weekday()]
+            query = """
+            SELECT 
+                routes.id, 
+                routes.departureTime, 
+                routes.arrivalTime, 
+                routes.basePrice, 
+                flights.model, 
+                flights.business, 
+                flights.economy 
+            FROM 
+                routes 
+            JOIN 
+                flights ON routes.aircraftID = flights.aircraftID 
+            WHERE 
+                departureAirportCode=%s 
+                AND arrivalAirportCode=%s 
+                AND {}=1
+            """.format(
+                day
+            )
+
+            cursor.execute(query, (destination, source))
+            res1 = cursor.fetchall()
+            res1 = filterFlights(
+                cursor, res1, returnDate, seatClass, int(noAdults) + int(noChildren)
+            )
+
+        d = {"toFlights": res}
+        d["returnFlights"] = res1 if roundTrip else False
+
+        cursor.execute("CALL airportDetails(%s, @cityName, @airportName)", (source,))
+        cursor.execute("SELECT @cityName, @airportName")
+        source_details = cursor.fetchone()
+
+        cursor.execute(
+            "CALL airportDetails(%s, @cityName, @airportName)", (destination,)
+        )
+        cursor.execute("SELECT @cityName, @airportName")
+        destination_details = cursor.fetchone()
+
+        d["source"] = source_details
+        d["destination"] = destination_details
+
+        return d
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return None
+
+    finally:
+        cursor.close()
+        cnx.close()
 
 
-# print(searchFlights("DEL", "BOM", "2021-06-01", True, "2021-06-10"))
+# print(searchFlights("DEL", "BOM", "2024-10-18", True, 5, "2024-10-20"))

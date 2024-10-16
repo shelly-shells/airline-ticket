@@ -151,6 +151,23 @@ def add_flight():
     }
 
 
+@app.route("/api/flights/<string:aircraft_id>", methods=["DELETE"])
+def delete_flight(aircraft_id):
+    cnx = get_db_connection()
+    cursor = cnx.cursor()
+    cursor.execute(
+        """
+        DELETE FROM flights
+        WHERE aircraftID = %s
+        """,
+        (aircraft_id,),
+    )
+    cnx.commit()
+    cursor.close()
+    cnx.close()
+    return {"status": "success"}
+
+
 @app.route("/api/routes", methods=["GET"])
 def get_routes():
     cnx = get_db_connection()
@@ -193,6 +210,74 @@ def update_route(route_id):
     return {"status": "success"}
 
 
+@app.route("/api/routes", methods=["POST"])
+def add_route():
+    data = request.get_json()
+    cnx = get_db_connection()
+    cursor = cnx.cursor()
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    cursor.execute(
+        """
+        INSERT INTO routes (id, departureAirportCode, arrivalAirportCode, basePrice, aircraftID, departureTime, arrivalTime, Mon, Tue, Wed, Thu, Fri, Sat, Sun, updatedBy, uTime)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """,
+        (
+            data["id"],
+            data["departureAirportCode"],
+            data["arrivalAirportCode"],
+            data["basePrice"],
+            data["aircraftID"],
+            data["departureTime"],
+            data["arrivalTime"],
+            data["Mon"],
+            data["Tue"],
+            data["Wed"],
+            data["Thu"],
+            data["Fri"],
+            data["Sat"],
+            data["Sun"],
+            session["username"],
+            time,
+        ),
+    )
+    cnx.commit()
+    cursor.close()
+    cnx.close()
+    return {
+        "id": data["id"],
+        "departureAirportCode": data["departureAirportCode"],
+        "arrivalAirportCode": data["arrivalAirportCode"],
+        "basePrice": data["basePrice"],
+        "aircraftID": data["aircraftID"],
+        "departureTime": data["departureTime"],
+        "arrivalTime": data["arrivalTime"],
+        "Mon": data["Mon"],
+        "Tue": data["Tue"],
+        "Wed": data["Wed"],
+        "Thu": data["Thu"],
+        "Fri": data["Fri"],
+        "Sat": data["Sat"],
+        "Sun": data["Sun"],
+    }
+
+
+@app.route("/api/routes/<string:route_id>", methods=["DELETE"])
+def delete_route(route_id):
+    cnx = get_db_connection()
+    cursor = cnx.cursor()
+    cursor.execute(
+        """
+        DELETE FROM routes
+        WHERE id = %s
+        """,
+        (route_id,),
+    )
+    cnx.commit()
+    cursor.close()
+    cnx.close()
+    return {"status": "success"}
+
+
 @app.route("/api/cities", methods=["GET"])
 def get_cities():
     cnx = get_db_connection()
@@ -224,6 +309,52 @@ def update_city(city_id):
     return {"status": "success"}
 
 
+@app.route("/api/cities", methods=["POST"])
+def add_city():
+    data = request.get_json()
+    cnx = get_db_connection()
+    cursor = cnx.cursor()
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    cursor.execute(
+        """
+        INSERT INTO cities (cityID, cityName, airportName, updatedBy, uTime)
+        VALUES (%s, %s, %s, %s, %s)
+        """,
+        (
+            data["cityID"],
+            data["cityName"],
+            data["airportName"],
+            session["username"],
+            time,
+        ),
+    )
+    cnx.commit()
+    cursor.close()
+    cnx.close()
+    return {
+        "cityID": data["cityID"],
+        "cityName": data["cityName"],
+        "airportName": data["airportName"],
+    }
+
+
+@app.route("/api/cities/<string:city_id>", methods=["DELETE"])
+def delete_city(city_id):
+    cnx = get_db_connection()
+    cursor = cnx.cursor()
+    cursor.execute(
+        """
+        DELETE FROM cities
+        WHERE cityID = %s
+        """,
+        (city_id,),
+    )
+    cnx.commit()
+    cursor.close()
+    cnx.close()
+    return {"status": "success"}
+
+
 @app.route("/home")
 def home():
     return render_template("home.html")
@@ -236,9 +367,21 @@ def searchFlightsAPI():
     departure = request.args.get("departure")
     tripType = request.args.get("tripType") == "true"
     returnDate = request.args.get("returnDate") if tripType else None
-    print(origin, destination, departure, tripType, returnDate)
+    adults = request.args.get("adults")
+    children = request.args.get("children")
+    seatClass = request.args.get("seatClass")
+
     try:
-        res = searchFlights(origin, destination, departure, tripType, returnDate)
+        res = searchFlights(
+            origin,
+            destination,
+            departure,
+            tripType,
+            adults,
+            children,
+            seatClass,
+            returnDate,
+        )
         if res is None:
             res = {
                 "toFlights": [],
@@ -260,6 +403,7 @@ def searchPage():
     returnDate = request.args.get("returnDate") if tripType else None
     adults = request.args.get("adults")
     children = request.args.get("children")
+    seatClass = request.args.get("seatClass")
 
     return render_template(
         "search.html",
@@ -270,6 +414,7 @@ def searchPage():
         returnDate=returnDate,
         adults=adults,
         children=children,
+        seatClass=seatClass,
     )
 
 
