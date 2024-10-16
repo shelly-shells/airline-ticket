@@ -2,6 +2,7 @@ CREATE DATABASE flightBooking;
 
 USE flightBooking;
 
+-- Create Main Tables
 CREATE TABLE users (
     username VARCHAR(50) PRIMARY KEY,
     password_encrypt VARCHAR(200) NOT NULL,
@@ -84,6 +85,111 @@ CREATE TABLE bookingDetails (
     FOREIGN KEY (bookingID) REFERENCES bookings(bookingID) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE users_deleted LIKE users;
+
+CREATE TABLE cities_deleted LIKE cities;
+
+CREATE TABLE flights_deleted LIKE flights;
+
+CREATE TABLE routes_deleted LIKE routes;
+
+CREATE TABLE bookings_deleted LIKE bookings;
+
+CREATE TABLE bookingDetails_deleted LIKE bookingDetails;
+
+DELIMITER // 
+CREATE TRIGGER before_users_delete 
+BEFORE DELETE ON users 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO
+        users_deleted
+    SELECT
+        *
+    FROM
+        users
+    WHERE
+        username = OLD.username;
+END;
+// 
+CREATE TRIGGER before_cities_delete 
+BEFORE DELETE ON cities 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO
+        cities_deleted
+    SELECT
+        *
+    FROM
+        cities
+    WHERE
+        cityID = OLD.cityID;
+END;
+
+// 
+CREATE TRIGGER before_flights_delete 
+BEFORE DELETE ON flights 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO
+        flights_deleted
+    SELECT
+        *
+    FROM
+        flights
+    WHERE
+        aircraftID = OLD.aircraftID;
+END;
+
+// 
+CREATE TRIGGER before_routes_delete 
+BEFORE DELETE ON routes 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO
+        routes_deleted
+    SELECT
+        *
+    FROM
+        routes
+    WHERE
+        id = OLD.id;
+END;
+
+// 
+CREATE TRIGGER before_bookings_delete 
+BEFORE DELETE ON bookings 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO
+        bookings_deleted
+    SELECT
+        *
+    FROM
+        bookings
+    WHERE
+        bookingID = OLD.bookingID;
+END;
+
+//
+CREATE TRIGGER before_bookingDetails_delete 
+BEFORE DELETE ON bookingDetails 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO
+        bookingDetails_deleted
+    SELECT
+        *
+    FROM
+        bookingDetails
+    WHERE
+        bookingID = OLD.bookingID
+        AND passengerNo = OLD.passengerNo;
+END;
+
+// 
+DELIMITER ;
+
 CREATE ROLE user;
 
 CREATE ROLE admin;
@@ -129,6 +235,7 @@ GRANT user TO 'user' @'localhost';
 GRANT sys TO 'sys' @'localhost';
 
 GRANT admin TO 'admin' @'localhost';
+
 GRANT SUPER ON *.* TO 'admin' @'localhost';
 
 FLUSH PRIVILEGES;
@@ -138,16 +245,16 @@ CREATE PROCEDURE airportDetails(
     IN id VARCHAR(3),
     OUT airport VARCHAR(100),
     OUT city VARCHAR(100)
-) BEGIN
-SELECT
-    airportName,
-    cityName INTO airport,
-    city
-FROM
-    cities
-WHERE
-    cityID = id;
-
+) 
+BEGIN
+    SELECT
+        airportName,
+        cityName INTO airport,
+        city
+    FROM
+        cities
+    WHERE
+        cityID = id;
 END // 
 DELIMITER ;
 
@@ -163,40 +270,41 @@ BEGIN
     DECLARE available INT;
 
     IF class = 'Economy' THEN
-        SELECT
-            flights.economy - COALESCE(SUM(bookings.adults + bookings.children), 0) INTO available
-        FROM
-            flights
-            JOIN routes ON flights.aircraftID = routes.aircraftID
-            JOIN bookings ON bookings.flightID = routes.id
-        WHERE
-            bookings.seatClass = 'Economy'
-            AND bookings.flightID = flightID
-            AND bookings.date = date
-        GROUP BY
-            bookings.flightID,
-            bookings.date;
+    SELECT
+        flights.economy - COALESCE(SUM(bookings.adults + bookings.children), 0) INTO available
+    FROM
+        flights
+        JOIN routes ON flights.aircraftID = routes.aircraftID
+        JOIN bookings ON bookings.flightID = routes.id
+    WHERE
+        bookings.seatClass = 'Economy'
+        AND bookings.flightID = flightID
+        AND bookings.date = date
+    GROUP BY
+        bookings.flightID,
+        bookings.date;
 
     ELSEIF class = 'Business' THEN
-        SELECT
-            flights.business - COALESCE(SUM(bookings.adults + bookings.children), 0) INTO available
-        FROM
-            flights
-            JOIN routes ON flights.aircraftID = routes.aircraftID
-            JOIN bookings ON bookings.flightID = routes.id
-        WHERE
-            bookings.seatClass = 'Business'
-            AND bookings.flightID = flightID
-            AND bookings.date = date
-        GROUP BY
-            bookings.flightID,
-            bookings.date;
+    SELECT
+        flights.business - COALESCE(SUM(bookings.adults + bookings.children), 0) INTO available
+    FROM
+        flights
+        JOIN routes ON flights.aircraftID = routes.aircraftID
+        JOIN bookings ON bookings.flightID = routes.id
+    WHERE
+        bookings.seatClass = 'Business'
+        AND bookings.flightID = flightID
+        AND bookings.date = date
+    GROUP BY
+        bookings.flightID,
+        bookings.date;
 
     END IF;
 
     RETURN available;
-
 END // 
 DELIMITER ;
+
 GRANT EXECUTE ON PROCEDURE flightBooking.airportDetails TO user;
+
 GRANT EXECUTE ON FUNCTION flightBooking.seatAvailability TO user;

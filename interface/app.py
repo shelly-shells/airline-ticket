@@ -162,6 +162,14 @@ def delete_flight(aircraft_id):
         """,
         (aircraft_id,),
     )
+    cursor.execute(
+        """
+        UPDATE flights_deleted
+        SET updatedBy = %s, uTime = CURRENT_TIMESTAMP
+        WHERE aircraftID = %s
+        """,
+        (session["username"], aircraft_id),
+    )
     cnx.commit()
     cursor.close()
     cnx.close()
@@ -272,6 +280,14 @@ def delete_route(route_id):
         """,
         (route_id,),
     )
+    cursor.execute(
+        """
+        UPDATE routes_deleted
+        SET updatedBy = %s, uTime = CURRENT_TIMESTAMP
+        WHERE id = %s
+        """,
+        (session["username"], route_id),
+    )
     cnx.commit()
     cursor.close()
     cnx.close()
@@ -348,6 +364,14 @@ def delete_city(city_id):
         WHERE cityID = %s
         """,
         (city_id,),
+    )
+    cursor.execute(
+        """
+        UPDATE cities_deleted
+        SET updatedBy = %s, uTime = CURRENT_TIMESTAMP
+        WHERE cityID = %s
+        """,
+        (session["username"], city_id),
     )
     cnx.commit()
     cursor.close()
