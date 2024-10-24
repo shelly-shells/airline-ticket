@@ -10,6 +10,7 @@ sys.path.append(
 )
 from loginRegister import login, register
 from flightSearch import searchFlights
+from pricing import get_price
 
 app = Flask(__name__)
 CORS(app)
