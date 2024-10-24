@@ -34,9 +34,30 @@ function FlightResult({ result, source, destination }) {
 	);
 }
 
+function ConnectingFlightResult({ resultPair, source, destination }) {
+	return (
+		<div className="connecting-flight-result">
+			<FlightResult
+				result={resultPair[0]}
+				source={source}
+				destination={destination}
+			/>
+			<br />
+			<br />
+			<FlightResult
+				result={resultPair[1]}
+				source={source}
+				destination={destination}
+			/>
+		</div>
+	);
+}
+
 function SearchResults() {
 	const [data, setData] = React.useState(null);
 	const [loading, setLoading] = React.useState(true);
+	const [showConnectingFlights, setShowConnectingFlights] =
+		React.useState(false);
 
 	React.useEffect(() => {
 		const searchData = JSON.parse(
@@ -81,7 +102,12 @@ function SearchResults() {
 					))}
 				</div>
 			) : (
-				<div>No "To Flights" found.</div>
+				<div>
+					<div>No "To Flights" found.</div>
+					<button onClick={() => setShowConnectingFlights(true)}>
+						Show Connecting Flights
+					</button>
+				</div>
 			)}
 
 			{data.returnFlights && data.returnFlights.length > 0 ? (
@@ -100,7 +126,52 @@ function SearchResults() {
 			) : data.returnFlights === false ? (
 				<div></div>
 			) : (
-				<div>No "Return Flights" found.</div>
+				<div>
+					<div>No "Return Flights" found.</div>
+					<button onClick={() => setShowConnectingFlights(true)}>
+						Show Connecting Flights
+					</button>
+				</div>
+			)}
+
+			{showConnectingFlights && (
+				<div>
+					{data.connectingOneWay &&
+						data.connectingOneWay.length > 0 && (
+							<div>
+								<h2>Connecting One-Way Flights</h2>
+								{data.connectingOneWay.map(
+									(resultPair, index) => (
+										<div key={index} className="result">
+											<ConnectingFlightResult
+												resultPair={resultPair}
+												source={data.source}
+												destination={data.destination}
+											/>
+										</div>
+									)
+								)}
+							</div>
+						)}
+
+					{data.connectingRoundTrip &&
+						data.connectingRoundTrip.length > 0 && (
+							<div>
+								<h2>Connecting Round-Trip Flights</h2>
+								{data.connectingRoundTrip.map(
+									(resultPair, index) => (
+										<div key={index} className="result">
+											<ConnectingFlightResult
+												resultPair={resultPair}
+												source={data.destination}
+												destination={data.source}
+											/>
+										</div>
+									)
+								)}
+							</div>
+						)}
+				</div>
 			)}
 		</div>
 	);
