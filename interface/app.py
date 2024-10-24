@@ -4,6 +4,7 @@ import sys
 import os
 import mysql.connector
 import datetime
+import json
 
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "sqlConnector"))
@@ -368,6 +369,18 @@ def delete_city(city_id):
 @app.route("/home")
 def home():
     return render_template("home.html")
+
+
+@app.route("/api/get-cities", methods=["GET"])
+def fetchCities():
+    cnx = get_db_connection()
+    cursor = cnx.cursor()
+    cursor.execute("SELECT getCities();")
+    res = cursor.fetchone()[0]
+    res = json.loads(res)
+    cursor.close()
+    cnx.close()
+    return jsonify({"cities": res})
 
 
 @app.route("/api/search-flights", methods=["GET"])

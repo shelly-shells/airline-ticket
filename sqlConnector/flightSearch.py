@@ -1,5 +1,6 @@
 import mysql.connector
 import datetime
+from pricing import getPrice
 
 
 def timedelta_to_hhmmss(td):
@@ -21,7 +22,34 @@ def filterFlights(cursor, res, date, seatClass, noPassengers):
         l.append(seatAvailability if seatAvailability is not None else -1)
 
     res = [res[i] for i in range(len(res)) if l[i] >= noPassengers or l[i] == -1]
-    return res
+    res = [
+        [
+            (
+                j[i]
+                if i != 3
+                else priceCalc(
+                    cursor,
+                    j[0],
+                    seatClass,
+                    j[-1] if seatClass == "Economy" else j[-2],
+                    j[3],
+                    date,
+                )
+            )
+            for i in range(len(j))
+        ]
+        for j in res
+    ]
+    return sorted(res, key=lambda x: x[3])
+
+
+def priceCalc(cursor, flightID, seatClass, seatCount, basePrice, date):
+    cursor.execute("SELECT DATEDIFF(%s, CURDATE())", (date,))
+    daysLeft = cursor.fetchone()[0]
+    cursor.execute("SELECT seatAvailability(%s, %s, %s)", (flightID, date, seatClass))
+    seatAvailability = cursor.fetchone()[0]
+    seatAvailability = seatAvailability if seatAvailability is not None else seatCount
+    return getPrice(int(basePrice), seatAvailability / seatCount, daysLeft)
 
 
 def searchFlights(
@@ -122,16 +150,13 @@ def searchFlights(
 
         d["source"] = source_details
         d["destination"] = destination_details
-
+        cursor.close()
+        cnx.close()
         return d
 
     except mysql.connector.Error as err:
         print(f"Error: {err}")
         return None
 
-    finally:
-        cursor.close()
-        cnx.close()
 
-
-# print(searchFlights("DEL", "BOM", "2024-10-18", True, 5, "2024-10-20"))
+# print(searchFlights("DEL", "BOM", "2023-01-01", False, 5, 1, "Economy"))
