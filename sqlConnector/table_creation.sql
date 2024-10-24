@@ -307,6 +307,27 @@ DELIMITER ;
 
 DELIMITER //
 
+CREATE FUNCTION getCities() 
+RETURNS JSON
+DETERMINISTIC
+BEGIN
+    DECLARE citiesList JSON;
+    
+    SET citiesList = (
+        SELECT JSON_ARRAYAGG(
+            JSON_OBJECT('cityID', cityID, 'cityName', cityName)
+        )
+        FROM cities
+    );
+
+    RETURN citiesList;
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
 CREATE PROCEDURE update_flight(
     IN p_aircraftID VARCHAR(8),
     IN p_model VARCHAR(50),

@@ -1,12 +1,35 @@
 function Home() {
     const [tripType, setTripType] = React.useState(false);
-    const [origin, setOrigin] = React.useState("DEL");
-    const [destination, setDestination] = React.useState("BOM");
-    const [departure, setDeparture] = React.useState("2023-01-01");
-    const [returnDate, setReturnDate] = React.useState("2023-01-15");
+    const [origin, setOrigin] = React.useState("");
+    const [destination, setDestination] = React.useState("");
+    const [departure, setDeparture] = React.useState("2024-11-01");
+    const [returnDate, setReturnDate] = React.useState("2024-11-15");
     const [adults, setAdults] = React.useState(1);
     const [children, setChildren] = React.useState(0);
     const [seatClass, setSeatClass] = React.useState("Economy");
+    const [cities, setCities] = React.useState([]);
+
+    const today = new Date().toISOString().split("T")[0];
+
+    React.useEffect(() => {
+        async function fetchCities() {
+            try {
+                const response = await fetch("/api/get-cities");
+                if (response.ok) {
+                    const data = await response.json();
+                    setCities(data.cities);
+                } else {
+                    console.error("Failed to fetch cities");
+                    setCities([]);
+                }
+            } catch (error) {
+                console.error("Error fetching cities:", error);
+                setCities([]);
+            }
+        }
+
+        fetchCities();
+    }, []);
 
     function handleTripTypeChange(event) {
         setTripType(event.target.value === "True");
@@ -32,23 +55,38 @@ function Home() {
             <TopBar />
             <div className="booking-container">
                 <h1>Book Your Flight</h1>
-                <input
-                    type="text"
-                    placeholder="Origin"
+                <select
                     value={origin}
                     onChange={(e) => setOrigin(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="Destination"
+                >
+                    <option value="" disabled>
+                        Select Origin
+                    </option>
+                    {cities.map((city) => (
+                        <option key={city.cityID} value={city.cityID}>
+                            {city.cityName}
+                        </option>
+                    ))}
+                </select>
+                <select
                     value={destination}
                     onChange={(e) => setDestination(e.target.value)}
-                />
+                >
+                    <option value="" disabled>
+                        Select Destination
+                    </option>
+                    {cities.map((city) => (
+                        <option key={city.cityID} value={city.cityID}>
+                            {city.cityName}
+                        </option>
+                    ))}
+                </select>
                 <input
                     type="date"
                     placeholder="Departure Date"
                     value={departure}
                     onChange={(e) => setDeparture(e.target.value)}
+                    min={today}
                 />
                 {tripType && (
                     <input
@@ -56,6 +94,7 @@ function Home() {
                         placeholder="Return Date"
                         value={returnDate}
                         onChange={(e) => setReturnDate(e.target.value)}
+                        min={departure}
                     />
                 )}
                 <select
