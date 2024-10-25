@@ -37,16 +37,18 @@ function FlightResult({ result, source, destination }) {
 function ConnectingFlightResult({ resultPair, source, destination }) {
 	return (
 		<div className="connecting-flight-result">
+			<h2>Flight 1</h2>
 			<FlightResult
 				result={resultPair[0]}
 				source={source}
-				destination={destination}
+				destination={[resultPair[0][8], resultPair[0][7]]}
 			/>
 			<br />
 			<br />
+			<h2>Flight 2</h2>
 			<FlightResult
 				result={resultPair[1]}
-				source={source}
+				source={[resultPair[1][8], resultPair[1][7]]}
 				destination={destination}
 			/>
 		</div>
@@ -103,10 +105,14 @@ function SearchResults() {
 				</div>
 			) : (
 				<div>
-					<div>No "To Flights" found.</div>
-					<button onClick={() => setShowConnectingFlights(true)}>
-						Show Connecting Flights
-					</button>
+					<div>
+						<h3>No "To Flights" found.</h3>
+					</div>
+					{!showConnectingFlights && (
+						<button onClick={() => setShowConnectingFlights(true)}>
+							Show Connecting Flights
+						</button>
+					)}
 				</div>
 			)}
 
@@ -127,50 +133,60 @@ function SearchResults() {
 				<div></div>
 			) : (
 				<div>
-					<div>No "Return Flights" found.</div>
-					<button onClick={() => setShowConnectingFlights(true)}>
-						Show Connecting Flights
-					</button>
+					<div>
+						<h3>No "Return Flights" found.</h3>
+					</div>
+					{!showConnectingFlights && (
+						<button onClick={() => setShowConnectingFlights(true)}>
+							Show Connecting Flights
+						</button>
+					)}
 				</div>
 			)}
 
 			{showConnectingFlights && (
 				<div>
 					{data.connectingOneWay &&
-						data.connectingOneWay.length > 0 && (
-							<div>
-								<h2>Connecting One-Way Flights</h2>
-								{data.connectingOneWay.map(
-									(resultPair, index) => (
-										<div key={index} className="result">
-											<ConnectingFlightResult
-												resultPair={resultPair}
-												source={data.source}
-												destination={data.destination}
-											/>
-										</div>
-									)
-								)}
-							</div>
-						)}
+					data.connectingOneWay.length > 0 ? (
+						<div>
+							<h2>Connecting One-Way Flights</h2>
+							{data.connectingOneWay.map((resultPair, index) => (
+								<div key={index} className="result">
+									<ConnectingFlightResult
+										resultPair={resultPair}
+										source={data.source}
+										destination={data.destination}
+									/>
+								</div>
+							))}
+						</div>
+					) : (
+						<div>
+							<h3>No connecting one-way flights found.</h3>
+						</div>
+					)}
 
-					{data.connectingRoundTrip &&
-						data.connectingRoundTrip.length > 0 && (
-							<div>
-								<h2>Connecting Round-Trip Flights</h2>
-								{data.connectingRoundTrip.map(
-									(resultPair, index) => (
-										<div key={index} className="result">
-											<ConnectingFlightResult
-												resultPair={resultPair}
-												source={data.destination}
-												destination={data.source}
-											/>
-										</div>
-									)
-								)}
-							</div>
-						)}
+					{data.connectingReturn &&
+					data.connectingReturn.length > 0 ? (
+						<div>
+							<h2>Connecting Round-Trip Flights</h2>
+							{data.connectingReturn.map(
+								(resultPair, index) => (
+									<div key={index} className="result">
+										<ConnectingFlightResult
+											resultPair={resultPair}
+											source={data.destination}
+											destination={data.source}
+										/>
+									</div>
+								)
+							)}
+						</div>
+					) : (
+						<div>
+							<h3>No connecting round-trip flights found.</h3>
+						</div>
+					)}
 				</div>
 			)}
 		</div>
