@@ -54,7 +54,7 @@ def priceCalc(cursor, flightID, seatClass, seatCount, basePrice, date):
 
 def connectingFlights(departureAirportCode, arrivalAirportCode, date, seatClass):
     cnx = mysql.connector.connect(
-        user="user", password="user", host="127.0.0.1", database="flightBooking"
+        user="admin", password="admin", host="127.0.0.1", database="flightBooking"
     )
     cursor = cnx.cursor()
     day_dict = {
@@ -69,12 +69,14 @@ def connectingFlights(departureAirportCode, arrivalAirportCode, date, seatClass)
     day = day_dict[datetime.datetime.strptime(date, "%Y-%m-%d").weekday()]
 
     query = f"""
-    SELECT r1.id, r1.departureTime, r1.arrivalTime, r1.basePrice, f1.model, f1.business, f1.economy,
-    r2.id, r2.departureTime, r2.arrivalTime, r2.basePrice, f2.model, f2.business, f2.economy
+    SELECT r1.id, r1.departureTime, r1.arrivalTime, r1.basePrice, f1.model, f1.business, f1.economy, c1.cityName, c1.airportName,
+    r2.id, r2.departureTime, r2.arrivalTime, r2.basePrice, f2.model, f2.business, f2.economy, c2.cityName, c2.airportName
     FROM routes r1
     JOIN routes r2 ON r1.arrivalAirportCode = r2.departureAirportCode
     JOIN flights f1 ON r1.aircraftID = f1.aircraftID
     JOIN flights f2 ON r2.aircraftID = f2.aircraftID
+    JOIN cities c1 ON r1.arrivalAirportCode = c1.cityID
+    JOIN cities c2 ON r2.departureAirportCode = c2.cityID
     WHERE r1.departureAirportCode = %s
     AND r2.arrivalAirportCode = %s
     AND r1.{day} = 1
@@ -83,7 +85,7 @@ def connectingFlights(departureAirportCode, arrivalAirportCode, date, seatClass)
     """
     cursor.execute(query, (departureAirportCode, arrivalAirportCode))
     connecting_flights = cursor.fetchall()
-    connecting_flights = [{0: list(i[:7]), 1: list(i[7:])} for i in connecting_flights]
+    connecting_flights = [{0: list(i[:9]), 1: list(i[9:])} for i in connecting_flights]
     for i in connecting_flights:
         i[0][1] = timedelta_to_hhmmss(i[0][1])
         i[0][2] = timedelta_to_hhmmss(i[0][2])
