@@ -244,4 +244,4 @@ def searchFlights(
         return None
 
 
-# print(searchFlights("DEL", "BOM", "2025-01-01", False, 5, 1, "Economy"))
+# print(searchFlights("DEL", "BOM", "2025-01-01", True, 5, 1, "Economy", "2025-01-02")["connectingReturn"])

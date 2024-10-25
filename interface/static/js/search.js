@@ -166,11 +166,11 @@ function SearchResults() {
 						</div>
 					)}
 
-					{data.connectingRoundTrip &&
-					data.connectingRoundTrip.length > 0 ? (
+					{data.connectingReturn &&
+					data.connectingReturn.length > 0 ? (
 						<div>
 							<h2>Connecting Round-Trip Flights</h2>
-							{data.connectingRoundTrip.map(
+							{data.connectingReturn.map(
 								(resultPair, index) => (
 									<div key={index} className="result">
 										<ConnectingFlightResult
