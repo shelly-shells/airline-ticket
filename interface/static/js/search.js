@@ -51,6 +51,9 @@ function ConnectingFlightResult({ resultPair, source, destination }) {
 				source={[resultPair[1][8], resultPair[1][7]]}
 				destination={destination}
 			/>
+			<p>
+				<h3>Layover : {resultPair[2]}</h3>
+			</p>
 		</div>
 	);
 }
@@ -105,9 +108,11 @@ function SearchResults() {
 				</div>
 			) : (
 				<div>
-					<div>
-						<h3>No "To Flights" found.</h3>
-					</div>
+					{!showConnectingFlights && (
+						<div>
+							<h3>No "To Flights" found.</h3>
+						</div>
+					)}
 					{!showConnectingFlights && (
 						<button onClick={() => setShowConnectingFlights(true)}>
 							Show Connecting Flights
@@ -133,9 +138,11 @@ function SearchResults() {
 				<div></div>
 			) : (
 				<div>
-					<div>
-						<h3>No "Return Flights" found.</h3>
-					</div>
+					{!showConnectingFlights && (
+						<div>
+							<h3>No "Return Flights" found.</h3>
+						</div>
+					)}
 					{!showConnectingFlights && (
 						<button onClick={() => setShowConnectingFlights(true)}>
 							Show Connecting Flights
@@ -169,22 +176,22 @@ function SearchResults() {
 					{data.connectingReturn &&
 					data.connectingReturn.length > 0 ? (
 						<div>
-							<h2>Connecting Round-Trip Flights</h2>
-							{data.connectingReturn.map(
-								(resultPair, index) => (
-									<div key={index} className="result">
-										<ConnectingFlightResult
-											resultPair={resultPair}
-											source={data.destination}
-											destination={data.source}
-										/>
-									</div>
-								)
-							)}
+							<h2>Connecting Return Flights</h2>
+							{data.connectingReturn.map((resultPair, index) => (
+								<div key={index} className="result">
+									<ConnectingFlightResult
+										resultPair={resultPair}
+										source={data.destination}
+										destination={data.source}
+									/>
+								</div>
+							))}
 						</div>
+					) : data.connectingReturn === false ? (
+						<div></div>
 					) : (
 						<div>
-							<h3>No connecting round-trip flights found.</h3>
+							<h3>No connecting return flights found.</h3>
 						</div>
 					)}
 				</div>
