@@ -111,7 +111,7 @@ def connectingFlights(departureAirportCode, arrivalAirportCode, date, seatClass)
     for i in connecting_flights:
         i[0][3] = priceCalc(
             cursor,
-            i[0][1],
+            i[0][0],
             seatClass,
             i[0][5] if seatClass == "Business" else i[0][6],
             i[0][3],
@@ -120,12 +120,16 @@ def connectingFlights(departureAirportCode, arrivalAirportCode, date, seatClass)
 
         i[1][3] = priceCalc(
             cursor,
-            i[1][1],
+            i[1][0],
             seatClass,
             i[1][5] if seatClass == "Business" else i[1][6],
             i[1][3],
             date,
         )
+
+        arrival_time_1 = datetime.datetime.strptime(i[0][2], "%H:%M")
+        departure_time_2 = datetime.datetime.strptime(i[1][1], "%H:%M")
+        i[2] = str(departure_time_2 - arrival_time_1)
 
     cursor.close()
     cnx.close()
@@ -235,6 +239,8 @@ def searchFlights(
             d["connectingReturn"] = connectingFlights(
                 destination, source, returnDate, seatClass
             )
+        else:
+            d["connectingReturn"] = False
         cursor.close()
         cnx.close()
         return d
@@ -244,4 +250,8 @@ def searchFlights(
         return None
 
 
-# print(searchFlights("DEL", "BOM", "2025-01-01", True, 5, 1, "Economy", "2025-01-02")["connectingReturn"])
+# print(
+#     searchFlights("DEL", "BOM", "2025-01-01", True, 5, 1, "Economy", "2025-01-02")[
+#         "connectingReturn"
+#     ]
+# )
