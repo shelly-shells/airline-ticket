@@ -1,2 +1,7 @@
-stored procedure to check remaining seats 
-apply stored procedure to find airport names
+make views
+make logout
+make home page
+confirm booking
+take booking details
+user profile page
+labels for booking
