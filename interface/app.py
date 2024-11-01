@@ -441,5 +441,42 @@ def searchPage():
     )
 
 
+# @app.route("/profile")
+# def profile():
+#     if "username" in session:
+#         username = session["username"]
+#         cnx = get_db_connection()
+#         cursor = cnx.cursor(dictionary=True)
+#         cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+#         user_data = cursor.fetchone()
+#         cursor.close()
+#         cnx.close()
+#         return render_template("profile.html", user=user_data)
+#     else:
+#         return redirect(url_for("loginPage"))
+
+def get_user_profile(username):
+    cnx = get_db_connection()
+    cursor = cnx.cursor(dictionary=True)
+    query = "SELECT * FROM users WHERE username = %s"
+    cursor.execute(query, (username,))
+    user_data = cursor.fetchone()
+    cursor.close()
+    cnx.close()
+    return user_data
+
+
+@app.route("/profile")
+def profile():
+    if "username" not in session:
+        return redirect(url_for("loginPage"))
+    
+    user_data = get_user_profile(session["username"])
+    if user_data:
+        return render_template("profile.html", user=user_data)
+    else:
+        return render_template("profile.html", error="User profile not found.")
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=3000)
