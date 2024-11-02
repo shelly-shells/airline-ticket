@@ -441,19 +441,7 @@ def searchPage():
     )
 
 
-# @app.route("/profile")
-# def profile():
-#     if "username" in session:
-#         username = session["username"]
-#         cnx = get_db_connection()
-#         cursor = cnx.cursor(dictionary=True)
-#         cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
-#         user_data = cursor.fetchone()
-#         cursor.close()
-#         cnx.close()
-#         return render_template("profile.html", user=user_data)
-#     else:
-#         return redirect(url_for("loginPage"))
+
 
 def get_user_profile(username):
     cnx = get_db_connection()
@@ -477,6 +465,16 @@ def profile():
     else:
         return render_template("profile.html", error="User profile not found.")
 
+
+@app.route('/booking-confirmation', methods=['GET', 'POST'])
+def booking_confirmation():
+    if request.method == 'POST':
+        flight_data = json.loads(request.form['flight_data'])
+        adults = int(request.form['adults'])
+        children = int(request.form['children'])
+        # Use flight_data, adults, and children to render the confirmation page
+        return render_template('bookingConfirmation.html', flight_data=flight_data, adults=adults, children=children)
+    return redirect(url_for('searchPage'))
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=3000)
