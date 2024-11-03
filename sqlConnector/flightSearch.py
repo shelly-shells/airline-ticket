@@ -131,6 +131,7 @@ def connectingFlights(departureAirportCode, arrivalAirportCode, date, seatClass)
         departure_time_2 = datetime.datetime.strptime(i[1][1], "%H:%M")
         i[2] = str(departure_time_2 - arrival_time_1)
 
+    connecting_flights = sorted(connecting_flights, key=lambda x: x[2])
     cursor.close()
     cnx.close()
     return connecting_flights
