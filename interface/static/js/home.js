@@ -115,7 +115,7 @@ function Home() {
                     type="date"
                     placeholder="Departure Date"
                     value={departure}
-                    onChange={(e) => setDeparture(e.target.value)}
+                    onChange={(e) => {console.log(e.target.value.toString()); setDeparture(e.target.value.toString())}}
                     min={today}
                 />
                 {tripType && (

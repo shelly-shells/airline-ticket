@@ -1,22 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Confirmation</title>
-    <!-- Link to CSS file for styling -->
-    <link rel="stylesheet" href="/static/css/styles.css">
-</head>
-<body>
-    <!-- Root element where the BookingConfirmation component will render -->
-    <div id="root"></div>
-
-    <!-- Flight data passed from search results -->
-    <script id="flight-data" type="application/json">
-        <!-- JSON data for flight details will be dynamically inserted here by the backend -->
-    </script>
-
-    <!-- Link to the bookingConfirmation.js file -->
-    <script src="/static/js/bookingConfirmation.js"></script>
-</body>
+<html>
+	<head>
+		<title>Booking Confirmation</title>
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="{{ url_for('static', filename='styles/bookingConfirmation.css') }}"
+		/>
+		<script
+			src="https://unpkg.com/react@17/umd/react.production.min.js"
+			crossorigin
+		></script>
+		<script
+			src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"
+			crossorigin
+		></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	</head>
+	<body>
+		<div id="root"></div>
+		<script
+			type="text/babel"
+			src="{{ url_for('static', filename='js/top-bar.js') }}"
+		></script>
+		<script
+			type="text/babel"
+			src="{{ url_for('static', filename='js/bookingConfirmation.js') }}"
+		></script>
+	</body>
 </html>

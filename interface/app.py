@@ -465,16 +465,40 @@ def profile():
     else:
         return render_template("profile.html", error="User profile not found.")
 
+@app.route("/bookingConfirmation")
+def booking_confirmation_page():
+    return render_template("bookingConfirmation.html")
 
-@app.route('/booking-confirmation', methods=['GET', 'POST'])
-def booking_confirmation():
-    if request.method == 'POST':
-        flight_data = json.loads(request.form['flight_data'])
-        adults = int(request.form['adults'])
-        children = int(request.form['children'])
-        # Use flight_data, adults, and children to render the confirmation page
-        return render_template('bookingConfirmation.html', flight_data=flight_data, adults=adults, children=children)
-    return redirect(url_for('searchPage'))
+@app.route("/api/confirm-booking", methods=["POST"])
+def confirm_booking():
+    data = request.get_json()
+    username = session.get("username")
+    if not username:
+        return jsonify({"status": "failure", "message": "User not logged in"}), 403
+
+    cnx = get_db_connection()
+    cursor = cnx.cursor()
+
+    cursor.execute(
+        "INSERT INTO bookings (username, flightID, date, adults, children, seatClass, amountPaid, food, extraLuggage) "
+        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        (username, data["flightID"], data["date"], data["adults"], data["children"],
+         data["seatClass"], data["amountPaid"], data["food"], data["extraLuggage"])
+    )
+    cnx.commit()
+    booking_id = cursor.lastrowid
+
+    for i in range(int(data["adults"]) + int(data["children"])):
+        cursor.execute(
+            "INSERT INTO bookingDetails (bookingID, passengerNo, firstName, lastName, gender, age) "
+            "VALUES (%s, %s, %s, %s, %s, %s)",
+            (booking_id, i + 1, "First Name", "Last Name", "M", 30)
+        )
+
+    cnx.commit()
+    cursor.close()
+    cnx.close()
+    return jsonify({"status": "success"})
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=3000)
