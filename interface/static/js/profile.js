@@ -28,52 +28,184 @@ function TopBar() {
     );
 }
 
-
 function UserProfile() {
-	const [user, setUser] = React.useState(null);
-	const [errorMessage, setErrorMessage] = React.useState("");
+	const [user, setUser] = React.useState(JSON.parse(document.getElementById("thissucks").dataset.user));
+    const [errorMessage, setErrorMessage] = React.useState("");
+    const [successMessage, setSuccessMessage] = React.useState("");
 
-	React.useEffect(() => {
-		fetch("/api/profile", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		})
-			.then((response) => response.json())
-			.then((data) => {
-				if (data.status === "success") {
-					setUser(data.user);
-				} else {
-					setErrorMessage(data.message || "Failed to load user profile.");
-				}
-			})
-			.catch((error) => {
-				console.error("Error:", error);
-				setErrorMessage("An error occurred. Please try again later.");
-			});
-	}, []);
+    const [formData, setFormData] = React.useState({
+        username: user.username,
+        password: "",
+        fname: "",
+        lname: "",
+        mobile: "",
+        email: "",
+        age: "",
+        gender: "",
+    });
 
-	if (errorMessage) {
-		return <div className="error-message">{errorMessage}</div>;
-	}
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
 
-	if (!user) {
-		return <div>Loading...</div>;
-	}
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setErrorMessage("");
+        setSuccessMessage("");
 
-	return (
-		<div className="profile-container">
-			<h1>User Profile</h1>
-			<p><strong>Username:</strong> {user.username}</p>
-			<p><strong>First Name:</strong> {user.firstName}</p>
-			<p><strong>Last Name:</strong> {user.lastName}</p>
-			<p><strong>Mobile:</strong> {user.mobileNo}</p>
-			<p><strong>Email:</strong> {user.email}</p>
-			<p><strong>Age:</strong> {user.age}</p>
-			<p><strong>Gender:</strong> {user.gender}</p>
-		</div>
-	);
+        // Prepare data to send (exclude fields if empty)
+        const dataToSend = {};
+        for (const key in formData) {
+            if (formData[key] !== "") {
+                dataToSend[key] = formData[key];
+            }
+        }
+
+		dataToSend["username"] = user.username;
+
+        fetch("/update-profile", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataToSend),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === "success") {
+                    setSuccessMessage("Profile updated successfully.");
+                } else {
+                    setErrorMessage(data.message || "Failed to update profile.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                setErrorMessage("An error occurred. Please try again later.");
+            });
+    };
+
+    return (
+        <div className="profile-container">
+            <h1>Profile</h1>
+            {errorMessage && <div className="error-message">{errorMessage}</div>}
+            {successMessage && <div className="success-message">{successMessage}</div>}
+            <form onSubmit={handleSubmit} className="profile-form">
+                <div className="form-group">
+                    <label>
+                        Username:
+                        <input
+                            type="text"
+                            name="username"
+                            value={user.username}
+                            disabled
+                        />
+                    </label>
+                </div>
+
+                <div className="form-group">
+                    <label>
+                        Password:
+                        <input
+                            type="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            placeholder="Enter new password"
+                        />
+                    </label>
+                </div>
+
+                <div className="form-group">
+                    <label>
+                        First Name:
+                        <input
+                            type="text"
+                            name="fname"
+                            value={formData.fname}
+                            onChange={handleChange}
+                            placeholder={user.firstName}
+                        />
+                    </label>
+                </div>
+
+                <div className="form-group">
+                    <label>
+                        Last Name:
+                        <input
+                            type="text"
+                            name="lname"
+                            value={formData.lname}
+                            onChange={handleChange}
+                            placeholder={user.lastName}
+                        />
+                    </label>
+                </div>
+
+                <div className="form-group">
+                    <label>
+                        Mobile:
+                        <input
+                            type="text"
+                            name="mobile"
+                            value={formData.mobile}
+                            onChange={handleChange}
+                            placeholder={user.mobileNo}
+                        />
+                    </label>
+                </div>
+
+                <div className="form-group">
+                    <label>
+                        Email:
+                        <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            placeholder={user.email}
+                        />
+                    </label>
+                </div>
+
+                <div className="form-group">
+                    <label>
+                        Age:
+                        <input
+                            type="number"
+                            name="age"
+                            value={formData.age}
+                            onChange={handleChange}
+                            placeholder={user.age}
+                        />
+                    </label>
+                </div>
+
+                <div className="form-group">
+                    <label>
+                        Gender:
+                        <select
+                            name="gender"
+                            value={formData.gender}
+                            onChange={handleChange}
+                        >
+                            <option disabled value="">{user.gender}</option>
+                            <option value="M">M</option>
+                            <option value="F">F</option>
+                            <option value="O">O</option>
+                        </select>
+                    </label>
+                </div>
+
+                <button type="submit" className="submit-button">
+                    Update Profile
+                </button>
+            </form>
+        </div>
+    );
 }
 
 ReactDOM.render(<UserProfile />, document.getElementById("root"));

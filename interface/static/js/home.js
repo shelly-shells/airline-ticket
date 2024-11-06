@@ -12,7 +12,7 @@ function TopBar() {
             </div>
 
             <div className="nav-buttons">
-                <button className="my-bookings">My Bookings</button>
+                <button className="my-bookings" onClick={() => window.location.href = "/myBookings"}>My Bookings</button>
                 <button className="home">Home</button>
                 <div className="user-profile">
                     <button onClick={toggleDropdown} className="profile-button">User Profile</button>

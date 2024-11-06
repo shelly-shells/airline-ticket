@@ -1,12 +1,14 @@
-function FlightResult({ result, source, destination }) {
+function FlightResult({ result, source, destination, flightData }) {
     function selectFlight() {
-        const flightData = {
+        const neededFlightData = {
             id: result[0],
-            date: result[5],
-            seatClass: result[6],
-            price: result[3]
+            date: flightData.get("departure"),
+            seatClass: flightData.get("seatClass"),
+			children: flightData.get("children"),
+			adults: flightData.get("adults"),
+            price: result[3],
         };
-        localStorage.setItem("selectedFlight", JSON.stringify(flightData));
+        localStorage.setItem("selectedFlight", JSON.stringify(neededFlightData));
         window.location.href = "/bookingConfirmation";
     }
 
@@ -28,7 +30,7 @@ function FlightResult({ result, source, destination }) {
 }
 
 
-function ConnectingFlightResult({ resultPair, source, destination }) {
+function ConnectingFlightResult({ resultPair, source, destination, flightData }) {
 	return (
 		<div className="connecting-flight-result">
 			<h2>Flight 1</h2>
@@ -36,6 +38,7 @@ function ConnectingFlightResult({ resultPair, source, destination }) {
 				result={resultPair[0]}
 				source={source}
 				destination={[resultPair[0][8], resultPair[0][7]]}
+				flightData={flightData}
 			/>
 			<br />
 			<br />
@@ -44,6 +47,7 @@ function ConnectingFlightResult({ resultPair, source, destination }) {
 				result={resultPair[1]}
 				source={[resultPair[1][8], resultPair[1][7]]}
 				destination={destination}
+				flightData={flightData}
 			/>
 			<p>
 				<h3>Layover : {resultPair[2]}</h3>
@@ -58,12 +62,16 @@ function SearchResults() {
 	const [showConnectingFlights, setShowConnectingFlights] =
 		React.useState(false);
 
+	const [flightData, setFlightData] = React.useState(null);
+
 	React.useEffect(() => {
 		const searchData = JSON.parse(
 			document.getElementById("search-data").textContent
 		);
-		const params = new URLSearchParams(searchData).toString();
+		const paramsUrl = new URLSearchParams(searchData);
+		setFlightData(paramsUrl);
 
+		const params = paramsUrl.toString();
 		fetch(`/api/search-flights?${params}`)
 			.then((response) => response.json())
 			.then((data) => {
@@ -96,6 +104,7 @@ function SearchResults() {
 								result={result}
 								source={data.source}
 								destination={data.destination}
+								flightData={flightData}
 							/>
 						</div>
 					))}
@@ -124,6 +133,7 @@ function SearchResults() {
 								result={result}
 								source={data.destination}
 								destination={data.source}
+								flightData={flightData}
 							/>
 						</div>
 					))}
@@ -157,6 +167,7 @@ function SearchResults() {
 										resultPair={resultPair}
 										source={data.source}
 										destination={data.destination}
+										flightData={flightData}
 									/>
 								</div>
 							))}
@@ -177,6 +188,7 @@ function SearchResults() {
 										resultPair={resultPair}
 										source={data.destination}
 										destination={data.source}
+										flightData={flightData}
 									/>
 								</div>
 							))}

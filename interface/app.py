@@ -5,12 +5,14 @@ import os
 import mysql.connector
 import datetime
 import json
+import random
 
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "sqlConnector"))
 )
 from loginRegister import login, register
 from flightSearch import searchFlights
+from updateProfile import update_profile
 
 app = Flask(__name__)
 CORS(app)
@@ -59,6 +61,24 @@ def registerMe():
     age = data.get("age")
     gender = data.get("gender")
     status = register(username, password, fname, lname, phone, email, age, gender)
+    if status == 1:
+        return {"status": "success"}
+    else:
+        return {"status": "failure"}
+
+
+@app.route("/update-profile", methods=["POST"])
+def updateMe():
+    data = request.get_json()
+    username = data.get("username")
+    password = data.get("password")
+    fname = data.get("fname")
+    lname = data.get("lname")
+    phone = data.get("mobile")
+    email = data.get("email")
+    age = data.get("age")
+    gender = data.get("gender")
+    status = update_profile(username, password, fname, lname, phone, email, age, gender)
     if status == 1:
         return {"status": "success"}
     else:
@@ -460,8 +480,10 @@ def profile():
         return redirect(url_for("loginPage"))
     
     user_data = get_user_profile(session["username"])
+    user_data.pop("uTime")
+
     if user_data:
-        return render_template("profile.html", user=user_data)
+        return render_template("profile.html", user=json.dumps(user_data))
     else:
         return render_template("profile.html", error="User profile not found.")
 
@@ -479,26 +501,67 @@ def confirm_booking():
     cnx = get_db_connection()
     cursor = cnx.cursor()
 
-    cursor.execute(
-        "INSERT INTO bookings (username, flightID, date, adults, children, seatClass, amountPaid, food, extraLuggage) "
-        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        (username, data["flightID"], data["date"], data["adults"], data["children"],
-         data["seatClass"], data["amountPaid"], data["food"], data["extraLuggage"])
-    )
-    cnx.commit()
-    booking_id = cursor.lastrowid
+    bookingID = random.randint(1000000,9999999)
 
-    for i in range(int(data["adults"]) + int(data["children"])):
-        cursor.execute(
-            "INSERT INTO bookingDetails (bookingID, passengerNo, firstName, lastName, gender, age) "
-            "VALUES (%s, %s, %s, %s, %s, %s)",
-            (booking_id, i + 1, "First Name", "Last Name", "M", 30)
-        )
+    query_string = f"""INSERT INTO bookings (bookingID, username, flightID, date, adults, children, 
+                    seatClass, amountPaid, food, extraLuggage) VALUES ({bookingID}, '{username}', '{data["flightID"]}', 
+                    '{data["date"]}', {data["adults"]}, {data["children"]}, '{data["seatClass"]}', {data["amountPaid"]}, 
+                    {str(data["food"]).upper()}, {str(data["extraLuggage"]).upper()})"""
+
+    print(query_string)
+    print()
+    cursor.execute(query_string)
+    cnx.commit()
+
+    passenger_no = 0 
+    for passenger in data["passengers"]:
+        query_string = f"""INSERT INTO bookingDetails (bookingID, passengerNo, firstName, lastName, gender, age) 
+                            VALUES ({bookingID}, {passenger_no}, '{passenger["firstName"]}', '{passenger["lastName"]}', 
+                            '{passenger["gender"]}', {passenger["age"]})"""
+        
+        cursor.execute(query_string)
+        print(query_string)
+        print()
+        passenger_no += 1
 
     cnx.commit()
     cursor.close()
     cnx.close()
     return jsonify({"status": "success"})
+
+
+@app.route("/myBookings")
+def my_bookings_page():
+    if "username" not in session:
+        return redirect(url_for("loginPage"))
+    return render_template("myBookings.html")
+
+@app.route("/api/my-bookings", methods=["GET"])
+def get_my_bookings():
+    username = session.get("username")
+    if not username:
+        return jsonify({"status": "failure", "message": "User not logged in"}), 403
+
+    cnx = get_db_connection()
+    cursor = cnx.cursor(dictionary=True)
+
+    # Fetch bookings made by the logged-in user
+    query = """
+        SELECT bookingID, flightID, date, adults, children, seatClass, amountPaid, food, extraLuggage
+        FROM bookings
+        WHERE username = %s
+        ORDER BY date DESC
+    """
+    cursor.execute(query, (username,))
+    bookings = cursor.fetchall()
+
+    cursor.close()
+    cnx.close()
+
+    if bookings:
+        return jsonify({"status": "success", "bookings": bookings})
+    else:
+        return jsonify({"status": "success", "bookings": []})
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=3000)

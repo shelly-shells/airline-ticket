@@ -1,5 +1,5 @@
 import mysql.connector
-import password_enryption
+import password_encryption
 import password_decryption
 
 
@@ -29,7 +29,7 @@ def register(username, password, fname, lname, phone, email, age, gender):
         cnx = mysql.connector.connect(user="sys", password="sys", host="127.0.0.1")
         cursor = cnx.cursor()
         cursor.execute("use flightBooking")
-        encrypted_password = password_enryption.encrypter(password)
+        encrypted_password = password_encryption.encrypter(password)
         insert_query = """
             INSERT INTO users (username, password_encrypt, firstName, lastName, mobileNo, email, age, gender)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
