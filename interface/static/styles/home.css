@@ -5,6 +5,72 @@ body {
     padding: 0;
 }
 
+/* Top Bar */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: #333;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo img {
+    height: 200px;
+}
+
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.my-bookings,
+.profile-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.my-bookings:hover,
+.profile-button:hover {
+    color: #6a11cb;
+}
+
+.dropdown {
+    position: absolute;
+    right: 20px;
+    top: 60px;
+    background-color: white;
+    color: black;
+    padding: 10px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    z-index: 1;
+}
+
+.dropdown button {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown button:hover {
+    background-color: #f0f0f0;
+}
+
+/* Booking Container */
 .booking-container {
     background: white;
     padding: 40px;
@@ -49,6 +115,7 @@ body {
     background: linear-gradient(45deg, #2575fc, #6a11cb);
 }
 
+/* Results Container */
 .results-container {
     display: flex;
     flex-direction: column;
@@ -74,6 +141,7 @@ body {
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
 
+/* Result Flight Details */
 h2 {
     margin-bottom: 20px;
     color: #333;
@@ -121,6 +189,7 @@ h2 {
     color: #2c3e50;
 }
 
+/* Responsive Styling */
 @media (max-width: 600px) {
     .result {
         width: 95%;
