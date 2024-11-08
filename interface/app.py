@@ -60,6 +60,7 @@ def registerMe():
     gender = data.get("gender")
     status = register(username, password, fname, lname, phone, email, age, gender)
     if status == 1:
+        session["username"] = username
         return {"status": "success"}
     else:
         return {"status": "failure"}
