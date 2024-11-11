@@ -1,7 +1,2 @@
-make views
-make logout
-make home page
-confirm booking
-take booking details
-user profile page
-labels for booking
+cancel booking
+fix top bar

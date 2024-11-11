@@ -2,7 +2,6 @@ CREATE DATABASE flightBooking;
 
 USE flightBooking;
 
--- Create Main Tables
 CREATE TABLE users (
     username VARCHAR(50) PRIMARY KEY,
     password_encrypt VARCHAR(200) NOT NULL,
@@ -190,74 +189,6 @@ END;
 // 
 DELIMITER ;
 
-CREATE ROLE user;
-
-CREATE ROLE admin;
-
-CREATE ROLE sys;
-
-GRANT
-SELECT
-    ON flightBooking.cities TO user;
-
-GRANT
-SELECT
-    ON flightBooking.flights TO user;
-
-GRANT
-SELECT
-    ON flightBooking.routes TO user;
-
-GRANT
-SELECT
-    ON flightBooking.bookings TO user;
-
-GRANT ALL PRIVILEGES ON flightBooking.* TO admin;
-
-GRANT USAGE ON flightBooking.* TO admin;
-
-GRANT
-SELECT
-,
-INSERT
-,
-UPDATE
-    ON flightBooking.users TO sys;
-
-CREATE USER 'user' @'localhost' IDENTIFIED BY 'user';
-
-CREATE USER 'admin' @'localhost' IDENTIFIED BY 'admin';
-
-CREATE USER 'sys' @'localhost' IDENTIFIED BY 'sys';
-
-GRANT user TO 'user' @'localhost';
-
-GRANT sys TO 'sys' @'localhost';
-
-GRANT admin TO 'admin' @'localhost';
-
-GRANT SUPER ON *.* TO 'admin' @'localhost';
-
-FLUSH PRIVILEGES;
-
-DELIMITER // 
-CREATE PROCEDURE airportDetails(
-    IN id VARCHAR(3),
-    OUT airport VARCHAR(100),
-    OUT city VARCHAR(100)
-) 
-BEGIN
-    SELECT
-        airportName,
-        cityName INTO airport,
-        city
-    FROM
-        cities
-    WHERE
-        cityID = id;
-END // 
-DELIMITER ;
-
 DELIMITER // 
 CREATE FUNCTION seatAvailability(
     flightID VARCHAR(8),
@@ -270,34 +201,34 @@ BEGIN
     DECLARE available INT;
 
     IF class = 'Economy' THEN
-    SELECT
-        flights.economy - COALESCE(SUM(bookings.adults + bookings.children), 0) INTO available
-    FROM
-        flights
-        JOIN routes ON flights.aircraftID = routes.aircraftID
-        JOIN bookings ON bookings.flightID = routes.id
-    WHERE
-        bookings.seatClass = 'Economy'
-        AND bookings.flightID = flightID
-        AND bookings.date = date
-    GROUP BY
-        bookings.flightID,
-        bookings.date;
+        SELECT
+            vf.economy - COALESCE(SUM(vb.adults + vb.children), 0) INTO available
+        FROM
+            view_flights vf
+            JOIN view_routes vr ON vf.aircraftID = vr.aircraftID
+            JOIN view_bookings vb ON vb.flightID = vr.id
+        WHERE
+            vb.seatClass = 'Economy'
+            AND vb.flightID = flightID
+            AND vb.date = date
+        GROUP BY
+            vb.flightID,
+            vb.date;
 
     ELSEIF class = 'Business' THEN
-    SELECT
-        flights.business - COALESCE(SUM(bookings.adults + bookings.children), 0) INTO available
-    FROM
-        flights
-        JOIN routes ON flights.aircraftID = routes.aircraftID
-        JOIN bookings ON bookings.flightID = routes.id
-    WHERE
-        bookings.seatClass = 'Business'
-        AND bookings.flightID = flightID
-        AND bookings.date = date
-    GROUP BY
-        bookings.flightID,
-        bookings.date;
+        SELECT
+            vf.business - COALESCE(SUM(vb.adults + vb.children), 0) INTO available
+        FROM
+            view_flights vf
+            JOIN view_routes vr ON vf.aircraftID = vr.aircraftID
+            JOIN view_bookings vb ON vb.flightID = vr.id
+        WHERE
+            vb.seatClass = 'Business'
+            AND vb.flightID = flightID
+            AND vb.date = date
+        GROUP BY
+            vb.flightID,
+            vb.date;
 
     END IF;
 
@@ -318,6 +249,7 @@ BEGIN
             JSON_OBJECT('cityID', cityID, 'cityName', cityName)
         )
         FROM cities
+        ORDER BY cityName ASC
     );
 
     RETURN citiesList;
@@ -325,6 +257,23 @@ END //
 
 DELIMITER ;
 
+DELIMITER // 
+CREATE PROCEDURE airportDetails(
+    IN id VARCHAR(3),
+    OUT airport VARCHAR(100),
+    OUT city VARCHAR(100)
+) 
+BEGIN
+    SELECT
+        airportName,
+        cityName INTO airport,
+        city
+    FROM
+        view_cities
+    WHERE
+        cityID = id;
+END // 
+DELIMITER ;
 
 DELIMITER //
 
@@ -478,6 +427,65 @@ BEGIN
 END //
 
 DELIMITER ;
+
+CREATE VIEW view_users AS
+SELECT username, password_encrypt, firstName, lastName, mobileNo, email, age, gender, role
+FROM users;
+
+CREATE VIEW view_cities AS
+SELECT cityID, cityName, airportName
+FROM cities;
+
+CREATE VIEW view_flights AS
+SELECT aircraftID, model, business, economy
+FROM flights;
+
+CREATE VIEW view_routes AS
+SELECT id, aircraftID, departureAirportCode, arrivalAirportCode, departureTime, arrivalTime, basePrice, Mon, Tue, Wed, Thu, Fri, Sat, Sun
+FROM routes;
+
+CREATE VIEW view_bookings AS
+SELECT bookingID, username, flightID, date, adults, children, seatClass, amountPaid, food, extraLuggage
+FROM bookings;
+
+CREATE VIEW view_bookingDetails AS
+SELECT bookingID, passengerNo, firstName, lastName, gender, age
+FROM bookingDetails;
+
+CREATE ROLE user;
+
+CREATE ROLE admin;
+
+CREATE ROLE sys;
+
+GRANT SELECT ON flightBooking.view_users TO user;
+GRANT SELECT ON flightBooking.view_cities TO user;
+GRANT SELECT ON flightBooking.view_flights TO user;
+GRANT SELECT ON flightBooking.view_routes TO user;
+GRANT SELECT ON flightBooking.view_bookings TO user;
+GRANT SELECT ON flightBooking.view_bookingDetails TO user;
+
+GRANT ALL PRIVILEGES ON flightBooking.* TO admin;
+
+GRANT USAGE ON flightBooking.* TO admin;
+
+GRANT SELECT, INSERT, UPDATE ON flightBooking.users TO sys;
+
+CREATE USER 'user'@'localhost' IDENTIFIED BY 'user';
+
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
+
+CREATE USER 'sys'@'localhost' IDENTIFIED BY 'sys';
+
+GRANT user TO 'user'@'localhost';
+
+GRANT sys TO 'sys'@'localhost';
+
+GRANT admin TO 'admin'@'localhost';
+
+GRANT SUPER ON *.* TO 'admin'@'localhost';
+
+FLUSH PRIVILEGES;
 
 GRANT EXECUTE ON PROCEDURE flightBooking.airportDetails TO user;
 

@@ -71,12 +71,12 @@ def connectingFlights(departureAirportCode, arrivalAirportCode, date, seatClass)
     query = f"""
     SELECT r1.id, r1.departureTime, r1.arrivalTime, r1.basePrice, f1.model, f1.business, f1.economy, c1.cityName, c1.airportName,
     r2.id, r2.departureTime, r2.arrivalTime, r2.basePrice, f2.model, f2.business, f2.economy, c2.cityName, c2.airportName
-    FROM routes r1
-    JOIN routes r2 ON r1.arrivalAirportCode = r2.departureAirportCode
-    JOIN flights f1 ON r1.aircraftID = f1.aircraftID
-    JOIN flights f2 ON r2.aircraftID = f2.aircraftID
-    JOIN cities c1 ON r1.arrivalAirportCode = c1.cityID
-    JOIN cities c2 ON r2.departureAirportCode = c2.cityID
+    FROM view_routes r1
+    JOIN view_routes r2 ON r1.arrivalAirportCode = r2.departureAirportCode
+    JOIN view_flights f1 ON r1.aircraftID = f1.aircraftID
+    JOIN view_flights f2 ON r2.aircraftID = f2.aircraftID
+    JOIN view_cities c1 ON r1.arrivalAirportCode = c1.cityID
+    JOIN view_cities c2 ON r2.departureAirportCode = c2.cityID
     WHERE r1.departureAirportCode = %s
     AND r2.arrivalAirportCode = %s
     AND r1.{day} = 1
@@ -166,17 +166,17 @@ def searchFlights(
 
         query = """
         SELECT 
-            routes.id, 
-            routes.departureTime, 
-            routes.arrivalTime, 
-            routes.basePrice, 
-            flights.model, 
-            flights.business, 
-            flights.economy 
+            view_routes.id, 
+            view_routes.departureTime, 
+            view_routes.arrivalTime, 
+            view_routes.basePrice, 
+            view_flights.model, 
+            view_flights.business, 
+            view_flights.economy 
         FROM 
-            routes 
+            view_routes 
         JOIN 
-            flights ON routes.aircraftID = flights.aircraftID 
+            view_flights ON view_routes.aircraftID = view_flights.aircraftID 
         WHERE 
             departureAirportCode=%s 
             AND arrivalAirportCode=%s 
@@ -195,17 +195,17 @@ def searchFlights(
             day = day_dict[datetime.datetime.strptime(returnDate, "%Y-%m-%d").weekday()]
             query = """
             SELECT 
-                routes.id, 
-                routes.departureTime, 
-                routes.arrivalTime, 
-                routes.basePrice, 
-                flights.model, 
-                flights.business, 
-                flights.economy 
+                view_routes.id, 
+                view_routes.departureTime, 
+                view_routes.arrivalTime, 
+                view_routes.basePrice, 
+                view_flights.model, 
+                view_flights.business, 
+                view_flights.economy 
             FROM 
-                routes 
+                view_routes 
             JOIN 
-                flights ON routes.aircraftID = flights.aircraftID 
+                view_flights ON view_routes.aircraftID = view_flights.aircraftID 
             WHERE 
                 departureAirportCode=%s 
                 AND arrivalAirportCode=%s 
