@@ -462,12 +462,10 @@ def searchPage():
     )
 
 
-
-
 def get_user_profile(username):
     cnx = get_db_connection()
     cursor = cnx.cursor(dictionary=True)
-    query = "SELECT * FROM users WHERE username = %s"
+    query = "SELECT * FROM view_users WHERE username = %s"
     cursor.execute(query, (username,))
     user_data = cursor.fetchone()
     cursor.close()
@@ -479,7 +477,7 @@ def get_user_profile(username):
 def profile():
     if "username" not in session:
         return redirect(url_for("loginPage"))
-    
+
     user_data = get_user_profile(session["username"])
     user_data.pop("uTime")
 
@@ -488,9 +486,11 @@ def profile():
     else:
         return render_template("profile.html", error="User profile not found.")
 
+
 @app.route("/bookingConfirmation")
 def booking_confirmation_page():
     return render_template("bookingConfirmation.html")
+
 
 @app.route("/api/confirm-booking", methods=["POST"])
 def confirm_booking():
@@ -502,27 +502,23 @@ def confirm_booking():
     cnx = get_db_connection()
     cursor = cnx.cursor()
 
-    bookingID = random.randint(1000000,9999999)
+    bookingID = random.randint(1000000, 9999999)
 
     query_string = f"""INSERT INTO bookings (bookingID, username, flightID, date, adults, children, 
                     seatClass, amountPaid, food, extraLuggage) VALUES ({bookingID}, '{username}', '{data["flightID"]}', 
                     '{data["date"]}', {data["adults"]}, {data["children"]}, '{data["seatClass"]}', {data["amountPaid"]}, 
                     {str(data["food"]).upper()}, {str(data["extraLuggage"]).upper()})"""
 
-    print(query_string)
-    print()
     cursor.execute(query_string)
     cnx.commit()
 
-    passenger_no = 0 
+    passenger_no = 0
     for passenger in data["passengers"]:
         query_string = f"""INSERT INTO bookingDetails (bookingID, passengerNo, firstName, lastName, gender, age) 
                             VALUES ({bookingID}, {passenger_no}, '{passenger["firstName"]}', '{passenger["lastName"]}', 
                             '{passenger["gender"]}', {passenger["age"]})"""
-        
+
         cursor.execute(query_string)
-        print(query_string)
-        print()
         passenger_no += 1
 
     cnx.commit()
@@ -537,6 +533,7 @@ def my_bookings_page():
         return redirect(url_for("loginPage"))
     return render_template("myBookings.html")
 
+
 @app.route("/api/my-bookings", methods=["GET"])
 def get_my_bookings():
     username = session.get("username")
@@ -546,10 +543,9 @@ def get_my_bookings():
     cnx = get_db_connection()
     cursor = cnx.cursor(dictionary=True)
 
-    # Fetch bookings made by the logged-in user
     query = """
         SELECT bookingID, flightID, date, adults, children, seatClass, amountPaid, food, extraLuggage
-        FROM bookings
+        FROM view_bookings
         WHERE username = %s
         ORDER BY date DESC
     """
@@ -563,6 +559,13 @@ def get_my_bookings():
         return jsonify({"status": "success", "bookings": bookings})
     else:
         return jsonify({"status": "success", "bookings": []})
+
+
+@app.route("/logout", methods=["GET"])
+def logout():
+    session.pop("username", None)
+    return redirect(url_for("loginPage"))
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=3000)

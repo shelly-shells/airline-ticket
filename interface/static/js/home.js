@@ -12,14 +12,33 @@ function TopBar() {
             </div>
 
             <div className="nav-buttons">
-                <button className="my-bookings" onClick={() => window.location.href = "/myBookings"}>My Bookings</button>
+                <button
+                    className="my-bookings"
+                    onClick={() => (window.location.href = "/myBookings")}
+                >
+                    My Bookings
+                </button>
                 <button className="home">Home</button>
                 <div className="user-profile">
-                    <button onClick={toggleDropdown} className="profile-button">User Profile</button>
+                    <button onClick={toggleDropdown} className="profile-button">
+                        User Profile
+                    </button>
                     {showDropdown && (
                         <div className="dropdown">
-                            <button onClick={() => window.location.href = "/profile"}>Profile</button>
-                            <button onClick={() => window.location.href = "/logout"}>Logout</button>
+                            <button
+                                onClick={() =>
+                                    (window.location.href = "/profile")
+                                }
+                            >
+                                Profile
+                            </button>
+                            <button
+                                onClick={() =>
+                                    (window.location.href = "/logout")
+                                }
+                            >
+                                Logout
+                            </button>
                         </div>
                     )}
                 </div>
@@ -29,17 +48,16 @@ function TopBar() {
 }
 
 function Home() {
+    const today = new Date().toISOString().split("T")[0];
     const [tripType, setTripType] = React.useState(false);
     const [origin, setOrigin] = React.useState("");
     const [destination, setDestination] = React.useState("");
-    const [departure, setDeparture] = React.useState("2024-11-01");
-    const [returnDate, setReturnDate] = React.useState("2024-11-15");
+    const [departure, setDeparture] = React.useState(today);
+    const [returnDate, setReturnDate] = React.useState("2024-11-25");
     const [adults, setAdults] = React.useState(1);
     const [children, setChildren] = React.useState(0);
     const [seatClass, setSeatClass] = React.useState("Economy");
     const [cities, setCities] = React.useState([]);
-
-    const today = new Date().toISOString().split("T")[0];
 
     React.useEffect(() => {
         async function fetchCities() {
@@ -115,7 +133,10 @@ function Home() {
                     type="date"
                     placeholder="Departure Date"
                     value={departure}
-                    onChange={(e) => {console.log(e.target.value.toString()); setDeparture(e.target.value.toString())}}
+                    onChange={(e) => {
+                        console.log(e.target.value.toString());
+                        setDeparture(e.target.value.toString());
+                    }}
                     min={today}
                 />
                 {tripType && (

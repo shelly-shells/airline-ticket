@@ -1,36 +1,41 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Search Results</title>
-		<link
-			rel="stylesheet"
-			type="text/css"
-			href="{{ url_for('static', filename='styles/search.css') }}"
-		/>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
-	</head>
-	<body>
-		<h1>Search Results</h1>
-		<div id="root"></div>
+    <head>
+        <title>Search Results</title>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="{{ url_for('static', filename='styles/search.css') }}"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="{{ url_for('static', filename='styles/home.css') }}"
+        />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    </head>
+    <body>
+        <h1>Search Results</h1>
+        <div id="root"></div>
 
-		<script id="search-data" type="application/json">
-			{
-				"origin": "{{ origin }}",
-				"destination": "{{ destination }}",
-				"departure": "{{ departure }}",
-				"tripType": "{{ tripType }}",
-				"returnDate": "{{ returnDate }}",
-				"adults": "{{ adults }}",
-				"children": "{{ children }}",
-				"seatClass": "{{ seatClass }}"
-			}
-		</script>
+        <script id="search-data" type="application/json">
+            {
+                "origin": "{{ origin }}",
+                "destination": "{{ destination }}",
+                "departure": "{{ departure }}",
+                "tripType": "{{ tripType }}",
+                "returnDate": "{{ returnDate }}",
+                "adults": "{{ adults }}",
+                "children": "{{ children }}",
+                "seatClass": "{{ seatClass }}"
+            }
+        </script>
 
-		<script
-			type="text/babel"
-			src="{{ url_for('static', filename='js/search.js') }}"
-		></script>
-	</body>
+        <script
+            type="text/babel"
+            src="{{ url_for('static', filename='js/search.js') }}"
+        ></script>
+    </body>
 </html>
