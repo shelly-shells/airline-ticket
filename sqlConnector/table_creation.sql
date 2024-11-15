@@ -8,7 +8,7 @@ CREATE TABLE users (
     firstName VARCHAR(50) NOT NULL,
     lastName VARCHAR(50) NOT NULL,
     mobileNo VARCHAR(10) UNIQUE CHECK (mobileNo REGEXP '^[0-9]{10}$'),
-    email VARCHAR(100) UNIQUE,
+    email VARCHAR(100) UNIQUE CHECK (email REGEXP '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'),
     age INT CHECK (
         age >= 18
         AND age < 100

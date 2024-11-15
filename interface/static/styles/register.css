@@ -1,0 +1,134 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: url('/static/final.webp');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.login-container {
+    background: rgba(245, 237, 237, 0.95); /* Using F5EDED with slight transparency */
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(100, 130, 173, 0.2);
+    width: 100%;
+    max-width: 1000px; /* Increased max-width */
+    min-width: 700px; /* Increased min-width */
+    box-sizing: border-box;
+    position: relative;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(226, 218, 214, 0.5); /* E2DAD6 */
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.center-text {
+    text-align: center;
+    width: 100%;
+    color: #6482AD;
+}
+
+.login-container h1 {
+    margin-bottom: 30px;
+    color: #6482AD;
+    font-size: 2.2em;
+    font-weight: 600;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    color: #6482AD;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px;
+    margin: 8px 0;
+    border: 2px solid #E2DAD6;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    background: rgba(245, 237, 237, 0.7);
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #7FA1C3;
+    box-shadow: 0 0 0 3px rgba(127, 161, 195, 0.2);
+}
+
+.login-container button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    background: #6482AD;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+.login-container button:hover {
+    background: #7FA1C3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(100, 130, 173, 0.3);
+}
+
+.login-container a {
+    color: #6482AD;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.login-container a:hover {
+    color: #7FA1C3;
+    text-decoration: underline;
+}
+
+.error-message {
+    color: #ff6b6b;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+    width: 100%;
+    text-align: center;
+}
+
+/* Add some animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-container {
+    animation: fadeIn 0.5s ease-out;
+}
