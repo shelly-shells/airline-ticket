@@ -1,8 +1,25 @@
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    background-color: #f0f0f0;
     margin: 0;
     padding: 0;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Background Image Setup */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/static/final.webp'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.15; /* Adjust transparency here */
+    z-index: -1;
 }
 
 /* Top Bar */
@@ -10,109 +27,140 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 10px;
-    background-color: #333;
+    padding: 10px 20px;
+    background-color: #051f3d;
     color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(101, 69, 32, 0.2);
 }
 
 .logo img {
-    height: 200px;
+    height: 40px;
+    transition: transform 0.3s ease;
+}
+
+.logo img:hover {
+    transform: scale(1.05);
 }
 
 .nav-buttons {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 25px;
 }
 
 .my-bookings,
-.profile-button {
+.profile-button,
+.home {
     background: none;
-    border: none;
+    border: 2px solid transparent;
     color: white;
     cursor: pointer;
     font-size: 16px;
-    font-weight: bold;
-    transition: color 0.3s ease;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
 }
 
 .my-bookings:hover,
-.profile-button:hover {
-    color: #6a11cb;
+.profile-button:hover,
+.home:hover {
+    background-color: #6482AD;
+    border-color: #81DAE3;
 }
 
 .dropdown {
     position: absolute;
     right: 20px;
-    top: 60px;
+    top: 70px;
     background-color: white;
-    color: black;
-    padding: 10px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
+    padding: 12px;
+    box-shadow: 0px 8px 20px rgba(101, 69, 32, 0.15);
+    border-radius: 8px;
     z-index: 1;
+    border: 1px solid #81DAE3;
 }
 
 .dropdown button {
     display: block;
     width: 100%;
-    padding: 8px;
+    padding: 10px 15px;
     text-align: left;
     background: none;
     border: none;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.3s ease;
+    color: #6482AD;
+    transition: all 0.3s ease;
+    border-radius: 4px;
 }
 
 .dropdown button:hover {
-    background-color: #f0f0f0;
+    background-color: #6CBEC7;
+    color: white;
 }
 
 /* Booking Container */
 .booking-container {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(101, 69, 32, 0.15);
     text-align: center;
     width: 80%;
     max-width: 600px;
     min-width: 300px;
-    box-sizing: border-box;
     margin: 40px auto;
+    border: 2px solid #6CBEC7;
 }
 
 .booking-container h1 {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    color: #6482AD;
+    font-size: 2.2em;
+    font-weight: 600;
 }
 
 .booking-container input,
 .booking-container select {
     width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 12px;
+    margin: 12px 0;
+    border: 2px solid #6482AD;
+    border-radius: 8px;
     box-sizing: border-box;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.booking-container input:focus,
+.booking-container select:focus {
+    border-color: #6CBEC7;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(108, 190, 199, 0.2);
 }
 
 .booking-container button {
     width: 100%;
     padding: 15px;
     border: none;
-    border-radius: 5px;
-    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    border-radius: 8px;
+    background: linear-gradient(45deg, #6482AD, #359fec);
     color: white;
     font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.3s ease;
-    box-sizing: border-box;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .booking-container button:hover {
-    background: linear-gradient(45deg, #2575fc, #6a11cb);
+    background: linear-gradient(45deg, #6482AD, #6CBEC7);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(101, 69, 32, 0.2);
 }
 
 /* Results Container */
@@ -121,34 +169,35 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 40px 20px;
-    background-color: #eaeff2;
+    background-color: rgba(234, 239, 242, 0.8);
     min-height: 100vh;
 }
 
 .result {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 2px solid #6CBEC7;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(101, 69, 32, 0.1);
     margin: 20px 0;
-    padding: 25px;
+    padding: 30px;
     width: 90%;
     max-width: 850px;
-    transition: box-shadow 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .result:hover {
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(101, 69, 32, 0.15);
 }
 
 /* Result Flight Details */
 h2 {
-    margin-bottom: 20px;
-    color: #333;
-    font-size: 1.6em;
+    margin-bottom: 25px;
+    color: #654520;
+    font-size: 1.8em;
     text-align: center;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
 }
 
 .flight-result {
@@ -162,42 +211,59 @@ h2 {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+    border-bottom: 2px solid #81DAE3;
 }
 
 .flight-result .time-row p,
 .flight-result .airport-row p {
     margin: 0;
-    font-size: 1em;
-    color: #333;
+    font-size: 1.1em;
+    color: #654520;
 }
 
 .flight-result .airport-row p {
-    font-size: 0.95em;
-    color: #777;
+    font-size: 1em;
+    color: #825B32;
 }
 
 .flight-result p {
-    margin: 10px 0;
+    margin: 12px 0;
     font-size: 1.1em;
-    color: #555;
+    color: #654520;
 }
 
 .flight-result p span {
     font-weight: 600;
-    color: #2c3e50;
+    color: #6CBEC7;
 }
 
 /* Responsive Styling */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+    .booking-container {
+        width: 90%;
+        padding: 30px 20px;
+    }
+
     .result {
         width: 95%;
+        padding: 20px;
     }
 
     .flight-result .time-row p,
     .flight-result .airport-row p,
     .flight-result p {
-        font-size: 0.95em;
+        font-size: 0.9em;
+    }
+
+    .nav-buttons {
+        gap: 15px;
+    }
+
+    .my-bookings,
+    .profile-button,
+    .home {
+        padding: 6px 12px;
+        font-size: 14px;
     }
 }
