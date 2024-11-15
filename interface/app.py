@@ -479,8 +479,6 @@ def profile():
         return redirect(url_for("loginPage"))
 
     user_data = get_user_profile(session["username"])
-    user_data.pop("uTime")
-
     if user_data:
         return render_template("profile.html", user=json.dumps(user_data))
     else:

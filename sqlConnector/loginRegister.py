@@ -18,9 +18,9 @@ def login(username, password):
         if p == password:
             return 1, user[0][2]
         else:
-            return 0
+            return 0, None
     else:
-        return 0
+        return 0, None
 
 
 def register(username, password, fname, lname, phone, email, age, gender):

@@ -85,56 +85,68 @@ function Register() {
             <div className="login-container">
                 <h1 className="center-text">Register</h1>
                 <div className="error-message"></div>
-                <div className="input-group">
-                    <label htmlFor="username">Username:</label>
-                    <input
-                        className="username"
-                        type="text"
-                        placeholder="Username"
-                    />
+                <div className="input-row">
+                    <div className="input-group">
+                        <label htmlFor="username">Username:</label>
+                        <input
+                            className="username"
+                            type="text"
+                            placeholder="Username"
+                        />
+                    </div>
+                    <div className="input-group">
+                        <label htmlFor="password">Password:</label>
+                        <input
+                            className="password"
+                            type="password"
+                            placeholder="Password"
+                        />
+                    </div>
                 </div>
-                <div className="input-group">
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        className="password"
-                        type="password"
-                        placeholder="Password"
-                    />
+                <div className="input-row">
+                    <div className="input-group">
+                        <label htmlFor="fname">First Name:</label>
+                        <input
+                            className="fname"
+                            type="text"
+                            placeholder="First Name"
+                        />
+                    </div>
+                    <div className="input-group">
+                        <label htmlFor="lname">Last Name:</label>
+                        <input
+                            className="lname"
+                            type="text"
+                            placeholder="Last Name"
+                        />
+                    </div>
                 </div>
-                <div className="input-group">
-                    <label htmlFor="fname">First Name:</label>
-                    <input
-                        className="fname"
-                        type="text"
-                        placeholder="First Name"
-                    />
+                <div className="input-row">
+                    <div className="input-group">
+                        <label htmlFor="mobile">Mobile:</label>
+                        <input
+                            className="mobile"
+                            type="text"
+                            placeholder="Mobile"
+                        />
+                        <div className="mobile-error error-message"></div>
+                    </div>
+                    <div className="input-group">
+                        <label htmlFor="email">Email:</label>
+                        <input
+                            className="email"
+                            type="text"
+                            placeholder="Email"
+                        />
+                        <div className="email-error error-message"></div>
+                    </div>
                 </div>
-                <div className="input-group">
-                    <label htmlFor="lname">Last Name:</label>
-                    <input
-                        className="lname"
-                        type="text"
-                        placeholder="Last Name"
-                    />
-                </div>
-                <div className="input-group">
-                    <label htmlFor="mobile">Mobile:</label>
-                    <input
-                        className="mobile"
-                        type="text"
-                        placeholder="Mobile"
-                    />
-                    <div className="mobile-error error-message"></div>
-                </div>
-                <div className="input-group">
-                    <label htmlFor="email">Email:</label>
-                    <input className="email" type="text" placeholder="Email" />
-                    <div className="email-error error-message"></div>
-                </div>
-                <div className="input-group">
-                    <label htmlFor="age">Age:</label>
-                    <input className="age" type="text" placeholder="Age" />
-                    <div className="age-error error-message"></div>
+                <div className="input-row">
+                    <div className="input-group">
+                        <label htmlFor="age">Age:</label>
+                        <input className="age" type="text" placeholder="Age" />
+                        <div className="age-error error-message"></div>
+                    </div>
                 </div>
                 <label>Gender:</label>
                 <div className="gender-container">
