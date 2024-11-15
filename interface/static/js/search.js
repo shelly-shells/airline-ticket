@@ -95,6 +95,7 @@ function SearchResults() {
 
 	return (
 		<div className="results-container">
+			<TopBar />
 			{data.toFlights && data.toFlights.length > 0 ? (
 				<div>
 					<h2>To Flights</h2>

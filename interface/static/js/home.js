@@ -103,79 +103,117 @@ function Home() {
             <TopBar />
             <div className="booking-container">
                 <h1>Book Your Flight</h1>
-                <select
-                    value={origin}
-                    onChange={(e) => setOrigin(e.target.value)}
-                >
-                    <option value="" disabled>
-                        Select Origin
-                    </option>
-                    {cities.map((city) => (
-                        <option key={city.cityID} value={city.cityID}>
-                            {city.cityName}
-                        </option>
-                    ))}
-                </select>
-                <select
-                    value={destination}
-                    onChange={(e) => setDestination(e.target.value)}
-                >
-                    <option value="" disabled>
-                        Select Destination
-                    </option>
-                    {cities.map((city) => (
-                        <option key={city.cityID} value={city.cityID}>
-                            {city.cityName}
-                        </option>
-                    ))}
-                </select>
-                <input
-                    type="date"
-                    placeholder="Departure Date"
-                    value={departure}
-                    onChange={(e) => {
-                        console.log(e.target.value.toString());
-                        setDeparture(e.target.value.toString());
-                    }}
-                    min={today}
-                />
-                {tripType && (
-                    <input
-                        type="date"
-                        placeholder="Return Date"
-                        value={returnDate}
-                        onChange={(e) => setReturnDate(e.target.value)}
-                        min={departure}
-                    />
-                )}
-                <select
-                    value={tripType ? "True" : "False"}
-                    onChange={handleTripTypeChange}
-                >
-                    <option value="False">One Way</option>
-                    <option value="True">Round Trip</option>
-                </select>
-                <input
-                    type="number"
-                    placeholder="Number of Adults"
-                    min="1"
-                    value={adults}
-                    onChange={(e) => setAdults(e.target.value)}
-                />
-                <input
-                    type="number"
-                    placeholder="Number of Children"
-                    min="0"
-                    value={children}
-                    onChange={(e) => setChildren(e.target.value)}
-                />
-                <select
-                    value={seatClass}
-                    onChange={(e) => setSeatClass(e.target.value)}
-                >
-                    <option value="Economy">Economy</option>
-                    <option value="Business">Business</option>
-                </select>
+                <div className="input-row">
+                    <div className="input-group">
+                        <label htmlFor="origin">Origin:</label>
+                        <select
+                            id="origin"
+                            value={origin}
+                            onChange={(e) => setOrigin(e.target.value)}
+                        >
+                            <option value="" disabled>
+                                Select Origin
+                            </option>
+                            {cities.map((city) => (
+                                <option key={city.cityID} value={city.cityID}>
+                                    {city.cityName}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="input-group">
+                        <label htmlFor="destination">Destination:</label>
+                        <select
+                            id="destination"
+                            value={destination}
+                            onChange={(e) => setDestination(e.target.value)}
+                        >
+                            <option value="" disabled>
+                                Select Destination
+                            </option>
+                            {cities.map((city) => (
+                                <option key={city.cityID} value={city.cityID}>
+                                    {city.cityName}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+                <div className="input-row">
+                    <div className="input-group centered">
+                        <label htmlFor="tripType">Trip Type:</label>
+                        <select
+                            id="tripType"
+                            value={tripType ? "True" : "False"}
+                            onChange={handleTripTypeChange}
+                        >
+                            <option value="False">One Way</option>
+                            <option value="True">Round Trip</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="input-row">
+                    <div
+                        className={`input-group ${!tripType ? "centered" : ""}`}
+                        style={{ width: tripType ? "48%" : "100%" }}
+                    >
+                        <label htmlFor="departure">Departure Date:</label>
+                        <input
+                            id="departure"
+                            type="date"
+                            value={departure}
+                            onChange={(e) => setDeparture(e.target.value)}
+                            min={today}
+                        />
+                    </div>
+                    {tripType && (
+                        <div className="input-group">
+                            <label htmlFor="returnDate">Return Date:</label>
+                            <input
+                                id="returnDate"
+                                type="date"
+                                value={returnDate}
+                                onChange={(e) => setReturnDate(e.target.value)}
+                                min={departure}
+                            />
+                        </div>
+                    )}
+                </div>
+                <div className="input-row">
+                    <div className="input-group centered">
+                        <label htmlFor="seatClass">Seat Class:</label>
+                        <select
+                            id="seatClass"
+                            value={seatClass}
+                            onChange={(e) => setSeatClass(e.target.value)}
+                        >
+                            <option value="Economy">Economy</option>
+                            <option value="Business">Business</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="input-row">
+                    <div className="input-group">
+                        <label htmlFor="adults">Number of Adults:</label>
+                        <input
+                            id="adults"
+                            type="number"
+                            min="1"
+                            value={adults}
+                            onChange={(e) => setAdults(e.target.value)}
+                        />
+                    </div>
+                    <div className="input-group">
+                        <label htmlFor="children">Number of Children:</label>
+                        <input
+                            id="children"
+                            type="number"
+                            min="0"
+                            value={children}
+                            onChange={(e) => setChildren(e.target.value)}
+                        />
+                    </div>
+                </div>
                 <button onClick={search}>Search Flights</button>
             </div>
         </div>

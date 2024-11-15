@@ -121,11 +121,43 @@ body::before {
     font-weight: 600;
 }
 
-.booking-container input,
-.booking-container select {
+.input-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    width: 48%;
+}
+
+.input-group.centered {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.input-group.label-centered {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.input-group label {
+    color: #6482AD;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.input-group input,
+.input-group select {
     width: 100%;
     padding: 12px;
-    margin: 12px 0;
+    margin: 8px 0;
     border: 2px solid #6482AD;
     border-radius: 8px;
     box-sizing: border-box;
@@ -134,8 +166,8 @@ body::before {
     background-color: rgba(255, 255, 255, 0.9);
 }
 
-.booking-container input:focus,
-.booking-container select:focus {
+.input-group input:focus,
+.input-group select:focus {
     border-color: #6CBEC7;
     outline: none;
     box-shadow: 0 0 0 3px rgba(108, 190, 199, 0.2);
