@@ -1,109 +1,240 @@
 /* profile.css */
+:root {
+    --dark-brown: #654520;
+    --light-brown: #825B32;
+    --dark-teal: #6CBEC7;
+    --light-teal: #81DAE3;
+}
+
+/* Reset global margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    margin: 0;
+    padding-top: 60px; /* Account for fixed top bar height */
+    min-height: 100vh;
+    position: relative;
+    background-color: #f5f5f5;
+}
+
+/* Background image */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/static/final.webp'); /* Replace with your image URL */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.15;
+    z-index: -1;
+}
+
 /* Top Bar */
 .top-bar {
+    position: fixed; /* Fix the top bar to the top of the viewport */
+    top: 0;
+    left: 0;
+    width: 100%; /* Ensure it spans the full width */
+    z-index: 1000; /* Keep it above other elements */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 10px;
-    background-color: #333;
+    padding: 10px 20px;
+    background-color: #051f3d;
     color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(101, 69, 32, 0.2);
 }
 
 .logo img {
-    height: 200px;
+    height: 40px;
+    transition: transform 0.3s ease;
+}
+
+.logo img:hover {
+    transform: scale(1.05);
 }
 
 .nav-buttons {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 25px;
 }
 
 .my-bookings,
-.profile-button {
+.profile-button,
+.home {
     background: none;
-    border: none;
+    border: 2px solid transparent;
     color: white;
     cursor: pointer;
     font-size: 16px;
-    font-weight: bold;
-    transition: color 0.3s ease;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
 }
 
 .my-bookings:hover,
-.profile-button:hover {
-    color: #6a11cb;
+.profile-button:hover,
+.home:hover {
+    background-color: #6482AD;
+    border-color: #81DAE3;
 }
 
 .dropdown {
     position: absolute;
     right: 20px;
-    top: 60px;
+    top: 70px;
     background-color: white;
-    color: black;
-    padding: 10px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
+    padding: 12px;
+    box-shadow: 0px 8px 20px rgba(101, 69, 32, 0.15);
+    border-radius: 8px;
     z-index: 1;
+    border: 1px solid #81DAE3;
 }
 
 .dropdown button {
     display: block;
     width: 100%;
-    padding: 8px;
+    padding: 10px 15px;
     text-align: left;
     background: none;
     border: none;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.3s ease;
+    color: #6482AD;
+    transition: all 0.3s ease;
+    border-radius: 4px;
 }
 
 .dropdown button:hover {
-    background-color: #f0f0f0;
+    background-color: #6CBEC7;
+    color: white;
 }
 
-
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    background-color: #f5f5f5;
-}
-
+/* Profile Container Styles */
 .profile-container {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    text-align: center;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 8px 24px rgba(101, 69, 32, 0.15);
+    max-width: 600px;
+    margin: 40px auto;
+    border: 2px solid #6CBEC7;
 }
 
 .profile-container h1 {
-    font-size: 24px;
-    color: #333;
+    font-size: 2.2em;
+    color: #6482AD;
+    margin-bottom: 30px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
     margin-bottom: 20px;
+    width: 100%;
 }
 
-.profile-container p {
+.form-group label {
+    min-width: 100px;
+    margin-right: 15px;
+    text-align: right;
+    color: #6482AD;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+    flex: 1;
+    max-width: 300px;
+    padding: 10px 16px;
+    border: 1px solid var(--dark-teal);
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--light-teal);
+    box-shadow: 0 0 0 3px rgba(129, 218, 227, 0.2);
+}
+
+.form-group input:disabled {
+    background-color: rgba(101, 69, 32, 0.1);
+    border-color: var(--light-brown);
+    cursor: not-allowed;
+}
+
+.submit-button {
+    background: linear-gradient(45deg, #6482AD, #359fec);
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
     font-size: 16px;
-    color: #555;
-    margin: 8px 0;
-    line-height: 1.5;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.profile-container p strong {
-    color: #333;
+.submit-button:hover {
+    background: linear-gradient(45deg, #6482AD, #6CBEC7);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(101, 69, 32, 0.2);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+}
+
+.error-message,
+.success-message {
+    padding: 12px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-size: 14px;
+    text-align: center;
+    backdrop-filter: blur(5px);
+    transition: backdrop-filter 0.3s ease;
 }
 
 .error-message {
-    color: #ff4d4d;
-    font-size: 14px;
-    margin: 15px 0;
-    text-align: center;
+    background-color: rgba(220, 38, 38, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+.success-message {
+    background-color: rgba(22, 163, 74, 0.1);
+    color: #16a34a;
+    border: 1px solid rgba(22, 163, 74, 0.2);
 }
