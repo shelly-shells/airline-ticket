@@ -21,10 +21,8 @@ function createTopBar() {
         </div>
     `;
     
-    // Insert the top bar at the beginning of the body
     document.body.insertBefore(topBar, document.body.firstChild);
 
-    // Add dropdown functionality
     const profileButton = topBar.querySelector('.profile-button');
     const dropdown = topBar.querySelector('.dropdown');
     
