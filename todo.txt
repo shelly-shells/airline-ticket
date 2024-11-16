@@ -1,2 +1,2 @@
-failed to update profile
 duplicate phone no for update profile
+number of seats
