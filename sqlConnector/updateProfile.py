@@ -11,7 +11,19 @@ def update_profile(username, password, fname, lname, phone, email, age, gender):
         
         if password:
             encrypted_password = password_encryption.encrypter(password)
-        
+        if email:
+            cursor.execute(f"SELECT email FROM users WHERE email = '{email}'")
+            if cursor.fetchall():
+                cursor.close()
+                cnx.close()
+                return 0, "Email already exists"
+        if phone:
+            cursor.execute(f"SELECT mobileNo FROM users WHERE mobileNo = '{phone}'")
+            if cursor.fetchall():
+                cursor.close()
+                cnx.close()
+                return 0, "Mobile number already exists"
+            
         password_update_query = f"""password_encrypt = "{encrypted_password}", """ if password else ""
         fname_update_query = f"firstName = '{fname}', " if fname else ""
         lname_update_query = f"lastName = '{lname}', " if lname else ""
@@ -39,7 +51,7 @@ def update_profile(username, password, fname, lname, phone, email, age, gender):
         cnx.commit()
         cursor.close()
         cnx.close()
-        return 1  
+        return 1, None
     except Exception as e:
         print(e)
-        return 0 
+        return 0, "Error updating profile"

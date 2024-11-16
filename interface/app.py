@@ -61,11 +61,11 @@ def registerMe():
     age = data.get("age")
     gender = data.get("gender")
     status = register(username, password, fname, lname, phone, email, age, gender)
-    if status == 1:
+    if status[0] == 1:
         session["username"] = username
         return {"status": "success"}
     else:
-        return {"status": "failure"}
+        return {"status": "failure", "message": status[1]}
 
 
 @app.route("/update-profile", methods=["POST"])
@@ -80,10 +80,10 @@ def updateMe():
     age = data.get("age")
     gender = data.get("gender")
     status = update_profile(username, password, fname, lname, phone, email, age, gender)
-    if status == 1:
+    if status[0] == 1:
         return {"status": "success"}
     else:
-        return {"status": "failure"}
+        return {"status": "failure", "message": status[1]}
 
 
 def get_db_connection():

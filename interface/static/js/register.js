@@ -1,85 +1,88 @@
 function Register() {
-    function register() {
-        const username = document.querySelector(".username").value;
-        const password = document.querySelector(".password").value;
-        const fname = document.querySelector(".fname").value;
-        const lname = document.querySelector(".lname").value;
-        const mobile = document.querySelector(".mobile").value;
-        const email = document.querySelector(".email").value;
-        const age = document.querySelector(".age").value;
-        const gender = document.querySelector(
-            "input[name='gender']:checked"
-        ).value;
+	function register() {
+		const username = document.querySelector(".username").value;
+		const password = document.querySelector(".password").value;
+		const fname = document.querySelector(".fname").value;
+		const lname = document.querySelector(".lname").value;
+		const mobile = document.querySelector(".mobile").value;
+		const email = document.querySelector(".email").value;
+		const age = document.querySelector(".age").value;
+		const gender = document.querySelector(
+			"input[name='gender']:checked"
+		).value;
 
-        let valid = true;
+		let valid = true;
 
-        // Mobile number validation
-        if (!/^\d{10}$/.test(mobile)) {
-            valid = false;
-            const mobileError = document.querySelector(".mobile-error");
-            mobileError.innerHTML = "Mobile number must be exactly 10 digits.";
-            document.querySelector(".mobile").classList.add("error");
-        } else {
-            document.querySelector(".mobile-error").innerHTML = "";
-            document.querySelector(".mobile").classList.remove("error");
-        }
+		if (!/^\d{10}$/.test(mobile)) {
+			valid = false;
+			const mobileError = document.querySelector(".mobile-error");
+			mobileError.innerHTML = "Mobile number must be exactly 10 digits.";
+			document.querySelector(".mobile").classList.add("error");
+		} else {
+			document.querySelector(".mobile-error").innerHTML = "";
+			document.querySelector(".mobile").classList.remove("error");
+		}
 
-        // Email validation
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailRegex.test(email)) {
-            valid = false;
-            const emailError = document.querySelector(".email-error");
-            emailError.innerHTML = "Invalid email format.";
-            document.querySelector(".email").classList.add("error");
-        } else {
-            document.querySelector(".email-error").innerHTML = "";
-            document.querySelector(".email").classList.remove("error");
-        }
+		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		if (!emailRegex.test(email)) {
+			valid = false;
+			const emailError = document.querySelector(".email-error");
+			emailError.innerHTML = "Invalid email format.";
+			document.querySelector(".email").classList.add("error");
+		} else {
+			document.querySelector(".email-error").innerHTML = "";
+			document.querySelector(".email").classList.remove("error");
+		}
 
-        // Age validation
-        if (isNaN(age) || age <= 18) {
-            valid = false;
-            const ageError = document.querySelector(".age-error");
-            ageError.innerHTML = "Age must be more than 18.";
-            document.querySelector(".age").classList.add("error");
-        } else {
-            document.querySelector(".age-error").innerHTML = "";
-            document.querySelector(".age").classList.remove("error");
-        }
+		if (isNaN(age) || age <= 18) {
+			valid = false;
+			const ageError = document.querySelector(".age-error");
+			ageError.innerHTML = "Age must be more than 18.";
+			document.querySelector(".age").classList.add("error");
+		} else {
+			document.querySelector(".age-error").innerHTML = "";
+			document.querySelector(".age").classList.remove("error");
+		}
 
-        if (!valid) {
-            return;
-        }
+		if (!valid) {
+			return;
+		}
 
-        fetch("/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                username,
-                password,
-                fname,
-                lname,
-                mobile,
-                email,
-                age,
-                gender,
-            }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                if (data.status === "success") {
-                    window.location.href = "/home";
-                } else {
-                    let err = document.querySelector(".error-message");
-                    err.innerHTML = "Invalid username or password";
-                }
-            });
-    }
+		fetch("/register", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				username,
+				password,
+				fname,
+				lname,
+				mobile,
+				email,
+				age,
+				gender,
+			}),
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				if (data.status === "success") {
+					window.location.href = "/home";
+				} else {
+					let err = document.querySelector(".error-message");
+					err.innerHTML =
+						data.message ||
+						"Registration failed. Please try again.";
+				}
+			})
+			.catch((error) => {
+				let err = document.querySelector(".error-message");
+				err.innerHTML = "An error occurred. Please try again.";
+				console.error("Error:", error);
+			});
+	}
 
-    return (
+	return (
 		<div>
 			<TopBar />
 			<div className="login-container">
