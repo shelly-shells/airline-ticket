@@ -201,7 +201,7 @@ body::before {
     flex-direction: column;
     align-items: center;
     padding: 40px 20px;
-    background-color: rgba(234, 239, 242, 0.8);
+    background-color: rgba(234, 239, 242, 0.1);
     min-height: 100vh;
 }
 
@@ -225,7 +225,7 @@ body::before {
 /* Result Flight Details */
 h2 {
     margin-bottom: 25px;
-    color: #654520;
+    color: #000000;
     font-size: 1.8em;
     text-align: center;
     text-transform: uppercase;
@@ -244,30 +244,30 @@ h2 {
     align-items: center;
     margin-bottom: 15px;
     padding: 15px 0;
-    border-bottom: 2px solid #81DAE3;
+    border-bottom: 2px solid #60616150;
 }
 
 .flight-result .time-row p,
 .flight-result .airport-row p {
     margin: 0;
     font-size: 1.1em;
-    color: #654520;
+    color: #000000;
 }
 
 .flight-result .airport-row p {
     font-size: 1em;
-    color: #825B32;
+    color: #2c5083;
 }
 
 .flight-result p {
     margin: 12px 0;
     font-size: 1.1em;
-    color: #654520;
+    color: #031836;
 }
 
 .flight-result p span {
     font-weight: 600;
-    color: #6CBEC7;
+    color: #6482AD;
 }
 
 /* Responsive Styling */

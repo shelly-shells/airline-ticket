@@ -557,7 +557,78 @@ def get_my_bookings():
         return jsonify({"status": "success", "bookings": bookings})
     else:
         return jsonify({"status": "success", "bookings": []})
+    
 
+@app.route("/api/booking-details", methods=["GET"])
+def get_booking_details():
+    booking_id = request.args.get("bookingID")
+    username = session.get("username")
+
+    if not username:
+        return jsonify({"status": "failure", "message": "User not logged in"}), 403
+
+    if not booking_id:
+        return jsonify({"status": "failure", "message": "Booking ID is required"}), 400
+
+    cnx = get_db_connection()
+    cursor = cnx.cursor(dictionary=True)
+
+    # Fetch passenger details for the given bookingID
+    query = """
+        SELECT passengerNo, firstName, lastName, gender, age
+        FROM view_bookingDetails
+        WHERE bookingID = %s
+    """
+    cursor.execute(query, (booking_id,))
+    passengers = cursor.fetchall()
+
+    cursor.close()
+    cnx.close()
+
+    return jsonify({"status": "success", "passengers": passengers})
+
+
+@app.route("/api/cancel-booking", methods=["POST"])
+def cancel_booking():
+    try:
+        data = request.json
+        booking_id = data.get('bookingID')
+        username = session.get("username")
+
+        if not username:
+            return jsonify({"status": "failure", "message": "User not logged in"}), 403
+
+        if not booking_id:
+            return jsonify({"status": "failure", "message": "Booking ID is required"}), 400
+
+        cnx = get_db_connection()
+        cursor = cnx.cursor()
+
+        # Nested subquery to delete the booking
+        delete_query = """
+        DELETE FROM bookings
+        WHERE bookingID = (
+            SELECT * FROM (
+                SELECT bookingID
+                FROM bookings
+                WHERE bookingID = %s AND username = %s
+            ) AS subquery
+        )
+        """
+        cursor.execute(delete_query, (booking_id, username))
+        cnx.commit()
+
+        # Check if any rows were affected
+        if cursor.rowcount == 0:
+            return jsonify({"status": "failure", "message": "Booking not found or already canceled"}), 404
+
+        cursor.close()
+        cnx.close()
+
+        return jsonify({"status": "success", "message": "Booking canceled successfully"})
+
+    except Exception as e:
+        return jsonify({"status": "failure", "message": str(e)}), 500
 
 @app.route("/logout", methods=["GET"])
 def logout():
