@@ -3,7 +3,6 @@ function AdminPage() {
         <div>
             <TopBar />
             <div className="admin-container">
-                <h1 className="center-text">Admin Panel</h1>
                 <div className="admin-options">
                     <button
                         onClick={() =>

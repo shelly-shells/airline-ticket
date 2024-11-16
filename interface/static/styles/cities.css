@@ -26,7 +26,7 @@ th, td {
 }
 
 th {
-    background-color: #007bff;
+    background-color: #1e4986;
     color: white;
 }
 
@@ -43,7 +43,7 @@ input[type="text"] {
 }
 
 button {
-    background-color: #007bff;
+    background-color: #6482AD;
     color: white;
     border: none;
     padding: 10px 20px;
