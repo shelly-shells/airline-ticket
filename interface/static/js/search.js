@@ -23,7 +23,7 @@ function FlightResult({ result, source, destination, flightData }) {
                 <p>{destination[0]}<br />{destination[1]}</p>
             </div>
             <p><span>Flight:</span> {result[0]}</p>
-            <p><span>Price:</span> {result[3]}</p>
+            <p><span>Price/ticket:</span> {result[3]} Rs. </p>
             <p><span>Aircraft Model:</span> {result[4]}</p>
         </div>
     );
