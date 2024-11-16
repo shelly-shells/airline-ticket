@@ -1,4 +1,3 @@
-/* profile.css */
 :root {
     --dark-brown: #654520;
     --light-brown: #825B32;
@@ -6,7 +5,6 @@
     --light-teal: #81DAE3;
 }
 
-/* Reset global margins and paddings */
 * {
     margin: 0;
     padding: 0;
@@ -16,13 +14,12 @@
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     margin: 0;
-    padding-top: 60px; /* Account for fixed top bar height */
+    padding-top: 60px;
     min-height: 100vh;
     position: relative;
     background-color: #f5f5f5;
 }
 
-/* Background image */
 body::before {
     content: '';
     position: fixed;
@@ -30,7 +27,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('/static/final.webp'); /* Replace with your image URL */
+    background-image: url('/static/final.webp'); 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -38,13 +35,12 @@ body::before {
     z-index: -1;
 }
 
-/* Top Bar */
 .top-bar {
     position: fixed; /* Fix the top bar to the top of the viewport */
     top: 0;
     left: 0;
-    width: 100%; /* Ensure it spans the full width */
-    z-index: 1000; /* Keep it above other elements */
+    width: 100%; 
+    z-index: 1000;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -121,7 +117,6 @@ body::before {
     color: white;
 }
 
-/* Profile Container Styles */
 .profile-container {
     background-color: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
@@ -158,7 +153,7 @@ body::before {
 }
 
 .form-group label {
-    min-width: 120px; /* Adjusted for better alignment */
+    min-width: 120px;
     margin-right: 15px;
     text-align: right;
     color: #6482AD;

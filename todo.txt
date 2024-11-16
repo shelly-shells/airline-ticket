@@ -1,2 +1,2 @@
-duplicate phone no for update profile
-number of seats
+connecting flight details
+return flight booking

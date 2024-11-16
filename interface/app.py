@@ -597,7 +597,6 @@ def get_booking_details():
     cnx = get_db_connection()
     cursor = cnx.cursor(dictionary=True)
 
-    # Fetch passenger details for the given bookingID
     query = """
         SELECT passengerNo, firstName, lastName, gender, age
         FROM view_bookingDetails
@@ -631,7 +630,6 @@ def cancel_booking():
         cnx = get_db_connection()
         cursor = cnx.cursor()
 
-        # Nested subquery to delete the booking
         delete_query = """
         DELETE FROM bookings
         WHERE bookingID = (
@@ -645,7 +643,6 @@ def cancel_booking():
         cursor.execute(delete_query, (booking_id, username))
         cnx.commit()
 
-        # Check if any rows were affected
         if cursor.rowcount == 0:
             return (
                 jsonify(
