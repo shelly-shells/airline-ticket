@@ -12,7 +12,7 @@ def update_profile(username, password, fname, lname, phone, email, age, gender):
         if password:
             encrypted_password = password_encryption.encrypter(password)
         
-        password_update_query = f"password_encrypt = '{encrypted_password}', " if password else ""
+        password_update_query = f"""password_encrypt = "{encrypted_password}", """ if password else ""
         fname_update_query = f"firstName = '{fname}', " if fname else ""
         lname_update_query = f"lastName = '{lname}', " if lname else ""
         phone_update_query = f"mobileNo = '{phone}', " if phone else ""
@@ -35,15 +35,11 @@ def update_profile(username, password, fname, lname, phone, email, age, gender):
         
         update_query = f"UPDATE users SET {set_clause} WHERE username = '{username}'"
         
-        print(f"Update query: {update_query}")
-
-        # Execute the query
         cursor.execute(update_query)
-        
         cnx.commit()
         cursor.close()
         cnx.close()
-        return 1  # Success
+        return 1  
     except Exception as e:
         print(e)
-        return 0  # Failure
+        return 0 

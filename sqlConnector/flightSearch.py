@@ -108,6 +108,13 @@ def connectingFlights(departureAirportCode, arrivalAirportCode, date, seatClass)
         i for i in connecting_flights if i[0][-1] == 1 and i[1][-1] == 1
     ]
 
+    connecting_flights = [
+        i
+        for i in connecting_flights
+        if seatClass == "Economy"
+        or (seatClass == "Business" and i[0][5] > 0 and i[1][5] > 0)
+    ]
+
     for i in connecting_flights:
         i[0][3] = priceCalc(
             cursor,
@@ -251,8 +258,4 @@ def searchFlights(
         return None
 
 
-# print(
-#     searchFlights("DEL", "BOM", "2025-01-01", True, 5, 1, "Economy", "2025-01-02")[
-#         "connectingReturn"
-#     ]
-# )
+# print(searchFlights("BLR", "NAG", "2024-11-16", True, 5, 1, "Business", "2025-01-02"))

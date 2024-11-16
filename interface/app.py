@@ -542,22 +542,46 @@ def get_my_bookings():
     cursor = cnx.cursor(dictionary=True)
 
     query = """
-        SELECT bookingID, flightID, date, adults, children, seatClass, amountPaid, food, extraLuggage
-        FROM view_bookings
-        WHERE username = %s
-        ORDER BY date DESC
+    SELECT 
+        bookingID, 
+        flightID, 
+        date, 
+        adults, 
+        children, 
+        seatClass, 
+        amountPaid, 
+        food, 
+        extraLuggage, 
+        view_routes.departureAirportCode, 
+        view_routes.arrivalAirportCode, 
+        view_routes.departureTime, 
+        view_routes.arrivalTime
+    FROM 
+        view_bookings
+    JOIN 
+        view_routes 
+    ON 
+        view_bookings.flightID = view_routes.id
+    WHERE 
+        username = %s
+    ORDER BY 
+        date DESC
     """
     cursor.execute(query, (username,))
     bookings = cursor.fetchall()
-
     cursor.close()
     cnx.close()
 
     if bookings:
+        for i in bookings:
+            i["date"] = i["date"].strftime("%Y-%m-%d")
+            i["departureTime"] = timedelta_to_hhmmss(i["departureTime"])
+            i["arrivalTime"] = timedelta_to_hhmmss(i["arrivalTime"])
+
         return jsonify({"status": "success", "bookings": bookings})
     else:
         return jsonify({"status": "success", "bookings": []})
-    
+
 
 @app.route("/api/booking-details", methods=["GET"])
 def get_booking_details():
@@ -592,14 +616,17 @@ def get_booking_details():
 def cancel_booking():
     try:
         data = request.json
-        booking_id = data.get('bookingID')
+        booking_id = data.get("bookingID")
         username = session.get("username")
 
         if not username:
             return jsonify({"status": "failure", "message": "User not logged in"}), 403
 
         if not booking_id:
-            return jsonify({"status": "failure", "message": "Booking ID is required"}), 400
+            return (
+                jsonify({"status": "failure", "message": "Booking ID is required"}),
+                400,
+            )
 
         cnx = get_db_connection()
         cursor = cnx.cursor()
@@ -620,15 +647,26 @@ def cancel_booking():
 
         # Check if any rows were affected
         if cursor.rowcount == 0:
-            return jsonify({"status": "failure", "message": "Booking not found or already canceled"}), 404
+            return (
+                jsonify(
+                    {
+                        "status": "failure",
+                        "message": "Booking not found or already canceled",
+                    }
+                ),
+                404,
+            )
 
         cursor.close()
         cnx.close()
 
-        return jsonify({"status": "success", "message": "Booking canceled successfully"})
+        return jsonify(
+            {"status": "success", "message": "Booking canceled successfully"}
+        )
 
     except Exception as e:
         return jsonify({"status": "failure", "message": str(e)}), 500
+
 
 @app.route("/logout", methods=["GET"])
 def logout():

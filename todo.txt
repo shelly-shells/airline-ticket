@@ -1,3 +1,2 @@
-cancel booking
-fix top bar
-connecting flight
+failed to update profile
+duplicate phone no for update profile
