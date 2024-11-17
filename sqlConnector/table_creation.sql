@@ -199,6 +199,7 @@ RETURNS INT
 DETERMINISTIC 
 BEGIN 
     DECLARE available INT;
+    DECLARE total INT;
 
     IF class = 'Economy' THEN
         SELECT
@@ -206,14 +207,13 @@ BEGIN
         FROM
             view_flights vf
             JOIN view_routes vr ON vf.aircraftID = vr.aircraftID
-            JOIN view_bookings vb ON vb.flightID = vr.id
+            LEFT JOIN view_bookings vb ON vb.flightID = vr.id AND vb.date = date AND vb.seatClass = 'Economy'
         WHERE
-            vb.seatClass = 'Economy'
-            AND vb.flightID = flightID
-            AND vb.date = date
+            vr.id = flightID
         GROUP BY
-            vb.flightID,
-            vb.date;
+            vr.id;
+
+        SELECT vf.economy INTO total FROM view_flights vf WHERE vf.aircraftID = (SELECT aircraftID FROM view_routes WHERE id = flightID);
 
     ELSEIF class = 'Business' THEN
         SELECT
@@ -221,15 +221,17 @@ BEGIN
         FROM
             view_flights vf
             JOIN view_routes vr ON vf.aircraftID = vr.aircraftID
-            JOIN view_bookings vb ON vb.flightID = vr.id
+            LEFT JOIN view_bookings vb ON vb.flightID = vr.id AND vb.date = date AND vb.seatClass = 'Business'
         WHERE
-            vb.seatClass = 'Business'
-            AND vb.flightID = flightID
-            AND vb.date = date
+            vr.id = flightID
         GROUP BY
-            vb.flightID,
-            vb.date;
+            vr.id;
 
+        SELECT vf.business INTO total FROM view_flights vf WHERE vf.aircraftID = (SELECT aircraftID FROM view_routes WHERE id = flightID);
+    END IF;
+
+    IF available IS NULL THEN
+        SET available = total;
     END IF;
 
     RETURN available;

@@ -107,6 +107,12 @@ function Home() {
 			alert("Please select a destination airport.");
 			return;
 		}
+
+		if (origin === destination) {
+			alert("Origin and destination cannot be the same.");
+			return;
+		}
+		
 		if (departure < today) {
 			alert("Departure date cannot be in the past.");
 			return;
@@ -127,6 +133,11 @@ function Home() {
 			alert(
 				"The total number of passengers (adults + children) must be at least 1."
 			);
+			return;
+		}
+
+		if (adults + children > 9) {
+			alert("The maximum number of passengers is 9.");
 			return;
 		}
 
