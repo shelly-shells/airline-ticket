@@ -1,18 +1,25 @@
+const isObjectEmpty = (objectName) => {
+	return Object.keys(objectName).length === 0
+}
+
 function BookingConfirmation() {
 	const storedFlightData = JSON.parse(
-		localStorage.getItem("selectedFlight") || "{}"
+		localStorage.getItem("selectedFlights") || "{}"
 	);
 
-	const adults = storedFlightData.adults || 1;
-	const children = storedFlightData.children || 0;
-	const basePrice = storedFlightData.price || 0;
+	const adults = (storedFlightData[0] ? storedFlightData[0].adults : 0) || 1;
+	const children =(storedFlightData[0] ? storedFlightData[0].children : 0) || 1;
+	const basePrice = storedFlightData[0] ? storedFlightData.reduce(
+		(sum, flight) => sum + (parseFloat(flight.price) || 0),
+		0
+	) : 0;
 	const [extraLuggage, setExtraLuggage] = React.useState(false);
 	const [food, setFood] = React.useState(false);
 
 	const luggageCost = 30;
 	const foodCost = 20;
 
-	const [flight, setFlight] = React.useState(storedFlightData);
+	const [flights, setFlights] = React.useState(storedFlightData);
 
 	const [passengers, setPassengers] = React.useState([]);
 
@@ -66,51 +73,82 @@ function BookingConfirmation() {
 		);
 	}
 
-	function confirmBooking() {
-		const bookingData = {
-			flightID: flight.id,
-			date: flight.date,
-			adults: adults,
-			children: children,
-			seatClass: flight.seatClass,
-			amountPaid: totalPrice(),
-			food: food,
-			extraLuggage: extraLuggage,
-			passengers: passengers,
-		};
+	async function confirmBooking() {
+		let success = false;
 
-		fetch("/api/confirm-booking", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(bookingData),
-		})
-			.then((response) => response.json())
-			.then((data) => {
+		if (isObjectEmpty(flights))
+		{
+			alert("Die, scammer.");
+			window.location.href = "/home";
+		}
+
+		const bookingPromises = flights.map(async (flight) => {
+			const bookingData = {
+				flightID: flight.id,
+				date: flight.date,
+				adults: flight.adults,
+				children: flight.children,
+				seatClass: flight.seatClass,
+				amountPaid: totalPrice(),
+				food: food,
+				extraLuggage: extraLuggage,
+				passengers: passengers,
+			};
+	
+			try {
+				const response = await fetch("/api/confirm-booking", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(bookingData),
+				});
+				const data = await response.json();
+	
 				if (data.status === "success") {
-					alert("Booking confirmed!");
-					window.location.href = "/home";
+					console.log(`Booking confirmed for flight ID: ${flight.id}`);
+					success = true;
 				} else {
-					alert("Failed to confirm booking. Try again.");
+					alert(`Failed to confirm booking for flight ID: ${flight.id}`);
+					success = false;
 				}
-			})
-			.catch((error) => console.error("Booking error:", error));
-	}
+			} catch (error) {
+				console.error(`Booking error for flight ID: ${flight.id}`, error);
+				success = false;
+			}
+		});
+
+		await Promise.all(bookingPromises);
+
+		if (success) {
+			alert("All bookings confirmed!");
+		} else {
+			alert("Some or all bookings failed. Please try again later.");
+		}
+		localStorage.setItem("selectedFlights", "{}");
+		window.location.href = "/home";
+	}	
 
 	return (
 		<div className="confirmation-container">
 			<h1>Booking Confirmation</h1>
-			<p>
-				<strong>Flight ID:</strong> {flight.id}
-			</p>
-			<p>
-				<strong>Date:</strong> {flight.date}
-			</p>
-			<p>
-				<strong>Seat Class:</strong> {flight.seatClass}
-			</p>
-			<p>
-				<strong>Price per Ticket:</strong> Rs. {flight.price}
-			</p>
+			{!isObjectEmpty(flights) ? flights.map((flight, index) => (
+				<div key={index} className="result">
+					<p>
+						<strong>Flight ID:</strong> {flight.id}
+					</p>
+					<p>
+						<strong>Date:</strong> {flight.date}
+					</p>
+					<p>
+						<strong>Seat Class:</strong> {flight.seatClass}
+					</p>
+					<p>
+						<strong>Price per Ticket:</strong> Rs. {flight.price}
+					</p>
+					<hr />
+				</div>
+			)): ''}
+
+
 
 			<h3>Number of Passengers</h3>
 			<p>
