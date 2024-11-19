@@ -1,61 +1,3 @@
-function FlightResult({ result, source, destination, flightData }) {
-    function selectFlight() {
-        const neededFlightData = {
-            id: result[0],
-            date: flightData.get("departure"),
-            seatClass: flightData.get("seatClass"),
-			children: flightData.get("children"),
-			adults: flightData.get("adults"),
-            price: result[3],
-        };
-        localStorage.setItem("selectedFlight", JSON.stringify(neededFlightData));
-        window.location.href = "/bookingConfirmation";
-    }
-
-    return (
-        <div className="flight-result" onClick={selectFlight}>
-            <div className="time-row">
-                <p><span>Departure:</span> {result[1]}</p>
-                <p><span>Arrival:</span> {result[2]}</p>
-            </div>
-            <div className="airport-row">
-                <p>{source[0]}<br />{source[1]}</p>
-                <p>{destination[0]}<br />{destination[1]}</p>
-            </div>
-            <p><span>Flight:</span> {result[0]}</p>
-            <p><span>Price/ticket:</span> {result[3]} Rs. </p>
-            <p><span>Aircraft Model:</span> {result[4]}</p>
-        </div>
-    );
-}
-
-
-function ConnectingFlightResult({ resultPair, source, destination, flightData }) {
-	return (
-		<div className="connecting-flight-result">
-			<h2>Flight 1</h2>
-			<FlightResult
-				result={resultPair[0]}
-				source={source}
-				destination={[resultPair[0][8], resultPair[0][7]]}
-				flightData={flightData}
-			/>
-			<br />
-			<br />
-			<h2>Flight 2</h2>
-			<FlightResult
-				result={resultPair[1]}
-				source={[resultPair[1][8], resultPair[1][7]]}
-				destination={destination}
-				flightData={flightData}
-			/>
-			<p>
-				<h3>Layover : {resultPair[2]}</h3>
-			</p>
-		</div>
-	);
-}
-
 function SearchResults() {
 	const [data, setData] = React.useState(null);
 	const [loading, setLoading] = React.useState(true);
@@ -93,8 +35,78 @@ function SearchResults() {
 		return <div>Error loading search results. Please try again later.</div>;
 	}
 
+	function FlightResult({ result, source, destination, flightData, onClick }) {
+
+		return (
+			<div className="flight-result" onClick={() => { onClick([result], flightData); window.location.href = "/bookingConfirmation";} }>
+				<div className="time-row">
+					<p><span>Departure:</span> {result[1]}</p>
+					<p><span>Arrival:</span> {result[2]}</p>
+				</div>
+				<div className="airport-row">
+					<p>{source[0]}<br />{source[1]}</p>
+					<p>{destination[0]}<br />{destination[1]}</p>
+				</div>
+				<p><span>Flight:</span> {result[0]}</p>
+				<p><span>Price/ticket:</span> {result[3]} Rs. </p>
+				<p><span>Aircraft Model:</span> {result[4]}</p>
+			</div>
+		);
+	}
+	
+	
+	function ConnectingFlightResult({ resultPair, source, destination, flightData }) {
+		console.log(resultPair);
+		
+		return (
+			<div className="connecting-flight-result" onClick={() => { selectFlight(resultPair, flightData); window.location.href = "/bookingConfirmation";}}>
+				<h2>Flight 1</h2>
+				<FlightResult
+					result={resultPair[0]}
+					source={source}
+					destination={[resultPair[0][8], resultPair[0][7]]}
+					flightData={flightData}
+					onClick={(a,b)=>{console.log("hey ya!1")}}
+				/>
+				<br />
+				<br />
+				<h2>Flight 2</h2>
+				<FlightResult
+					result={resultPair[1]}
+					source={[resultPair[1][8], resultPair[1][7]]}
+					destination={destination}
+					flightData={flightData}
+					onClick={(a,b)=>{console.log("hey ya!2")}}
+				/>
+				<p>
+					<h3>Layover : {resultPair[2]}</h3>
+				</p>
+			</div>
+		);
+	}	
+
+	function selectFlight(results, flightData) {
+		
+		var arrayOfResults = showConnectingFlights ? Object.keys(results).map((key) => results[key]).slice(0,-1) : results;
+		
+		console.log(arrayOfResults);
+		const selectedFlights = arrayOfResults.map((result, index) => ({
+			id: result[0],
+			date: flightData.get("departure"),
+			seatClass: flightData.get("seatClass"),
+			children: flightData.get("children"),
+			adults: flightData.get("adults"),
+			price: result[3],
+		}));
+	
+		localStorage.setItem("selectedFlights", JSON.stringify(selectedFlights));
+	}
+	
+
 	return (
-		<div className="results-container">
+		<div>
+			<div className="results-container">
+
 			{data.toFlights && data.toFlights.length > 0 ? (
 				<div>
 					<h2>To Flights</h2>
@@ -105,6 +117,7 @@ function SearchResults() {
 								source={data.source}
 								destination={data.destination}
 								flightData={flightData}
+								onClick={selectFlight}
 							/>
 						</div>
 					))}
@@ -134,6 +147,7 @@ function SearchResults() {
 								source={data.destination}
 								destination={data.source}
 								flightData={flightData}
+								onClick={selectFlight}
 							/>
 						</div>
 					))}
@@ -202,6 +216,7 @@ function SearchResults() {
 					)}
 				</div>
 			)}
+		</div>
 		</div>
 	);
 }
