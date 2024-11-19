@@ -87,10 +87,10 @@ function SearchResults() {
 
 	function selectFlight(results, flightData) {
 		
-		var arrayofResultsBecauseWhyTheFuckWasItAnObjectAndWhyTheActualFUCKDOESITHAVETHELAYOVERTIMERANDOMLYASAKEYIAMLOSINGMYBRAINPLS = showConnectingFlights ? Object.keys(results).map((key) => results[key]).slice(0,-1) : results;
+		var arrayOfResults = showConnectingFlights ? Object.keys(results).map((key) => results[key]).slice(0,-1) : results;
 		
-		console.log(arrayofResultsBecauseWhyTheFuckWasItAnObjectAndWhyTheActualFUCKDOESITHAVETHELAYOVERTIMERANDOMLYASAKEYIAMLOSINGMYBRAINPLS);
-		const selectedFlights = arrayofResultsBecauseWhyTheFuckWasItAnObjectAndWhyTheActualFUCKDOESITHAVETHELAYOVERTIMERANDOMLYASAKEYIAMLOSINGMYBRAINPLS.map((result, index) => ({
+		console.log(arrayOfResults);
+		const selectedFlights = arrayOfResults.map((result, index) => ({
 			id: result[0],
 			date: flightData.get("departure"),
 			seatClass: flightData.get("seatClass"),
