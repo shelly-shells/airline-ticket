@@ -98,7 +98,7 @@ p {
 
 .passenger-card input,
 .passenger-card select {
-    width: calc(100% - 30px); /* Subtract padding from total width */
+    width: calc(100% - 30px);
     padding: 12px 15px;
     margin: 8px 0;
     border: 1px solid rgba(100, 130, 173, 0.3);
@@ -151,7 +151,6 @@ p {
     cursor: not-allowed;
 }
 
-/* Price display styling */
 h2.total-price {
     color: #6482AD;
     font-size: 1.5rem;
@@ -160,7 +159,6 @@ h2.total-price {
     margin-top: 20px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .confirmation-container {
         margin: 20px;

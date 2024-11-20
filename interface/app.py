@@ -61,11 +61,11 @@ def registerMe():
     age = data.get("age")
     gender = data.get("gender")
     status = register(username, password, fname, lname, phone, email, age, gender)
-    if status == 1:
+    if status[0] == 1:
         session["username"] = username
         return {"status": "success"}
     else:
-        return {"status": "failure"}
+        return {"status": "failure", "message": status[1]}
 
 
 @app.route("/update-profile", methods=["POST"])
@@ -80,10 +80,10 @@ def updateMe():
     age = data.get("age")
     gender = data.get("gender")
     status = update_profile(username, password, fname, lname, phone, email, age, gender)
-    if status == 1:
+    if status[0] == 1:
         return {"status": "success"}
     else:
-        return {"status": "failure"}
+        return {"status": "failure", "message": status[1]}
 
 
 def get_db_connection():
@@ -597,7 +597,6 @@ def get_booking_details():
     cnx = get_db_connection()
     cursor = cnx.cursor(dictionary=True)
 
-    # Fetch passenger details for the given bookingID
     query = """
         SELECT passengerNo, firstName, lastName, gender, age
         FROM view_bookingDetails
@@ -631,7 +630,6 @@ def cancel_booking():
         cnx = get_db_connection()
         cursor = cnx.cursor()
 
-        # Nested subquery to delete the booking
         delete_query = """
         DELETE FROM bookings
         WHERE bookingID = (
@@ -645,7 +643,6 @@ def cancel_booking():
         cursor.execute(delete_query, (booking_id, username))
         cnx.commit()
 
-        # Check if any rows were affected
         if cursor.rowcount == 0:
             return (
                 jsonify(

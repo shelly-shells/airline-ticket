@@ -50,30 +50,35 @@ function BookingConfirmation() {
 		setPassengers((prevPassengers) => {
 			const newPassengers = [...prevPassengers];
 			newPassengers[index] = { ...newPassengers[index], [field]: value };
-			if (
-				field === "age" &&
-				newPassengers[index].type === "child" &&
-				parseInt(value) >= 12
-			) {
-				alert("Child age must be under 12.");
-				newPassengers[index].age = "";
-			}
 			return newPassengers;
 		});
 	}
 
 	function isFormValid() {
-		return passengers.every(
-			(passenger) =>
+		return passengers.every((passenger) => {
+			const age = parseInt(passenger.age);
+			if (passenger.type === "child" && (age < 0 || age >= 18)) {
+				alert("Child age must be between 0 and 18.");
+				return false;
+			}
+			if (passenger.type === "adult" && (age < 18 || age > 99)) {
+				alert("Adult age must be between 18 and 99.");
+				return false;
+			}
+			return (
 				passenger.firstName &&
 				passenger.lastName &&
 				passenger.age &&
-				passenger.gender &&
-				(passenger.type !== "child" || parseInt(passenger.age) < 12)
-		);
+				passenger.gender
+			);
+		});
 	}
 
 	async function confirmBooking() {
+		if (!isFormValid()) {
+			return;
+		}
+
 		let success = false;
 
 		if (isObjectEmpty(flights))
@@ -234,11 +239,7 @@ function BookingConfirmation() {
 			))}
 
 			<h2>Total Price: Rs. {totalPrice()}</h2>
-			<button
-				onClick={confirmBooking}
-				className="confirm-button"
-				disabled={!isFormValid()}
-			>
+			<button onClick={confirmBooking} className="confirm-button">
 				Confirm Booking
 			</button>
 		</div>

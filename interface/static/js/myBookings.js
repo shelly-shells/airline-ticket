@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function displayBookings(bookings) {
 	const bookingsContainer = document.getElementById("bookings-container");
-	bookingsContainer.innerHTML = ""; // Clear previous content
+	bookingsContainer.innerHTML = ""; 
 
 	bookings.forEach((booking) => {
 		const bookingCard = document.createElement("div");

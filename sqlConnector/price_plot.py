@@ -19,7 +19,6 @@ plt.plot(l)
 
 l = [(0.7 - 3 * np.log10((i / 100) + 0.1)) for i in range(0, 100)]
 plt.plot(l)
-# plt.savefig("plot2.png")
 
 basePrice = 4000
 seatProportions = np.linspace(0, 1, 100)

@@ -83,7 +83,22 @@ function UserProfile() {
 		setErrorMessage("");
 		setSuccessMessage("");
 
-		// Prepare data to send (exclude fields if empty)
+		if (formData.mobile && !/^\d{10}$/.test(formData.mobile)) {
+			setErrorMessage("Mobile number must be exactly 10 digits.");
+			return;
+		}
+
+		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		if (formData.email && !emailRegex.test(formData.email)) {
+			setErrorMessage("Invalid email format.");
+			return;
+		}
+
+		if (formData.age && (isNaN(formData.age) || formData.age <= 18)) {
+			setErrorMessage("Age must be more than 18.");
+			return;
+		}
+
 		const dataToSend = {};
 		for (const key in formData) {
 			if (formData[key] !== "") {

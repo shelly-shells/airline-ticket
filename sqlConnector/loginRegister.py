@@ -29,6 +29,24 @@ def register(username, password, fname, lname, phone, email, age, gender):
         cnx = mysql.connector.connect(user="sys", password="sys", host="127.0.0.1")
         cursor = cnx.cursor()
         cursor.execute("use flightBooking")
+        cursor.execute(f"select username from users where username = '{username}'")
+        if cursor.fetchall():
+            cursor.close()
+            cnx.close()
+            return 0, "Username already exists"
+
+        cursor.execute(f"select email from users where email = '{email}'")
+        if cursor.fetchall():
+            cursor.close()
+            cnx.close()
+            return 0, "Email already exists"
+
+        cursor.execute(f"select mobileNo from users where mobileNo = '{phone}'")
+        if cursor.fetchall():
+            cursor.close()
+            cnx.close()
+            return 0, "Mobile number already exists"
+
         encrypted_password = password_encryption.encrypter(password)
         insert_query = """
             INSERT INTO users (username, password_encrypt, firstName, lastName, mobileNo, email, age, gender)
@@ -43,10 +61,10 @@ def register(username, password, fname, lname, phone, email, age, gender):
             print(i)
         cursor.close()
         cnx.close()
-        return 1
+        return 1, None
     except Exception as e:
         print(e)
-        return 0
+        return 0, "Error in registering user"
 
 
 # register("test", "test", "test", "test", "test", "test", 20, "M")
