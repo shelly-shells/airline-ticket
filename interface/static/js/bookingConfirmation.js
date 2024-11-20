@@ -1,26 +1,33 @@
 const isObjectEmpty = (objectName) => {
-	return Object.keys(objectName).length === 0
-}
+	return Object.keys(objectName).length === 0;
+};
 
 function BookingConfirmation() {
-	const storedFlightData = JSON.parse(
-		localStorage.getItem("selectedFlights") || "{}"
+	const storedToFlight = JSON.parse(
+		localStorage.getItem("selectedToFlights") || "{}"
 	);
-
-	const adults = (storedFlightData[0] ? storedFlightData[0].adults : 0) || 1;
-	const children =(storedFlightData[0] ? storedFlightData[0].children : 0) || 1;
-	const basePrice = storedFlightData[0] ? storedFlightData.reduce(
-		(sum, flight) => sum + (parseFloat(flight.price) || 0),
-		0
-	) : 0;
+	const storedReturnFlight = JSON.parse(
+		localStorage.getItem("selectedReturnFlight") || "{}"
+	);
+	const adults = (storedToFlight[0] ? storedToFlight[0].adults : 0) || 1;
+	const children = (storedToFlight[0] ? storedToFlight[0].children : 0) || 1;
+	const basePrice = storedToFlight[0]
+		? storedToFlight.reduce(
+				(sum, flight) => sum + (parseFloat(flight.price) || 0),
+				0
+		  )
+		: 0;
 	const [extraLuggage, setExtraLuggage] = React.useState(false);
 	const [food, setFood] = React.useState(false);
 
 	const luggageCost = 30;
 	const foodCost = 20;
-
-	const [flights, setFlights] = React.useState(storedFlightData);
-
+	if (isObjectEmpty(storedReturnFlight))
+		var mergedFlights = [...storedToFlight];
+	else var mergedFlights = [...storedToFlight, ...storedReturnFlight];
+	const [flights, setFlights] = React.useState(mergedFlights);
+	const toFlights = flights.filter((flight) => flight.type === "to");
+	const fromFlights = flights.filter((flight) => flight.type === "from");
 	const [passengers, setPassengers] = React.useState([]);
 
 	React.useEffect(() => {
@@ -81,8 +88,7 @@ function BookingConfirmation() {
 
 		let success = false;
 
-		if (isObjectEmpty(flights))
-		{
+		if (isObjectEmpty(flights)) {
 			alert("Die, scammer.");
 			window.location.href = "/home";
 		}
@@ -99,7 +105,7 @@ function BookingConfirmation() {
 				extraLuggage: extraLuggage,
 				passengers: passengers,
 			};
-	
+
 			try {
 				const response = await fetch("/api/confirm-booking", {
 					method: "POST",
@@ -107,16 +113,23 @@ function BookingConfirmation() {
 					body: JSON.stringify(bookingData),
 				});
 				const data = await response.json();
-	
+
 				if (data.status === "success") {
-					console.log(`Booking confirmed for flight ID: ${flight.id}`);
+					console.log(
+						`Booking confirmed for flight ID: ${flight.id}`
+					);
 					success = true;
 				} else {
-					alert(`Failed to confirm booking for flight ID: ${flight.id}`);
+					alert(
+						`Failed to confirm booking for flight ID: ${flight.id}`
+					);
 					success = false;
 				}
 			} catch (error) {
-				console.error(`Booking error for flight ID: ${flight.id}`, error);
+				console.error(
+					`Booking error for flight ID: ${flight.id}`,
+					error
+				);
 				success = false;
 			}
 		});
@@ -128,33 +141,63 @@ function BookingConfirmation() {
 		} else {
 			alert("Some or all bookings failed. Please try again later.");
 		}
-		localStorage.setItem("selectedFlights", "{}");
+		localStorage.setItem("selectedToFlights", "{}");
+		localStorage.setItem("selectedReturnFlight", "{}");
 		window.location.href = "/home";
-	}	
+	}
 
 	return (
 		<div className="confirmation-container">
 			<h1>Booking Confirmation</h1>
-			{!isObjectEmpty(flights) ? flights.map((flight, index) => (
-				<div key={index} className="result">
-					<p>
-						<strong>Flight ID:</strong> {flight.id}
-					</p>
-					<p>
-						<strong>Date:</strong> {flight.date}
-					</p>
-					<p>
-						<strong>Seat Class:</strong> {flight.seatClass}
-					</p>
-					<p>
-						<strong>Price per Ticket:</strong> Rs. {flight.price}
-					</p>
-					<hr />
+			<h2>To Flights</h2>
+			{!isObjectEmpty(toFlights)
+				? toFlights.map((flight, index) => (
+						<div key={index} className="result">
+							<p>
+								<strong>Flight ID:</strong> {flight.id}
+							</p>
+							<p>
+								<strong>Date:</strong> {flight.date}
+							</p>
+							<p>
+								<strong>Seat Class:</strong> {flight.seatClass}
+							</p>
+							<p>
+								<strong>Price per Ticket:</strong> Rs.{" "}
+								{flight.price}
+							</p>
+							<hr />
+						</div>
+				  ))
+				: ""}
+			{!isObjectEmpty(fromFlights) ? (
+				<div>
+					<h2>Return Flights</h2>
+					{!isObjectEmpty(fromFlights)
+						? fromFlights.map((flight, index) => (
+								<div key={index} className="result">
+									<p>
+										<strong>Flight ID:</strong> {flight.id}
+									</p>
+									<p>
+										<strong>Date:</strong> {flight.date}
+									</p>
+									<p>
+										<strong>Seat Class:</strong>{" "}
+										{flight.seatClass}
+									</p>
+									<p>
+										<strong>Price per Ticket:</strong> Rs.{" "}
+										{flight.price}
+									</p>
+									<hr />
+								</div>
+						  ))
+						: ""}
 				</div>
-			)): ''}
-
-
-
+			) : (
+				""
+			)}
 			<h3>Number of Passengers</h3>
 			<p>
 				<strong>Adults:</strong> {adults}
@@ -162,7 +205,6 @@ function BookingConfirmation() {
 			<p>
 				<strong>Children:</strong> {children}
 			</p>
-
 			<div className="extras">
 				<label>
 					<input
@@ -181,7 +223,6 @@ function BookingConfirmation() {
 					Food (+ Rs. {foodCost} per passenger)
 				</label>
 			</div>
-
 			<h3>Passenger Details</h3>
 			{passengers.map((passenger, index) => (
 				<div key={index} className="passenger-card">
@@ -237,7 +278,6 @@ function BookingConfirmation() {
 					</select>
 				</div>
 			))}
-
 			<h2>Total Price: Rs. {totalPrice()}</h2>
 			<button onClick={confirmBooking} className="confirm-button">
 				Confirm Booking
