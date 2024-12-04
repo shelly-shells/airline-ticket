@@ -172,7 +172,7 @@ END;
 
 //
 CREATE TRIGGER before_bookingDetails_delete 
-BEFORE DELETE ON bookingDetails 
+BEFORE DELETE ON bookings 
 FOR EACH ROW 
 BEGIN
     INSERT INTO
@@ -182,8 +182,7 @@ BEGIN
     FROM
         bookingDetails
     WHERE
-        bookingID = OLD.bookingID
-        AND passengerNo = OLD.passengerNo;
+        bookingID = OLD.bookingID;
 END;
 
 // 

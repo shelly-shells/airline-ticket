@@ -565,7 +565,7 @@ def get_my_bookings():
     WHERE 
         username = %s
     ORDER BY 
-        date DESC
+        date ASC
     """
     cursor.execute(query, (username,))
     bookings = cursor.fetchall()
